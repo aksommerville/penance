@@ -178,7 +178,7 @@ export class MapToolbarUi {
     } else if (this.map) {
       const dx = (x < 0) ? -1 : (x >= this.map.w) ? 1 : 0;
       const dy = (y < 0) ? -1 : (y >= this.map.h) ? 1 : 0;
-      const entry = this.mapStore.entryByCoords(this.mapBus.loc.plane, this.mapBus.loc.x + dx, this.mapBus.loc.y + dy);
+      const entry = this.mapStore.entryByCoords(this.mapBus.loc.x + dx, this.mapBus.loc.y + dy);
       if (entry) {
         tattle.innerText = "#" + entry.res.rid;
         tattle.classList.add("neighbor");

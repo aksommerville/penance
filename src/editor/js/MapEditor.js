@@ -40,7 +40,6 @@ export class MapEditor {
   
   onRemoveFromDom() {
     this.mapBus.unlisten(this.mapBusListener);
-    this.mapPainter.clear();
   }
   
   setup(res) {

@@ -194,4 +194,23 @@ export class MapRes {
   removeCommands(k) {
     this.commands = this.commands.filter(cmd => (!cmd.startsWith(k) || (cmd.charCodeAt(k.length) > 0x20)));
   }
+  
+  // => [x,y], defaulting to middle
+  getLocation(nullForDefault) {
+    const v = this.getCommandByKeyword("location");
+    try {
+      const [x, y] = v.split(/\s+/).map(s => +s);
+      if (isNaN(x) || (x < 0) || (x > 0xff) || isNaN(y) || (y < 0) || (y > 0xff)) throw `invalid: ${x},${y} from ${v}`;
+      return [x, y];
+    } catch (e) {
+      if (nullForDefault) return null;
+      return [MapRes.LONG_LIMIT >> 1, MapRes.LAT_LIMIT >> 1];
+    }
+  }
 }
+
+/* Latitude and longitude are stored in 8 bits each, but I want to be easily able to hold the entire world in memory.
+ * Limit to 32 screens per axis, 1024 total maps. Way more than I can make in 9 days, at least :)
+ */
+MapRes.LAT_LIMIT = 32;
+MapRes.LONG_LIMIT = 32;

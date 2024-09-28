@@ -200,4 +200,5 @@ export class CommandModal {
 CommandModal.mapcmd = [
   [0x20, "image", ["u16:rid"]],
   [0x21, "hero", ["u8:x", "u8:y"]],
+  [0x22, "location", ["u8:long", "u8:lat"]],
 ];

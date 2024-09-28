@@ -32,10 +32,6 @@ export class MapPainter {
     this.map = map;
   }
   
-  clear() {
-    this.map = null;
-  }
-  
   /* pencil: Write selected tile to the map verbatim, no bells or whistles.
    ********************************************************/
    
@@ -320,6 +316,7 @@ export class MapPainter {
    *   remote: boolean
    */
   createDoor(rsp, srcx, srcy) {
+    throw new Error(`MapPainter.createDoor: We're not using doors.`);
     let entry;
     let res = this.mapStore.resByWhatever(rsp.dstrid);
     if (res) {
@@ -357,6 +354,7 @@ export class MapPainter {
   
   // Index in (this.map.commands) or <0. Point or region, according to visibility.
   findPoi() {
+    if (!this.map) return -1;
     if ((this.mapBus.mousecol < 0) || (this.mapBus.mousecol >= this.map.w)) return -1;
     if ((this.mapBus.mouserow < 0) || (this.mapBus.mouserow >= this.map.h)) return -1;
     let subp = ((this.mapBus.mousesubx >= 0.5) ? 1 : 0) + ((this.mapBus.mousesuby >= 0.5) ? 2 : 0);
@@ -393,6 +391,7 @@ export class MapPainter {
   
   // Same idea as findPoi(), but search for 'dst' in mapBus.entrances.
   findEntrance() {
+    if (!this.map) return -1;
     if (!this.mapBus.visibility.points) return -1;
     if ((this.mapBus.mousecol < 0) || (this.mapBus.mousecol >= this.map.w)) return -1;
     if ((this.mapBus.mouserow < 0) || (this.mapBus.mouserow >= this.map.h)) return -1;

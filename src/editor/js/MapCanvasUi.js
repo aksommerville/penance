@@ -146,6 +146,7 @@ export class MapCanvasUi {
         for (let nx=-1; nx<=1; nx++, np++) {
           if (!this.neighbors[np]) continue;
           const srcbits = this.neighbors[np].image;
+          if (!srcbits) continue;
           let ndstx = dstx + nx * (dstw + margin);
           let ndsty = dsty + ny * (dsth + margin);
           this.ctx.drawImage(srcbits, 0, 0, srcbits.width, srcbits.height, ndstx, ndsty, dstw, dsth);
@@ -267,12 +268,12 @@ export class MapCanvasUi {
     for (let np=0, dy=-1; dy<=1; dy++) {
       for (let dx=-1; dx<=1; dx++, np++) {
         if (!dx && !dy) continue;
-        const nei = this.mapStore.entryByCoords(this.loc.plane, this.loc.x + dx, this.loc.y + dy);
+        const nei = this.mapStore.entryByCoords(this.loc.x + dx, this.loc.y + dy);
         if (!nei) continue;
         this.neighbors[np] = {
           path: nei.res.path,
           rid: nei.res.rid,
-          image: this.drawMapImage(nei.map, 0.5),
+          image: this.drawMapImage(nei.map, 0.5, np),
         };
       }
     }
@@ -280,10 +281,23 @@ export class MapCanvasUi {
   
   // Return a new canvas with an exact-size image of the given map.
   // (fadeOut) in 0..1 to blend it gray a little.
-  drawMapImage(map, fadeOut) {
+  drawMapImage(map, fadeOut, neighborsp) {
     const tilesheet = this.data.getImage(map.getCommandByKeyword("image"));
     const tilesize = tilesheet ? (tilesheet.naturalWidth >> 4) : 16;
     const canvas = document.createElement("CANVAS");
+    if (tilesheet && !tilesheet.complete) {
+      tilesheet.addEventListener("load", () => {
+        this.neighbors[neighborsp].image = canvas;
+        this.drawMapImageNow(map, fadeOut, tilesheet, tilesheet.naturalWidth >> 4, canvas);
+        this.renderSoon();
+      }, { once: true });
+      return null;
+    }
+    this.drawMapImageNow(map, fadeOut, tilesheet, tilesize, canvas);
+    return canvas;
+  }
+  
+  drawMapImageNow(map, fadeOut, tilesheet, tilesize, canvas) {
     canvas.width = map.w * tilesize;
     canvas.height = map.h * tilesize;
     const ctx = canvas.getContext("2d");
@@ -304,7 +318,6 @@ export class MapCanvasUi {
       ctx.fillStyle = "#444";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-    return canvas;
   }
   
   evalOpcode(src) {
@@ -314,11 +327,6 @@ export class MapCanvasUi {
       if (name === src) return opcode;
     }
     return 0;
-  }
-  
-  refreshEntrances() {
-    this.entrances = this.mapStore.doors.filter(d => d.dstrid === this.loc.res.rid);
-    this.mapBus.setEntrances(this.entrances);
   }
   
   /* For (x,y) straight off a mouse event, return:
@@ -377,21 +385,14 @@ export class MapCanvasUi {
     }
     const nx = this.loc.x + dx;
     const ny = this.loc.y + dy;
-    if (dx && dy) {
-      // We can create diagonal neighbors and they'll behave as expected until you refresh.
-      // But if you don't join them cardinally in this session, they'll wind up disconnected, they'll be on a new plane next load.
-      // That's an accident waiting to happen. So if the diagonal doesn't have an intermediate cardinal, tell the user and abort.
-      const card1 = (dy + 1) * 3 + 1;
-      const card2 = 3 + dx + 1;
-      if (!this.neighbors[card1] && !this.neighbors[card2]) {
-        this.dom.modalMessage("Please create cardinal neighbor first. If you go straight to a diagonal, there's no path to it.");
-        return;
-      }
+    if ((nx < 0) || (ny < 0) || (nx >= MapRes.LONG_LIMIT) || (ny >= MapRes.LAT_LIMIT)) {
+      this.dom.modalMessage(`New map coords out of bounds. (${nx},${ny}), limit (0,0)..(${MapRes.LONG_LIMIT-1},${MapRes.LAT_LIMIT}-1)`);
+      return;
     }
     const proposeId = this.mapStore.unusedId();
     this.dom.modalInput(`'ID' or 'ID-NAME' for new map at (${dx},${dy}) to current:`, proposeId.toString()).then(basename => {
       if (!basename) throw null;
-      const entry = this.mapStore.createMap(this.loc.plane, nx, ny, this.map, basename);
+      const entry = this.mapStore.createMap(nx, ny, this.map, basename);
       if (!entry) return;
       this.window.location = "#" + entry.res.path;
     }).catch(e => e ? console.error(e) : null);
@@ -429,7 +430,6 @@ export class MapCanvasUi {
     this.loc = this.mapBus.loc;
     this.map = this.loc.map;
     this.redrawNeighbors();
-    this.refreshEntrances();
     this.renderSoon();
   }
   
@@ -440,7 +440,6 @@ export class MapCanvasUi {
       case "commandsChanged": this.redrawNeighbors(); this.renderSoon(); break;
       case "loc": this.onLocChanged(); break;
       case "render": this.renderSoon(); break;
-      case "remoteDoorsChanged": this.refreshEntrances(); this.renderSoon(); break;
     }
   }
 }
