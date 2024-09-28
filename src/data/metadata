@@ -1,0 +1,15 @@
+fb=320x176
+title=The Season of Penance
+title$=2
+author=AK Sommerville
+time=2024-09-27
+version=0.0.1
+lang=en
+players=1
+desc=Dot Vine joins a convent and goes on a pilgrimage.
+freedom=free
+copyright=(c) 2024 AK Sommerville
+genre=Adventure
+# tags= Use itch.io for reference.
+iconImage=7
+# posterImage= image id, should have aspect 2:1 and no text
