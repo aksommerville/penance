@@ -8,8 +8,8 @@ For (GDEX Game Jam 2024)[https://itch.io/jam/gdex-game-jam-2024], theme "FULL MO
 
 ## TODO
 
-- [ ] Change maps to use explicit world coordinates per resource.
-- [ ] Map loader.
+- [x] Change maps to use explicit world coordinates per resource.
+- [x] Map loader.
 - [ ] Hero sprite.
 - [ ] Hazards.
 - [ ] Monsters.

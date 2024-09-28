@@ -7,9 +7,10 @@ static struct font *font=0;
 static int fbw=0,fbh=0;
 static int texid_tiles=0;
 static int texid_hero=0;
+static int pvinput=0;
 
 //XXX very temp
-static uint8_t map[COLC*ROWC];
+static struct map *map=0;
 
 void egg_client_quit(int status) {
   // Flush save state, log performance... Usually noop.
@@ -42,40 +43,29 @@ int egg_client_init() {
   if (egg_texture_load_image(texid_hero=egg_texture_new(),RID_image_hero)<0) return -1;
   
   if (maps_reset(rom,romc)<0) return -1;
+  if (!(map=map_by_id(1))) return -1;
   
   srand_auto();
-  
-  //XXX TEMP
-  uint8_t *p=map;
-  int i=COLC*ROWC;
-  for (;i-->0;p++) {
-    *p=(rand()&31);
-    if ((*p==0x10)||(*p==0x11)||(*p==0x16)||(*p==0x17)) *p=0x00;
-    else if (*p>=0x1c) (*p)=0x22+(*p)-0x1c;
-    else if (*p>=0x18) (*p)=0x32+(*p)-0x18;
-  }
-  p=map+6*COLC+5;
-  p[ 0]=0x16;
-  p[ 1]=0x17;
-  p[ 2]=0x17;
-  p[ 3]=0x17;
-  p[ 4]=0x18;
-  p[20]=0x26;
-  p[21]=0x27;
-  p[22]=0x27;
-  p[23]=0x27;
-  p[24]=0x28;
-  p[40]=0x36;
-  p[41]=0x37;
-  p[42]=0x37;
-  p[43]=0x37;
-  p[44]=0x38;
   
   return 0;
 }
 
+static void navigate(int dx,int dy) {
+  int nx=map->x+dx,ny=map->y+dy;
+  struct map *nmap=map_by_location(nx,ny);
+  if (!nmap) return;
+  map=nmap;
+}
+
 void egg_client_update(double elapsed) {
-  // TODO
+  int input=egg_input_get_one(0);
+  if (input!=pvinput) {
+    if ((input&EGG_BTN_LEFT)&&!(pvinput&EGG_BTN_LEFT)) navigate(-1,0);
+    if ((input&EGG_BTN_RIGHT)&&!(pvinput&EGG_BTN_RIGHT)) navigate(1,0);
+    if ((input&EGG_BTN_UP)&&!(pvinput&EGG_BTN_UP)) navigate(0,-1);
+    if ((input&EGG_BTN_DOWN)&&!(pvinput&EGG_BTN_DOWN)) navigate(0,1);
+    pvinput=input;
+  }
 }
 
 void egg_client_render() {
@@ -85,7 +75,7 @@ void egg_client_render() {
   {
     struct egg_draw_tile vtxv[COLC*ROWC];
     struct egg_draw_tile *vtx=vtxv;
-    const uint8_t *srcp=map;
+    const uint8_t *srcp=map->v;
     int i=COLC*ROWC;
     int16_t x=8,y=8;
     for (;i-->0;vtx++,srcp++) {

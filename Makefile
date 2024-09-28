@@ -23,22 +23,45 @@ SRCFILES:=$(shell find src -type f)
 CFILES:=$(filter %.c,$(SRCFILES))
 DATAFILES:=$(filter src/data/%,$(SRCFILES))
 
-OPT_CFILES:=$(filter $(addprefix $(EGG_SDK)/src/opt/,$(addsuffix /%,$(OPT_ENABLE))),$(shell find $(EGG_SDK)/src/opt -name '*.c'))
+OPT_ALL_CFILES:=$(shell find $(EGG_SDK)/src/opt -name '*.c')
+OPT_CFILES:=$(filter $(addprefix $(EGG_SDK)/src/opt/,$(addsuffix /%,$(OPT_ENABLE))),$(OPT_ALL_CFILES))
 
 TOC_H:=mid/egg_rom_toc.h
 DATADIRS:=$(shell find src/data -type d)
 $(TOC_H):$(DATADIRS);$(PRECMD) $(EGG_SDK)/out/eggdev list src/data -ftoc > $@
 
-WEB_OFILES:=$(patsubst src/%.c,mid/web/%.o,$(CFILES)) $(patsubst $(EGG_SDK)/src/opt/%.c,mid/web/%.o,$(OPT_CFILES))
+WEB_CFILES:=$(filter src/game/%.c,$(CFILES))
+WEB_OFILES:=$(patsubst src/%.c,mid/web/%.o,$(WEB_CFILES)) $(patsubst $(EGG_SDK)/src/opt/%.c,mid/web/%.o,$(OPT_CFILES))
 -include $(WEB_OFILES:.o=.d)
 mid/web/%.o:src/%.c|$(TOC_H);$(PRECMD) $(WEB_CC) -o$@ $<
 mid/web/%.o:$(EGG_SDK)/src/opt/%.c|$(TOC_H);$(PRECMD) $(WEB_CC) -o$@ $<
 WEB_LIB:=mid/web/code.wasm
 $(WEB_LIB):$(WEB_OFILES);$(PRECMD) $(WEB_LD) -o$@ $(WEB_OFILES) $(WEB_LDPOST)
 
+TOOL:=out/tool
+all:$(TOOL)
+TOOL_CFILES:=$(filter src/tool/%.c,$(SRCFILES))
+TOOL_OPT_CFILES:=$(filter $(addprefix $(EGG_SDK)/src/opt/,$(addsuffix /%.c,fs serial)),$(OPT_ALL_CFILES))
+TOOL_OPT_OFILES:=$(patsubst $(EGG_SDK)/src/%.c,mid/tool/%.o,$(TOOL_OPT_CFILES))
+TOOL_OFILES:=$(patsubst src/%.c,mid/%.o,$(TOOL_CFILES)) $(TOOL_OPT_OFILES)
+-include $(TOOL_OFILES:.o=.d)
+mid/tool/%.o:src/tool/%.c|$(TOC_H);$(PRECMD) $(CC) -o$@ $<
+mid/tool/%.o:$(EGG_SDK)/src/%.c;$(PRECMD) $(CC) -o$@ $<
+$(TOOL):$(TOOL_OFILES);$(PRECMD) $(LD) -o$@ $^
+
+MAPS_SRC:=$(filter src/data/map/%,$(DATAFILES))
+MAPS_MID:=$(patsubst src/%,mid/%,$(MAPS_SRC))
+mid/data/map/%:src/data/map/% $(TOOL)|$(TOC_H);$(PRECMD) $(TOOL) -o$@ $< --toc=$(TOC_H)
+DATAFILES+=$(MAPS_MID)
+
+TILESHEETS_SRC:=$(filter src/data/tilesheet/%,$(DATAFILES))
+TILESHEETS_MID:=$(patsubst src/%,mid/%,$(TILESHEETS_SRC))
+mid/data/tilesheet/%:src/data/tilesheet/% $(TOOL)|$(TOC_H);$(PRECMD) $(TOOL) -o$@ $< --toc=$(TOC_H)
+DATAFILES+=$(TILESHEETS_MID)
+
 ROM:=out/penance.egg
 all:$(ROM)
-$(ROM):$(WEB_LIB) $(DATAFILES);$(PRECMD) $(EGG_SDK)/out/eggdev pack -o$@ $(WEB_LIB) src/data
+$(ROM):$(WEB_LIB) $(DATAFILES);$(PRECMD) $(EGG_SDK)/out/eggdev pack -o$@ $(WEB_LIB) src/data mid/data
 
 HTML:=out/penance.html
 all:$(HTML)

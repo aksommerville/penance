@@ -9,12 +9,12 @@
 #define ROWC 11
 #define TILESIZE 16
 
-#include "map.h"
-#include "egg_rom_toc.h"
 #include <egg/egg.h>
 #include <opt/stdlib/egg-stdlib.h>
 #include <opt/text/text.h>
 #include <opt/graf/graf.h>
 #include <opt/rom/rom.h>
+#include "map.h"
+#include "egg_rom_toc.h"
 
 #endif
