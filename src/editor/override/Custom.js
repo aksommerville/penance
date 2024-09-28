@@ -2,6 +2,9 @@
  * This exists only to be overridden by games' editors.
  */
  
+import { MapEditor } from "../js/MapEditor.js";
+import { TilesheetEditor } from "../js/TilesheetEditor.js";
+ 
 export class Custom {
   static getDependencies() {
     return [];
@@ -34,7 +37,10 @@ export class Custom {
    * Doing a more involved format check is of course possible but kind of pointless, that's what type is for.
    */
   getEditors() {
-    return [];
+    return [
+      MapEditor,
+      TilesheetEditor,
+    ];
   }
 }
 
