@@ -4,7 +4,7 @@ Requires [Egg](https://github.com/aksommerville/egg) to build.
 
 This is a sequel to my 2023 game [Full Moon](https://github.com/aksommerville/fullmoon4).
 
-For (GDEX Game Jam 2024)[https://itch.io/jam/gdex-game-jam-2024], theme "FULL MOON".
+For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MOON".
 
 ## TODO
 
@@ -21,3 +21,5 @@ For (GDEX Game Jam 2024)[https://itch.io/jam/gdex-game-jam-2024], theme "FULL MO
 - [ ] Hello.
 - [ ] Music.
 - [ ] Sound effects.
+- [ ] Pics and such for Itch page.
+- [ ] Open Itch page to public. Currently password "dot-in-a-habit"
