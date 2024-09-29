@@ -8,17 +8,15 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 
 ## TODO
 
-- [x] Change maps to use explicit world coordinates per resource.
-- [x] Map loader.
-- [x] Hero sprite.
-- - [x] Map transitions (neighbor only, maybe we won't need doors).
-- - [x] Collisions.
+Sunday:
+- [x] Cell-oriented features. Hole, stump. Maybe treadles?
 - [ ] Spawn other sprites.
-- [ ] Visual transitions.
-- [ ] Static map animation, eg ripples on water.
-- [ ] Solid sprites: Try not to need this, can we do without?
-- [ ] Hazards.
-- [ ] Monsters.
+- [x] Trigger hole and tree spells.
+- [ ] Trigger foot spells.
+- [ ] Hazard sprites.
+- [ ] Static hazards.
+
+Week:
 - [ ] Holes, for casting transform spells.
 - - [ ] Rabbit.
 - - [ ] Bird.
@@ -30,12 +28,22 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 - [ ] In-person spells.
 - - [ ] Fireball.
 - - [ ] Flower.
+- [ ] Sound effects.
+
+Saturday:
+- [ ] Monsters.
 - [ ] Goals.
+
+Final Sunday:
 - [ ] Finale.
 - [ ] Hello.
+- [ ] Pics and such for Itch page.
+- [ ] Open Itch page to public. Currently password "dot-in-a-habit"
+
+Stretch goals or uncertain:
+- [ ] Static map animation, eg ripples on water.
+- [ ] Solid sprites: Try not to need this, can we do without?
+- [ ] Visual transitions.
 - [ ] Music.
 - - [ ] Drums for Doors Without Walls.
 - - [ ] Review instruments again, after I've heard them all a few times.
-- [ ] Sound effects.
-- [ ] Pics and such for Itch page.
-- [ ] Open Itch page to public. Currently password "dot-in-a-habit"

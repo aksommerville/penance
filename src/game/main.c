@@ -53,5 +53,6 @@ void egg_client_render() {
   egg_draw_clear(1,0x201008ff);
   graf_draw_tile_buffer(&g.graf,g.texid_tiles,8,8,g.map->v,COLC,ROWC,COLC);
   sprite_group_render(GRP(VISIBLE),0,0);
+  if (GRP(HERO)->spritec>=1) hero_draw_overlay(GRP(HERO)->spritev[0],0,0);
   graf_flush(&g.graf);
 }

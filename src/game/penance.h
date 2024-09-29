@@ -14,6 +14,9 @@
 #define DIR_E 0x08
 #define DIR_S 0x02
 
+// Spells are cast into a circular buffer this long.
+#define SPELL_LIMIT 8
+
 #include <egg/egg.h>
 #include <opt/stdlib/egg-stdlib.h>
 #include <opt/text/text.h>
