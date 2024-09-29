@@ -33,6 +33,11 @@ static void hero_animate(struct sprite *sprite,double elapsed) {
   if (SPRITE->mode==HERO_MODE_GHOST) {
     sprite->tileid=0x11;
     sprite->xform=0;
+    
+  // Flower.
+  } else if (SPRITE->mode==HERO_MODE_FLOWER) {
+    sprite->tileid=0x21;
+    sprite->xform=0;
 
   // Hole spells.
   } else if (SPRITE->mode==HERO_MODE_HOLE) {

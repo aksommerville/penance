@@ -88,13 +88,20 @@ static void hero_cast_fireballr(struct sprite *sprite) { hero_cast_fireball(spri
  */
  
 static void hero_cast_flower(struct sprite *sprite) {
-  fprintf(stderr,"TODO %s\n",__func__);
+  SPRITE->mode=HERO_MODE_FLOWER;
+  //TODO sound effect
+}
+
+static void hero_end_flower(struct sprite *sprite) {
+  SPRITE->mode=HERO_MODE_FREE;
+  //TODO sound effect
 }
 
 /* Turn into ghost.
  */
  
 static void hero_cast_disembody(struct sprite *sprite) {
+  //TODO sound effect
   SPRITE->mode=HERO_MODE_GHOST;
   sprite->layer++;
   struct sprite *fleshpuppet=sprite_spawn_with_type(sprite->x,sprite->y,&sprite_type_fleshpuppet,0,0,0,0);
@@ -113,6 +120,7 @@ static void hero_cast_disembody(struct sprite *sprite) {
  */
  
 static void hero_end_ghost(struct sprite *sprite) {
+  //TODO sound effect
   SPRITE->mode=HERO_MODE_FREE;
   sprite->x=SPRITE->ghost_x;
   sprite->y=SPRITE->ghost_y;
@@ -206,6 +214,7 @@ static void hero_action_begin(struct sprite *sprite) {
     case HERO_MODE_TREE: hero_end_tree(sprite); break;
     case HERO_MODE_HOLE: hero_end_hole(sprite); break;
     case HERO_MODE_GHOST: hero_end_ghost(sprite); break;
+    case HERO_MODE_FLOWER: hero_end_flower(sprite); break;
   }
 }
  

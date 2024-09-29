@@ -27,7 +27,7 @@ Week:
 - - [ ] Spell of Opening.
 - [ ] In-person spells.
 - - [ ] Fireball.
-- - [ ] Flower.
+- - [x] Flower.
 - - [x] Eject soul.
 - [ ] Sound effects.
 
