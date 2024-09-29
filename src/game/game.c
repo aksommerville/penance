@@ -66,6 +66,9 @@ int penance_navigate(int dx,int dy) {
   // Run all map commands and record it globally.
   if (penance_load_map_object(map)<0) return -1;
   
+  // Hero might have extra things to do when the map changes.
+  if (hero) hero_map_changed(hero);
+  
   return 0;
 }
 
@@ -80,6 +83,13 @@ static inline int neighbor_map_exists(int dx,int dy) {
  */
  
 int penance_check_navigation() {
+
+  if (g.mapid_load_soon) {
+    int mapid=g.mapid_load_soon;
+    g.mapid_load_soon=0;
+    return penance_load_map(mapid);
+  }
+
   if (GRP(HERO)->spritec<1) return 0;
   struct sprite *hero=GRP(HERO)->spritev[0];
   

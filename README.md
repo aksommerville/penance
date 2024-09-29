@@ -12,7 +12,7 @@ Sunday:
 - [x] Cell-oriented features. Hole, stump. Maybe treadles?
 - [ ] Spawn other sprites.
 - [x] Trigger hole and tree spells.
-- [ ] Trigger foot spells.
+- [x] Trigger foot spells.
 - [ ] Hazard sprites.
 - [ ] Static hazards.
 
@@ -28,6 +28,7 @@ Week:
 - [ ] In-person spells.
 - - [ ] Fireball.
 - - [ ] Flower.
+- - [x] Eject soul.
 - [ ] Sound effects.
 
 Saturday:

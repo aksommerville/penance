@@ -29,8 +29,13 @@ static int _hero_init(struct sprite *sprite,const uint8_t *arg,int argc,const ui
  
 static void hero_animate(struct sprite *sprite,double elapsed) {
 
+  // Ghost.
+  if (SPRITE->mode==HERO_MODE_GHOST) {
+    sprite->tileid=0x11;
+    sprite->xform=0;
+
   // Hole spells.
-  if (SPRITE->mode==HERO_MODE_HOLE) {
+  } else if (SPRITE->mode==HERO_MODE_HOLE) {
     sprite->tileid=0x40;
     sprite->xform=0;
     if (SPRITE->indx<0) sprite->tileid+=1;
@@ -65,7 +70,7 @@ static void hero_animate(struct sprite *sprite,double elapsed) {
 }
 
 /* Update, FREE mode.
- * Walking.
+ * Walking and spellclock.
  */
  
 static void hero_update_FREE(struct sprite *sprite,double elapsed) {
@@ -90,6 +95,29 @@ static void hero_update_FREE(struct sprite *sprite,double elapsed) {
       hero_quantized_motion(sprite,cellx,celly);
     }
   }
+  
+  if ((SPRITE->spellclock-=elapsed)<=0.0) {
+    SPRITE->spellc=0;
+    SPRITE->spellclock=0.0;
+  }
+}
+
+/* Update, GHOST mode.
+ * Almost the same as FREE. Physics will apply a little different, and you can't cast foot spells.
+ * (because you don't have feet).
+ * And we don't update (cellx,celly) -- those belong to the corporeal body you left behind.
+ */
+ 
+static void hero_update_GHOST(struct sprite *sprite,double elapsed) {
+  if (SPRITE->indx||SPRITE->indy) {
+    const double walkspeed=8.0; // tile/sec
+    double dx=SPRITE->indx*elapsed*walkspeed;
+    double dy=SPRITE->indy*elapsed*walkspeed;
+    SPRITE->pvx=sprite->x;
+    SPRITE->pvy=sprite->y;
+    sprite->x+=dx;
+    sprite->y+=dy;
+  }
 }
 
 /* Update, TREE or HOLE mode.
@@ -107,6 +135,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     case HERO_MODE_FREE: hero_update_FREE(sprite,elapsed); break;
     case HERO_MODE_TREE:
     case HERO_MODE_HOLE: hero_update_spells(sprite,elapsed); break;
+    case HERO_MODE_GHOST: hero_update_GHOST(sprite,elapsed); break;
   }
   hero_animate(sprite,elapsed);
 }

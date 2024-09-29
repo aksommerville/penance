@@ -17,6 +17,21 @@
 // Spells are cast into a circular buffer this long.
 #define SPELL_LIMIT 8
 
+/* SPELLS
+Foot:
+  Fireball   LRLRL or RLRLR
+  Flower     DDUD
+  Disembody  UULRDU
+Hole:
+  Rabbit
+  Bird
+  Turtle
+Tree:
+  Teleport
+  Crow
+  Open
+*/
+
 #include <egg/egg.h>
 #include <opt/stdlib/egg-stdlib.h>
 #include <opt/text/text.h>
@@ -38,6 +53,7 @@ extern struct globals {
   int pvinput;
   struct map *map;
   int map_imageid;
+  int mapid_load_soon;
 } g;
 
 int penance_load_map(int mapid);

@@ -36,6 +36,11 @@ void hero_rectify_position(struct sprite *sprite) {
     const uint8_t *colp=rowp;
     int col=cola; for (;col<=colz;col++,colp++) {
       uint8_t prop=g.map->tileprops[*colp];
+      switch (SPRITE->mode) { // Ghosts and birds can pass over holes.
+        case HERO_MODE_GHOST: {
+            if (prop==2) continue;
+          } break;
+      }
       if (prop) { // So far, all nonzero physics are impassable. That's likely to change (eg flying over holes).
         if (row==rowa) {
           if (col==cola) collision|=1;
