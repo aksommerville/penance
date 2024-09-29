@@ -129,6 +129,7 @@ static int map_opcode_eval(const char *kw,int kwc) {
   if ((kwc==5)&&!memcmp(kw,"image",5)) return 0x20;
   if ((kwc==4)&&!memcmp(kw,"hero",4)) return 0x21;
   if ((kwc==8)&&!memcmp(kw,"location",8)) return 0x22;
+  if ((kwc==4)&&!memcmp(kw,"song",4)) return 0x23;
   return -1;
 }
 
@@ -150,6 +151,9 @@ static int map_tid_for_arg(uint8_t opcode,int position) {
   switch (opcode) {
     case 0x20: switch (position) { // image
         case 0: return EGG_TID_image;
+      } break;
+    case 0x23: switch (position) { // song
+        case 0: return EGG_TID_song;
       } break;
   }
   return -1;

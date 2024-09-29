@@ -9,24 +9,35 @@
 #define ROWC 11
 #define TILESIZE 16
 
+#define DIR_N 0x40
+#define DIR_W 0x10
+#define DIR_E 0x08
+#define DIR_S 0x02
+
 #include <egg/egg.h>
 #include <opt/stdlib/egg-stdlib.h>
 #include <opt/text/text.h>
 #include <opt/graf/graf.h>
 #include <opt/rom/rom.h>
 #include "map.h"
+#include "sprite/sprite.h"
+#include "hero/hero.h"
 #include "egg_rom_toc.h"
 
 extern struct globals {
   void *rom;
   int romc;
+  struct texcache texcache;
   struct graf graf;
   struct font *font;
   int fbw,fbh;
   int texid_tiles;
-  int texid_hero;//XXX
   int pvinput;
   struct map *map;
+  int map_imageid;
 } g;
+
+int penance_load_map(int mapid);
+int penance_navigate(int dx,int dy);
 
 #endif
