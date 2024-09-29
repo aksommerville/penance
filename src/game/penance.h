@@ -17,4 +17,16 @@
 #include "map.h"
 #include "egg_rom_toc.h"
 
+extern struct globals {
+  void *rom;
+  int romc;
+  struct graf graf;
+  struct font *font;
+  int fbw,fbh;
+  int texid_tiles;
+  int texid_hero;//XXX
+  int pvinput;
+  struct map *map;
+} g;
+
 #endif
