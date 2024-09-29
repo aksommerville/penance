@@ -37,12 +37,6 @@ void egg_client_update(double elapsed) {
    */
   int input=egg_input_get_one(0);
   if (input!=g.pvinput) {
-  /*XXX
-    if ((input&EGG_BTN_LEFT)&&!(g.pvinput&EGG_BTN_LEFT)) penance_navigate(-1,0);
-    if ((input&EGG_BTN_RIGHT)&&!(g.pvinput&EGG_BTN_RIGHT)) penance_navigate(1,0);
-    if ((input&EGG_BTN_UP)&&!(g.pvinput&EGG_BTN_UP)) penance_navigate(0,-1);
-    if ((input&EGG_BTN_DOWN)&&!(g.pvinput&EGG_BTN_DOWN)) penance_navigate(0,1);
-    /**/
     //TODO If there's a modal, send input to it instead of the hero.
     int i=GRP(HERO)->spritec;
     while (i-->0) sprite_hero_input(GRP(HERO)->spritev[i],input,g.pvinput);
@@ -51,6 +45,7 @@ void egg_client_update(double elapsed) {
   
   sprite_group_update(GRP(UPDATE),elapsed);
   sprite_group_kill(GRP(DEATHROW));
+  penance_check_navigation();
 }
 
 void egg_client_render() {

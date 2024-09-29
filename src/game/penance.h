@@ -40,4 +40,9 @@ extern struct globals {
 int penance_load_map(int mapid);
 int penance_navigate(int dx,int dy);
 
+/* If a door or neighbor needs entered, make it happen.
+ * This should be done well outside the usual update cycle, since a lot of things can change.
+ */
+int penance_check_navigation();
+
 #endif

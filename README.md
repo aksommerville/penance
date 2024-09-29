@@ -11,8 +11,11 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 - [x] Change maps to use explicit world coordinates per resource.
 - [x] Map loader.
 - [ ] Hero sprite.
-- - [ ] Map transitions (neighbor only, maybe we won't need doors).
+- - [x] Map transitions (neighbor only, maybe we won't need doors).
 - - [ ] Collisions.
+- [ ] Spawn other sprites.
+- [ ] Visual transitions.
+- [ ] Static map animation, eg ripples on water.
 - [ ] Hazards.
 - [ ] Monsters.
 - [ ] Holes, for casting transform spells.
