@@ -36,8 +36,6 @@ static void _fireball_update(struct sprite *sprite,double elapsed) {
       if (bonfire) {
         bonfire->imageid=sprite->imageid;
         bonfire->tileid=0x24;
-        sprite_group_add(GRP(VISIBLE),bonfire);
-        sprite_group_add(GRP(UPDATE),bonfire);
       }
       //TODO sound effect
       return;

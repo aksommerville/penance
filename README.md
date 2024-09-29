@@ -13,7 +13,7 @@ Sunday:
 - [ ] Spawn other sprites.
 - [x] Trigger hole and tree spells.
 - [x] Trigger foot spells.
-- [ ] Hazard sprites.
+- [x] Hazard sprites.
 - [ ] Static hazards.
 
 Week:

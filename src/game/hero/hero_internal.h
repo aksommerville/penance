@@ -9,6 +9,7 @@
 #define HERO_MODE_GHOST 3
 #define HERO_MODE_FLOWER 4
 #define HERO_MODE_FIREBALL 5
+#define HERO_MODE_HURT 6
 
 struct sprite_hero {
   struct sprite hdr;
@@ -26,6 +27,8 @@ struct sprite_hero {
   double spellclock; // In FREE mode, the spell clears whenever this expires.
   int ghost_mapid; // So we can return, and also for creating the fleshpuppet as needed.
   double ghost_x,ghost_y;
+  double hurtdx,hurtdy;
+  double hurtclock;
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)

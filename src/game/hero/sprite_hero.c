@@ -43,6 +43,11 @@ static void hero_animate(struct sprite *sprite,double elapsed) {
   } else if (SPRITE->mode==HERO_MODE_FIREBALL) {
     sprite->tileid=0x20;
     sprite->xform=(SPRITE->facedir==DIR_E)?0:EGG_XFORM_XREV;
+    
+  // Hurt.
+  } else if (SPRITE->mode==HERO_MODE_HURT) {
+    sprite->tileid=0x10;
+    sprite->xform=(SPRITE->facedir==DIR_E)?0:EGG_XFORM_XREV;
 
   // Hole spells.
   } else if (SPRITE->mode==HERO_MODE_HOLE) {
@@ -149,16 +154,84 @@ static void hero_update_FIREBALL(struct sprite *sprite,double elapsed) {
   }
 }
 
+/* Update, HURT mode.
+ */
+ 
+static void hero_update_HURT(struct sprite *sprite,double elapsed) {
+  if ((SPRITE->hurtclock-=elapsed)<=0.0) {
+    SPRITE->mode=HERO_MODE_FREE;
+    if (SPRITE->indx<0) SPRITE->facedir=SPRITE->movedir=DIR_W;
+    else if (SPRITE->indx>0) SPRITE->facedir=SPRITE->movedir=DIR_E;
+    return;
+  }
+  sprite->x+=SPRITE->hurtdx*elapsed;
+  sprite->y+=SPRITE->hurtdy*elapsed;
+  const double decay=12.0; // tile/sec. Not exponential decay as you'd expect.
+  if (SPRITE->hurtdx<0.0) {
+    if ((SPRITE->hurtdx+=decay*elapsed)>0.0) SPRITE->hurtdx=0.0;
+  } else {
+    if ((SPRITE->hurtdx-=decay*elapsed)<0.0) SPRITE->hurtdx=0.0;
+  }
+  if (SPRITE->hurtdy<0.0) {
+    if ((SPRITE->hurtdy+=decay*elapsed)>0.0) SPRITE->hurtdy=0.0;
+  } else {
+    if ((SPRITE->hurtdy-=decay*elapsed)<0.0) SPRITE->hurtdy=0.0;
+  }
+  // And the motion stuff:
+  hero_rectify_position(sprite);
+  int cellx=(int)sprite->x; if (sprite->x<0.0) cellx--;
+  int celly=(int)sprite->y; if (sprite->y<0.0) celly--;
+  if ((cellx!=SPRITE->cellx)||(celly!=SPRITE->celly)) {
+    hero_quantized_motion(sprite,cellx,celly);
+  }
+}
+
+/* Is this mode subject to damage from hazard sprites?
+ */
+ 
+static int hero_mode_vulnerable(int mode) {
+  switch (mode) {
+    case HERO_MODE_GHOST:
+    case HERO_MODE_FLOWER:
+      return 0;
+  }
+  return 1;
+}
+
 /* Update.
  */
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
+
+  // Check hazards.
+  if (GRP(HAZARD)->spritec&&hero_mode_vulnerable(SPRITE->mode)) {
+    const double radius=0.666; // All hazard sprites have the same radius. I... think we can get away with that?
+    const double radius2=radius*radius;
+    int i=GRP(HAZARD)->spritec;
+    while (i-->0) {
+      struct sprite *hazard=GRP(HAZARD)->spritev[i];
+      double dx=sprite->x-hazard->x;
+      double dy=sprite->y-hazard->y;
+      if (dx*dx+dy*dy>radius2) continue;
+      //TODO sound effect
+      double distance=sqrt(dx*dx+dy*dy);
+      double nx=dx/distance,ny=dy/distance;
+      SPRITE->hurtdx=nx*16.0;
+      SPRITE->hurtdy=ny*16.0;
+      SPRITE->hurtclock=0.200;
+      SPRITE->mode=HERO_MODE_HURT;
+      SPRITE->spellc=0;
+      break;
+    }
+  }
+
   switch (SPRITE->mode) {
     case HERO_MODE_FREE: hero_update_FREE(sprite,elapsed); break;
     case HERO_MODE_TREE:
     case HERO_MODE_HOLE: hero_update_spells(sprite,elapsed); break;
     case HERO_MODE_GHOST: hero_update_GHOST(sprite,elapsed); break;
     case HERO_MODE_FIREBALL: hero_update_FIREBALL(sprite,elapsed); break;
+    case HERO_MODE_HURT: hero_update_HURT(sprite,elapsed); break;
   }
   hero_animate(sprite,elapsed);
 }

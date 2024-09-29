@@ -11,6 +11,9 @@ struct sprite_bonfire {
 
 static int _bonfire_init(struct sprite *sprite,const uint8_t *arg,int argc,const uint8_t *def,int defc) {
   SPRITE->ttl=1.000;
+  if (sprite_group_add(GRP(VISIBLE),sprite)<0) return -1;
+  if (sprite_group_add(GRP(UPDATE),sprite)<0) return -1;
+  if (sprite_group_add(GRP(HAZARD),sprite)<0) return -1;
   return 0;
 }
 
