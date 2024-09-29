@@ -20,6 +20,7 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 - [ ] Finale.
 - [ ] Hello.
 - [ ] Music.
+- - [ ] Drums for Doors Without Walls.
 - [ ] Sound effects.
 - [ ] Pics and such for Itch page.
 - [ ] Open Itch page to public. Currently password "dot-in-a-habit"

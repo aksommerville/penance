@@ -45,6 +45,8 @@ int egg_client_init() {
   if (maps_reset(rom,romc)<0) return -1;
   if (!(map=map_by_id(1))) return -1;
   
+  egg_play_song(4,0,1);
+  
   srand_auto();
   
   return 0;

@@ -1,0 +1,22 @@
+1. Penance Prima: Hello splash. Tempo 500 ms/qnote.
+  1. 0x01 Lead, first part. And frills second.
+  2. 0x02 Lead, second part.
+  3. 0x03 Bass.
+
+2. Doors Without Walls: Outdoors. Tempo 560748 us/qnote.
+  1. 0x04 Lead, always.
+  2. 0x05 Arpeggio bass, always.
+  3. 0x06 Drums.
+  4. 0x07 Rhythm guitar.
+  5. 0x08 Alt lead, very end.
+  6. 0x09 Organ, end third.
+
+3. Antechamber: Castle. Tempo 500 ms/qnote.
+  1. 0x0a Lead.
+  2. 0x0b Bass.
+  3. 0x0c Pad, second part.
+  4. 0x0d Frills, first part.
+
+4. Take Wing: Outtro.
+  1. 0x0e Lead.
+  2. 0x0f Bass.
