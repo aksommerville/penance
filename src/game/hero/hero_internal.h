@@ -10,8 +10,11 @@ struct sprite_hero {
   uint8_t movedir; // Last nonzero motion on dpad. Basically (facedir) but includes vertical.
   double animclock;
   int animframe;
+  double pvx,pvy; // Set to prior position before invoking rectification.
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
+
+void hero_rectify_position(struct sprite *sprite);
 
 #endif

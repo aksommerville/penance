@@ -352,7 +352,7 @@ static int digest_tilesheet(struct sr_encoder *dst,const char *src,int srcc,cons
         if (tmpc<256) tmp[tmpc++]=(hi<<4)|lo;
       }
     } else {
-      if ((linec==7)&&!memcmp(src,"physics",7)) {
+      if ((linec==7)&&!memcmp(line,"physics",7)) {
         copying=1;
       } else if (copying) break;
     }

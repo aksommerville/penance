@@ -72,8 +72,15 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     const double walkspeed=6.0; // tile/sec
     double dx=SPRITE->indx*elapsed*walkspeed;
     double dy=SPRITE->indy*elapsed*walkspeed;
+    SPRITE->pvx=sprite->x;
+    SPRITE->pvy=sprite->y;
     sprite->x+=dx;
     sprite->y+=dy;
+    /* Currently, the only things relevant to physics are this motion right here, and the map.
+     * No other sprites participate, and the hero only moves right here.
+     * That's a pretty delicate balance to maintain, I'm not sure we'll be able to, but for now physics can be real easy.
+     */
+    hero_rectify_position(sprite);
   }
 
   hero_animate(sprite,elapsed);
