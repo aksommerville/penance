@@ -19,7 +19,7 @@
 
 /* SPELLS
 Foot:
-  Fireball   LRLRL or RLRLR
+  Fireball   LLLL or RRRR
   Flower     DDUD
   Disembody  UULRDU
 Hole:

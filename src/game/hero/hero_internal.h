@@ -8,6 +8,7 @@
 #define HERO_MODE_HOLE 2
 #define HERO_MODE_GHOST 3
 #define HERO_MODE_FLOWER 4
+#define HERO_MODE_FIREBALL 5
 
 struct sprite_hero {
   struct sprite hdr;

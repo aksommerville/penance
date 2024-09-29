@@ -38,6 +38,11 @@ static void hero_animate(struct sprite *sprite,double elapsed) {
   } else if (SPRITE->mode==HERO_MODE_FLOWER) {
     sprite->tileid=0x21;
     sprite->xform=0;
+    
+  // Fireball.
+  } else if (SPRITE->mode==HERO_MODE_FIREBALL) {
+    sprite->tileid=0x20;
+    sprite->xform=(SPRITE->facedir==DIR_E)?0:EGG_XFORM_XREV;
 
   // Hole spells.
   } else if (SPRITE->mode==HERO_MODE_HOLE) {
@@ -132,6 +137,18 @@ static void hero_update_GHOST(struct sprite *sprite,double elapsed) {
 static void hero_update_spells(struct sprite *sprite,double elapsed) {
 }
 
+/* Update, FIREBALL mode.
+ */
+ 
+static void hero_update_FIREBALL(struct sprite *sprite,double elapsed) {
+  if ((SPRITE->spellclock-=elapsed)<=0.0) {
+    SPRITE->mode=HERO_MODE_FREE;
+    // (indx) might have reversed while we were posing. Update facedir.
+    if (SPRITE->indx<0) SPRITE->facedir=SPRITE->movedir=DIR_W;
+    else if (SPRITE->indx>0) SPRITE->facedir=SPRITE->movedir=DIR_E;
+  }
+}
+
 /* Update.
  */
  
@@ -141,6 +158,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     case HERO_MODE_TREE:
     case HERO_MODE_HOLE: hero_update_spells(sprite,elapsed); break;
     case HERO_MODE_GHOST: hero_update_GHOST(sprite,elapsed); break;
+    case HERO_MODE_FIREBALL: hero_update_FIREBALL(sprite,elapsed); break;
   }
   hero_animate(sprite,elapsed);
 }

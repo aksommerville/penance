@@ -30,6 +30,11 @@ Week:
 - - [x] Flower.
 - - [x] Eject soul.
 - [ ] Sound effects.
+- [ ] Challenges:
+- - [ ] Wind that toggles on and off, so you have to turn into a flower when it's on.
+- - [ ] Aiming cannon. Turn into a ghost and make it aim at a switch.
+- - [ ] Put some cluestones where you need to either teleport, bird, or ghost to reach them.
+- - [ ] Bullet hell that only a turtle can get thru alive.
 
 Saturday:
 - [ ] Monsters.

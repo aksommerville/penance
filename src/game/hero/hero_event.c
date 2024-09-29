@@ -78,7 +78,21 @@ static void hero_end_hole(struct sprite *sprite) {
  */
  
 static void hero_cast_fireball(struct sprite *sprite,double dx) {
-  fprintf(stderr,"TODO %s %+f\n",__func__,dx);
+  SPRITE->mode=HERO_MODE_FIREBALL;
+  SPRITE->spellclock=0.500;
+  struct sprite *fireball=sprite_spawn_with_type(sprite->x+dx,sprite->y,&sprite_type_fireball,0,0,0,0);
+  if (!fireball) return;
+  //TODO sound effect
+  fireball->imageid=sprite->imageid;
+  fireball->tileid=0x22;
+  sprite_fireball_set_direction(fireball,dx*12.0,0.0);
+  sprite_group_add(GRP(UPDATE),fireball);
+  sprite_group_add(GRP(VISIBLE),fireball);
+  if (dx>0.0) {
+    SPRITE->facedir=DIR_E;
+  } else {
+    SPRITE->facedir=DIR_W;
+  }
 }
  
 static void hero_cast_fireballl(struct sprite *sprite) { hero_cast_fireball(sprite,-1.0); }
@@ -151,8 +165,8 @@ static void hero_check_free_spell(struct sprite *sprite) {
       return; \
     } \
   }
-  SPELLCHECK(fireballl,DIR_W,DIR_E,DIR_W,DIR_E,DIR_W)
-  SPELLCHECK(fireballr,DIR_E,DIR_W,DIR_E,DIR_W,DIR_E)
+  SPELLCHECK(fireballl,DIR_W,DIR_W,DIR_W,DIR_W)
+  SPELLCHECK(fireballr,DIR_E,DIR_E,DIR_E,DIR_E)
   SPELLCHECK(flower,DIR_S,DIR_S,DIR_N,DIR_S)
   SPELLCHECK(disembody,DIR_N,DIR_N,DIR_W,DIR_E,DIR_S,DIR_N)
   #undef SPELLCHECK
@@ -181,16 +195,21 @@ static void hero_spell_add(struct sprite *sprite,uint8_t word) {
  
 static void hero_dpad(struct sprite *sprite,int8_t dx,int8_t dy) {
 
+  // In FIREBALL mode, don't update.
+  if (SPRITE->mode==HERO_MODE_FIREBALL) {
+    SPRITE->indx=dx;
+    SPRITE->indy=dy;
+    return;
+  }
+
   // Any cardinal state entered from the zero state is a word to add to the spell.
-  //if ((SPRITE->mode==HERO_MODE_TREE)||(SPRITE->mode==HERO_MODE_HOLE)) {
-    if (!SPRITE->indx&&!SPRITE->indy) {
-      if (dx&&!dy) {
-        hero_spell_add(sprite,(dx<0)?DIR_W:DIR_E);
-      } else if (!dx&&dy) {
-        hero_spell_add(sprite,(dy<0)?DIR_N:DIR_S);
-      }
+  if (!SPRITE->indx&&!SPRITE->indy) {
+    if (dx&&!dy) {
+      hero_spell_add(sprite,(dx<0)?DIR_W:DIR_E);
+    } else if (!dx&&dy) {
+      hero_spell_add(sprite,(dy<0)?DIR_N:DIR_S);
     }
-  //}
+  }
 
   if ((dx<0)&&(SPRITE->indx>=0)) {
     SPRITE->facedir=SPRITE->movedir=DIR_W;

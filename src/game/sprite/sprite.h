@@ -112,7 +112,11 @@ void sprite_group_render(struct sprite_group *group,int addx,int addy);
 extern const struct sprite_type sprite_type_dummy; // 0
 extern const struct sprite_type sprite_type_hero; // 1
 extern const struct sprite_type sprite_type_fleshpuppet; // 2
+extern const struct sprite_type sprite_type_fireball; // 3
+extern const struct sprite_type sprite_type_bonfire; // 4
 
 const struct sprite_type *sprite_type_by_id(int id);
+
+void sprite_fireball_set_direction(struct sprite *sprite,double dx,double dy);
 
 #endif
