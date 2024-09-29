@@ -1,6 +1,7 @@
 #include "opt/fs/fs.h"
 #include "opt/serial/serial.h"
 #include "egg_rom_toc.h"
+#include "game/sprite/sprite.h" /* Not linkable, but what we need is the macro FOR_EACH_SPRITE_TYPE */
 #include <egg/egg.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -130,6 +131,7 @@ static int map_opcode_eval(const char *kw,int kwc) {
   if ((kwc==4)&&!memcmp(kw,"hero",4)) return 0x21;
   if ((kwc==8)&&!memcmp(kw,"location",8)) return 0x22;
   if ((kwc==4)&&!memcmp(kw,"song",4)) return 0x23;
+  if ((kwc==6)&&!memcmp(kw,"sprite",6)) return 0x40;
   return -1;
 }
 
@@ -154,6 +156,9 @@ static int map_tid_for_arg(uint8_t opcode,int position) {
       } break;
     case 0x23: switch (position) { // song
         case 0: return EGG_TID_song;
+      } break;
+    case 0x40: switch (position) { // sprite
+        case 1: return EGG_TID_sprite;
       } break;
   }
   return -1;
@@ -360,6 +365,109 @@ static int digest_tilesheet(struct sr_encoder *dst,const char *src,int srcc,cons
   return sr_encode_raw(dst,tmp,sizeof(tmp));
 }
 
+/* Sprite commands.
+ */
+ 
+static int sprite_cmd_type(struct sr_encoder *dst,const char *src,int srcc,const char *srcpath,int lineno) {
+  int id=0;
+  #define _(tag) if ((srcc==sizeof(#tag)-1)&&!memcmp(src,#tag,srcc)) goto _ok_; id++;
+  FOR_EACH_SPRITE_TYPE
+  #undef _
+  fprintf(stderr,"%s:%d: Unknown sprite type '%.*s'. Must be listed in game/sprite/sprite.h\n",srcpath,lineno,srcc,src);
+  return -2;
+ _ok_:
+  if (sr_encode_u8(dst,0x20)<0) return -1;
+  if (sr_encode_intbe(dst,id,2)<0) return -1;
+  return 0;
+}
+ 
+static int sprite_cmd_image(struct sr_encoder *dst,const char *src,int srcc,const char *srcpath,int lineno) {
+  int rid=rid_eval(EGG_TID_image,src,srcc);
+  if (rid<0) {
+    fprintf(stderr,"%s:%d: Unknown image '%.*s'\n",srcpath,lineno,srcc,src);
+    return -2;
+  }
+  if (sr_encode_u8(dst,0x21)<0) return -1;
+  if (sr_encode_intbe(dst,rid,2)<0) return -1;
+  return 0;
+}
+ 
+static int sprite_cmd_tileid(struct sr_encoder *dst,const char *src,int srcc,const char *srcpath,int lineno) {
+  int tileid;
+  if ((sr_int_eval(&tileid,src,srcc)<2)||(tileid<0)||(tileid>0xff)) {
+    fprintf(stderr,"%s:%d: Expected integer in 0..255 for 'tileid', found '%.*s'\n",srcpath,lineno,srcc,src);
+    return -2;
+  }
+  if (sr_encode_u8(dst,0x22)<0) return -1;
+  if (sr_encode_u8(dst,tileid)<0) return -1;
+  if (sr_encode_u8(dst,0)<0) return -1;
+  return 0;
+}
+
+static int sprgrp_eval_1(const char *src,int srcc) {
+  #define _(tag) if ((srcc==sizeof(#tag)-1)&&!memcmp(src,#tag,srcc)) return 1<<SPRITE_GROUP_##tag;
+  FOR_EACH_SPRITE_GROUP
+  #undef _
+  int v;
+  if (sr_int_eval(&v,src,srcc)>=2) return v;
+  return 0;
+}
+ 
+static int sprite_cmd_groups(struct sr_encoder *dst,const char *src,int srcc,const char *srcpath,int lineno) {
+  int srcp=0,mask=0;
+  while (srcp<srcc) {
+    if ((unsigned char)src[srcp]<=0x20) { srcp++; continue; }
+    if (src[srcp]==',') { srcp++; continue; }
+    const char *token=src+srcp;
+    int tokenc=0;
+    while ((srcp<srcc)&&((unsigned char)src[srcp]>0x20)&&(src[srcp]!=',')) { srcp++; tokenc++; }
+    int bit=sprgrp_eval_1(token,tokenc);
+    if (!bit) {
+      fprintf(stderr,"%s:%d: Not a known sprite group: '%.*s'. See src/game/sprite/sprite.h\n",srcpath,lineno,tokenc,token);
+      return -2;
+    }
+    mask|=bit;
+  }
+  if (sr_encode_u8(dst,0x40)<0) return -1;
+  if (sr_encode_intbe(dst,mask,4)<0) return -1;
+  return 0;
+}
+
+/* Compile one sprite.
+ */
+ 
+static int digest_sprite(struct sr_encoder *dst,const char *src,int srcc,const char *dstpath,const char *srcpath) {
+  struct sr_decoder decoder={.v=src,.c=srcc};
+  const char *line;
+  int linec,lineno=1,err;
+  for (;(linec=sr_decode_line(&line,&decoder))>0;lineno++) {
+    while (linec&&((unsigned char)line[linec-1]<=0x20)) linec--;
+    while (linec&&((unsigned char)line[0]<=0x20)) { linec--; line++; }
+    if (!linec) continue;
+    
+    int linep=0;
+    const char *kw=line+linep;
+    int kwc=0;
+    while ((linep<linec)&&((unsigned char)line[linep++]>0x20)) kwc++;
+    while ((linep<linec)&&((unsigned char)line[linep]<=0x20)) linep++;
+    
+    if ((kwc==4)&&!memcmp(kw,"type",4)) err=sprite_cmd_type(dst,line+linep,linec-linep,srcpath,lineno);
+    else if ((kwc==5)&&!memcmp(kw,"image",5)) err=sprite_cmd_image(dst,line+linep,linec-linep,srcpath,lineno);
+    else if ((kwc==6)&&!memcmp(kw,"tileid",6)) err=sprite_cmd_tileid(dst,line+linep,linec-linep,srcpath,lineno);
+    else if ((kwc==6)&&!memcmp(kw,"groups",6)) err=sprite_cmd_groups(dst,line+linep,linec-linep,srcpath,lineno);
+    
+    else {
+      fprintf(stderr,"%s:%d: Unknown sprite command '%.*s'. Add around %s:%d if this is new.\n",srcpath,lineno,kwc,kw,__FILE__,__LINE__);
+      return -2;
+    }
+    if (err<0) {
+      if (err!=-2) fprintf(stderr,"%s:%d: Unspecified error processing '%.*s' sprite command.\n",srcpath,lineno,kwc,kw);
+      return -2;
+    }
+  }
+  return 0;
+}
+
 /* Process file in memory, dispatch.
  */
  
@@ -374,6 +482,7 @@ static int digest(struct sr_encoder *dst,const char *src,int srcc,const char *ds
     
     if ((namec==3)&&!memcmp(name,"map",3)) return digest_map(dst,src,srcc,dstpath,srcpath);
     if ((namec==9)&&!memcmp(name,"tilesheet",9)) return digest_tilesheet(dst,src,srcc,dstpath,srcpath);
+    if ((namec==6)&&!memcmp(name,"sprite",6)) return digest_sprite(dst,src,srcc,dstpath,srcpath);
     
   }
   fprintf(stderr,"%s: Unable to determine operation based on dstpath='%s'\n",srcpath,dstpath);

@@ -36,6 +36,7 @@ static void _fireball_update(struct sprite *sprite,double elapsed) {
       if (bonfire) {
         bonfire->imageid=sprite->imageid;
         bonfire->tileid=0x24;
+        sprite_bonfire_set_ttl(bonfire,1.000);
       }
       //TODO sound effect
       return;

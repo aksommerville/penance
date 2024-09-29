@@ -248,6 +248,7 @@ export class MapPainter {
     const modal = this.dom.spawnModal(CommandModal);
     modal.setup(this.map.commands[cmdp]);
     modal.result.then(cmd => {
+      if (!cmd) return;
       this.map.commands[cmdp] = cmd;
       this.mapBus.dirty();
       this.mapBus.commandsChanged();

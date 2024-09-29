@@ -1,0 +1,4 @@
+type bonfire
+image hero
+tileid 0x24
+groups VISIBLE,UPDATE,HAZARD

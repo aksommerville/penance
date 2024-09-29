@@ -10,11 +10,11 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 
 Sunday:
 - [x] Cell-oriented features. Hole, stump. Maybe treadles?
-- [ ] Spawn other sprites.
+- [x] Spawn other sprites.
 - [x] Trigger hole and tree spells.
 - [x] Trigger foot spells.
 - [x] Hazard sprites.
-- [ ] Static hazards.
+- [x] Static hazards -- XXX, I doubt we need them.
 
 Week:
 - [ ] Holes, for casting transform spells.

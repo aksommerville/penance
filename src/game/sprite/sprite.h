@@ -60,7 +60,7 @@ int sprite_ref(struct sprite *sprite);
  */
 struct sprite *sprite_spawn_for_map(
   int x,int y,
-  const uint8_t *arg,int argc
+  const uint8_t *def,int defc
 );
 struct sprite *sprite_spawn_with_type(
   double x,double y,
@@ -83,6 +83,13 @@ struct sprite *sprite_spawn_with_type(
 #define SPRITE_GROUP_HERO      4
 #define SPRITE_GROUP_HAZARD    5
 #define SPRITE_GROUP_SOLID     6
+
+#define FOR_EACH_SPRITE_GROUP \
+  _(UPDATE) \
+  _(VISIBLE) \
+  _(HERO) \
+  _(HAZARD) \
+  _(SOLID)
 
 extern struct sprite_group sprite_groupv[32];
 
@@ -109,14 +116,23 @@ void sprite_group_render(struct sprite_group *group,int addx,int addy);
 /* Types.
  *********************************************************************/
  
-extern const struct sprite_type sprite_type_dummy; // 0
-extern const struct sprite_type sprite_type_hero; // 1
-extern const struct sprite_type sprite_type_fleshpuppet; // 2
-extern const struct sprite_type sprite_type_fireball; // 3
-extern const struct sprite_type sprite_type_bonfire; // 4
+extern const struct sprite_type sprite_type_dummy;
+extern const struct sprite_type sprite_type_hero;
+extern const struct sprite_type sprite_type_fleshpuppet;
+extern const struct sprite_type sprite_type_fireball;
+extern const struct sprite_type sprite_type_bonfire;
+
+// ids get assigned in this order. Use the same as the ^ declarations above.
+#define FOR_EACH_SPRITE_TYPE \
+  _(dummy) \
+  _(hero) \
+  _(fleshpuppet) \
+  _(fireball) \
+  _(bonfire)
 
 const struct sprite_type *sprite_type_by_id(int id);
 
 void sprite_fireball_set_direction(struct sprite *sprite,double dx,double dy);
+void sprite_bonfire_set_ttl(struct sprite *sprite,double ttl);
 
 #endif

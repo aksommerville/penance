@@ -202,4 +202,5 @@ CommandModal.mapcmd = [
   [0x21, "hero", ["u8:x", "u8:y"]],
   [0x22, "location", ["u8:long", "u8:lat"]],
   [0x23, "song", ["u16:rid"]],
+  [0x40, "sprite", ["u8:x", "u8:y", "u16:rid"]],
 ];

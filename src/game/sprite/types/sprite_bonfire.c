@@ -10,7 +10,6 @@ struct sprite_bonfire {
 #define SPRITE ((struct sprite_bonfire*)sprite)
 
 static int _bonfire_init(struct sprite *sprite,const uint8_t *arg,int argc,const uint8_t *def,int defc) {
-  SPRITE->ttl=1.000;
   if (sprite_group_add(GRP(VISIBLE),sprite)<0) return -1;
   if (sprite_group_add(GRP(UPDATE),sprite)<0) return -1;
   if (sprite_group_add(GRP(HAZARD),sprite)<0) return -1;
@@ -18,9 +17,11 @@ static int _bonfire_init(struct sprite *sprite,const uint8_t *arg,int argc,const
 }
 
 static void _bonfire_update(struct sprite *sprite,double elapsed) {
-  if ((SPRITE->ttl-=elapsed)<=0.0) {
-    sprite_kill_later(sprite);
-    return;
+  if (SPRITE->ttl>0.0) {
+    if ((SPRITE->ttl-=elapsed)<=0.0) {
+      sprite_kill_later(sprite);
+      return;
+    }
   }
   if ((SPRITE->animclock-=elapsed)<=0.0) {
     SPRITE->animclock+=0.150;
@@ -41,3 +42,11 @@ const struct sprite_type sprite_type_bonfire={
   .init=_bonfire_init,
   .update=_bonfire_update,
 };
+
+/* Public accessors.
+ */
+ 
+void sprite_bonfire_set_ttl(struct sprite *sprite,double ttl) {
+  if (!sprite||(sprite->type!=&sprite_type_bonfire)) return;
+  SPRITE->ttl=ttl;
+}

@@ -1,2 +1,3 @@
 type map 16
 type tilesheet 17
+type sprite 18

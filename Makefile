@@ -59,6 +59,11 @@ TILESHEETS_MID:=$(patsubst src/%,mid/%,$(TILESHEETS_SRC))
 mid/data/tilesheet/%:src/data/tilesheet/% $(TOOL)|$(TOC_H);$(PRECMD) $(TOOL) -o$@ $< --toc=$(TOC_H)
 DATAFILES+=$(TILESHEETS_MID)
 
+SPRITES_SRC:=$(filter src/data/sprite/%,$(DATAFILES))
+SPRITES_MID:=$(patsubst src/%,mid/%,$(SPRITES_SRC))
+mid/data/sprite/%:src/data/sprite/% $(TOOL)|$(TOC_H);$(PRECMD) $(TOOL) -o$@ $< --toc=$(TOC_H)
+DATAFILES+=$(SPRITES_MID)
+
 ROM:=out/penance.egg
 all:$(ROM)
 $(ROM):$(WEB_LIB) $(DATAFILES);$(PRECMD) $(EGG_SDK)/out/eggdev pack -o$@ $(WEB_LIB) src/data mid/data

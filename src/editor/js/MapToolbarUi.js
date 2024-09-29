@@ -127,6 +127,7 @@ export class MapToolbarUi {
     const modal = this.dom.spawnModal(CommandsModal);
     modal.setup(this.map.commands);
     modal.result.then(commands => {
+      if (typeof(commands) !== "string") return;
       this.map.commands = commands;
       this.mapBus.dirty();
       this.mapBus.commandsChanged();

@@ -27,6 +27,10 @@ int maps_reset(const void *rom,int romc);
 struct map *map_by_id(int rid);
 struct map *map_by_location(int x,int y);
 
+/* Since we're in there anyway for maps and tilesheets, we also cache all the sprite resources at boot.
+ */
+int maps_get_sprite(void *dstpp,int rid);
+
 struct map_command_reader {
   const uint8_t *v;
   int p,c;

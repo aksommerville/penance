@@ -31,6 +31,18 @@ static int penance_load_map_object(struct map *map) {
           int songid=(arg[0]<<8)|arg[1];
           egg_play_song(songid,0,1);
         } break;
+      case 0x40: { // sprite
+          double x=(double)arg[0]+0.5;
+          double y=(double)arg[1]+0.5;
+          int rid=(arg[2]<<8)|arg[3];
+          const uint8_t *serial=0;
+          int serialc=maps_get_sprite(&serial,rid);
+          struct sprite *sprite=sprite_spawn_for_map(x,y,serial,serialc);
+          if (!sprite) {
+            fprintf(stderr,"Failed to spawn sprite:%d for map:%d\n",rid,map->rid);
+            return -2;
+          }
+        } break;
     }
   }
   return 0;

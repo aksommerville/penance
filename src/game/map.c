@@ -8,6 +8,8 @@ static const uint8_t tileprops_default[256]={0};
 static struct {
   const uint8_t *tilesheetv[TILESHEET_LIMIT]; // sparse, indexed by rid
   struct map *mapv[LONG_LIMIT*LAT_LIMIT]; // sparse
+  struct rom_res *spritev;
+  int spritec,spritea;
 } maps={0};
 
 /* Add resource, during reset.
@@ -94,6 +96,17 @@ int maps_reset(const void *rom,int romc) {
             return -2;
           }
         } break;
+      case EGG_TID_sprite: {
+          if (maps.spritec>=maps.spritea) {
+            int na=maps.spritea+32;
+            if (na>INT_MAX/sizeof(struct rom_res)) return -1;
+            void *nv=realloc(maps.spritev,sizeof(struct rom_res)*na);
+            if (!nv) return -1;
+            maps.spritev=nv;
+            maps.spritea=na;
+          }
+          maps.spritev[maps.spritec++]=*res;
+        } break;
     }
   }
   
@@ -112,7 +125,7 @@ int maps_reset(const void *rom,int romc) {
   return 0;
 }
 
-/* Fetch map from store.
+/* Fetch resources from store.
  */
  
 struct map *map_by_id(int rid) {
@@ -130,6 +143,21 @@ struct map *map_by_id(int rid) {
 struct map *map_by_location(int x,int y) {
   if ((x<0)||(y<0)||(x>=LONG_LIMIT)||(y>=LAT_LIMIT)) return 0;
   return maps.mapv[y*LONG_LIMIT+x];
+}
+
+int maps_get_sprite(void *dstpp,int rid) {
+  int lo=0,hi=maps.spritec;
+  while (lo<hi) {
+    int ck=(lo+hi)>>1;
+    const struct rom_res *q=maps.spritev+ck;
+         if (rid<q->rid) hi=ck;
+    else if (rid>q->rid) lo=ck+1;
+    else {
+      if (dstpp) *(const void**)dstpp=q->v;
+      return q->c;
+    }
+  }
+  return 0;
 }
 
 /* Command reader.
