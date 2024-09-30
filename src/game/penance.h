@@ -40,6 +40,7 @@ Tree:
 #include "map.h"
 #include "sprite/sprite.h"
 #include "hero/hero.h"
+#include "menu/menu.h"
 #include "egg_rom_toc.h"
 
 extern struct globals {
@@ -54,6 +55,8 @@ extern struct globals {
   struct map *map;
   int map_imageid;
   int mapid_load_soon;
+  struct menu *menuv[MENU_STACK_LIMIT];
+  int menuc;
 } g;
 
 int penance_load_map(int mapid);

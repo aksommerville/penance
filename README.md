@@ -9,11 +9,15 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 ## TODO
 
 Week:
+- [x] General menus.
 - [ ] Tree stumps, for casting environmental spells.
 - - [ ] Teleport.
 - - [ ] Summon guidance crow.
 - - [ ] Spell of Opening.
 - [ ] Sound effects.
+- [ ] Allow hazard sprites to indicate explicit rejection direction.
+- [ ] Fireworks when transforming to/from animal.
+- [ ] Measure world extents while loading maps.
 - [ ] Challenges:
 - - [ ] Wind that toggles on and off, so you have to turn into a flower when it's on.
 - - [ ] Aiming cannon. Turn into a ghost and make it aim at a switch.
@@ -26,7 +30,7 @@ Saturday:
 
 Final Sunday:
 - [ ] Finale.
-- [ ] Hello.
+- [ ] Hello: Roll in credits after a delay?
 - [ ] Pics and such for Itch page.
 - [ ] Open Itch page to public. Currently password "dot-in-a-habit"
 
