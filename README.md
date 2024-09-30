@@ -8,27 +8,11 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 
 ## TODO
 
-Sunday:
-- [x] Cell-oriented features. Hole, stump. Maybe treadles?
-- [x] Spawn other sprites.
-- [x] Trigger hole and tree spells.
-- [x] Trigger foot spells.
-- [x] Hazard sprites.
-- [x] Static hazards -- XXX, I doubt we need them.
-
 Week:
-- [ ] Holes, for casting transform spells.
-- - [ ] Rabbit.
-- - [ ] Bird.
-- - [ ] Turtle.
 - [ ] Tree stumps, for casting environmental spells.
 - - [ ] Teleport.
 - - [ ] Summon guidance crow.
 - - [ ] Spell of Opening.
-- [ ] In-person spells.
-- - [ ] Fireball.
-- - [x] Flower.
-- - [x] Eject soul.
 - [ ] Sound effects.
 - [ ] Challenges:
 - - [ ] Wind that toggles on and off, so you have to turn into a flower when it's on.
@@ -53,3 +37,4 @@ Stretch goals or uncertain:
 - [ ] Music.
 - - [ ] Drums for Doors Without Walls.
 - - [ ] Review instruments again, after I've heard them all a few times.
+- [ ] Jammio cameo

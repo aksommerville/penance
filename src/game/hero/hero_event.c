@@ -13,6 +13,27 @@ static void hero_begin_tree(struct sprite *sprite,uint8_t tileid) {
   SPRITE->spellc=0;
 }
 
+/* Teleport: Enter a modal to selection destination.
+ */
+ 
+static void hero_cast_teleport(struct sprite *sprite) {
+  fprintf(stderr,"TODO %s\n",__func__);
+}
+
+/* Summon the helpful crow.
+ */
+ 
+static void hero_cast_crow(struct sprite *sprite) {
+  fprintf(stderr,"TODO %s\n",__func__);
+}
+
+/* The Spell of Opening.
+ */
+ 
+static void hero_cast_open(struct sprite *sprite) {
+  fprintf(stderr,"TODO %s\n",__func__);
+}
+
 /* Finish tree-spell mode.
  * Stumps must have clearance below.
  */
@@ -20,20 +41,18 @@ static void hero_begin_tree(struct sprite *sprite,uint8_t tileid) {
 static void hero_end_tree(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_FREE;
   sprite->y+=1.500;
-  if (SPRITE->spellc>SPELL_LIMIT) {
-    fprintf(stderr,"Invalid tree spell, too long.\n");//TODO sound effect
-  } else {
-    char tmp[8];
-    int i=0; for (;i<SPRITE->spellc;i++) switch (SPRITE->spellv[i]) {
-      case DIR_W: tmp[i]='L'; break;
-      case DIR_E: tmp[i]='R'; break;
-      case DIR_N: tmp[i]='U'; break;
-      case DIR_S: tmp[i]='D'; break;
-      default: tmp[i]='?';
-    }
-    fprintf(stderr,"tree spell: %.*s\n",SPRITE->spellc,tmp);
-    //TODO Cast spell.
+  #define SPELLCHECK(tag,...) { \
+    const uint8_t spell[]={__VA_ARGS__}; \
+    if ((SPRITE->spellc==sizeof(spell))&&!memcmp(SPRITE->spellv,spell,sizeof(spell))) { \
+      SPRITE->spellc=0; \
+      hero_cast_##tag(sprite); \
+      return; \
+    } \
   }
+  SPELLCHECK(teleport,DIR_S,DIR_S,DIR_S)
+  SPELLCHECK(crow,DIR_N,DIR_E,DIR_S,DIR_W,DIR_N)
+  SPELLCHECK(open,DIR_W,DIR_E,DIR_W,DIR_N,DIR_N)
+  #undef SPELLCHECK
   SPRITE->spellc=0;
 }
 
@@ -50,6 +69,31 @@ static void hero_begin_hole(struct sprite *sprite,uint8_t tileid) {
   SPRITE->spellc=0;
 }
 
+/* Turn into animals.
+ */
+ 
+static void hero_cast_rabbit(struct sprite *sprite) {
+  SPRITE->mode=HERO_MODE_RABBIT;
+  //TODO sound effect
+}
+ 
+static void hero_cast_bird(struct sprite *sprite) {
+  SPRITE->mode=HERO_MODE_BIRD;
+  sprite->y-=1.000; // Normally you get pushed off the hole after casting, but for bird no need to.
+  //TODO sound effect
+}
+ 
+static void hero_cast_turtle(struct sprite *sprite) {
+  SPRITE->mode=HERO_MODE_TURTLE;
+  //TODO sound effect
+}
+
+static void hero_end_transform(struct sprite *sprite) {
+  SPRITE->mode=HERO_MODE_FREE;
+  hero_rectify_position(sprite); // We might be transforming out of BIRD over water.
+  //TODO sound effect
+}
+
 /* Finish hole-spell mode.
  * Holes must have clearance below.
  */
@@ -57,21 +101,20 @@ static void hero_begin_hole(struct sprite *sprite,uint8_t tileid) {
 static void hero_end_hole(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_FREE;
   sprite->y+=1.000;
-  if (SPRITE->spellc>SPELL_LIMIT) {
-    fprintf(stderr,"Invalid hole spell, too long.\n");//TODO sound effect
-  } else {
-    char tmp[8];
-    int i=0; for (;i<SPRITE->spellc;i++) switch (SPRITE->spellv[i]) {
-      case DIR_W: tmp[i]='L'; break;
-      case DIR_E: tmp[i]='R'; break;
-      case DIR_N: tmp[i]='U'; break;
-      case DIR_S: tmp[i]='D'; break;
-      default: tmp[i]='?';
-    }
-    fprintf(stderr,"hole spell: %.*s\n",SPRITE->spellc,tmp);
-    //TODO Cast spell.
+  #define SPELLCHECK(tag,...) { \
+    const uint8_t spell[]={__VA_ARGS__}; \
+    if ((SPRITE->spellc==sizeof(spell))&&!memcmp(SPRITE->spellv,spell,sizeof(spell))) { \
+      SPRITE->spellc=0; \
+      hero_cast_##tag(sprite); \
+      return; \
+    } \
   }
+  SPELLCHECK(rabbit,DIR_E,DIR_E,DIR_S,DIR_E)
+  SPELLCHECK(bird,DIR_N,DIR_N,DIR_W,DIR_E,DIR_N)
+  SPELLCHECK(turtle,DIR_W,DIR_W,DIR_E,DIR_E,DIR_S)
+  #undef SPELLCHECK
   SPRITE->spellc=0;
+  //TODO repudiation
 }
 
 /* Throw fireball.
@@ -168,7 +211,7 @@ static void hero_check_free_spell(struct sprite *sprite) {
   SPELLCHECK(fireballl,DIR_W,DIR_W,DIR_W,DIR_W)
   SPELLCHECK(fireballr,DIR_E,DIR_E,DIR_E,DIR_E)
   SPELLCHECK(flower,DIR_S,DIR_S,DIR_N,DIR_S)
-  SPELLCHECK(disembody,DIR_N,DIR_N,DIR_W,DIR_E,DIR_S,DIR_N)
+  SPELLCHECK(disembody,DIR_N,DIR_W,DIR_E,DIR_S,DIR_N)
   #undef SPELLCHECK
 }
 
@@ -234,6 +277,9 @@ static void hero_action_begin(struct sprite *sprite) {
     case HERO_MODE_HOLE: hero_end_hole(sprite); break;
     case HERO_MODE_GHOST: hero_end_ghost(sprite); break;
     case HERO_MODE_FLOWER: hero_end_flower(sprite); break;
+    case HERO_MODE_RABBIT: hero_end_transform(sprite); break;
+    case HERO_MODE_BIRD: hero_end_transform(sprite); break;
+    case HERO_MODE_TURTLE: hero_end_transform(sprite); break;
   }
 }
  
@@ -280,11 +326,22 @@ void hero_quantized_motion(struct sprite *sprite,int nx,int ny) {
   // I don't expect to need the previous position, but it's available if we want.
   SPRITE->cellx=nx;
   SPRITE->celly=ny;
+  
+  // Some mode don't use quantized motion at all (and they probably shouldn't even call here).
+  switch (SPRITE->mode) {
+    case HERO_MODE_BIRD:
+    case HERO_MODE_GHOST:
+      return;
+  }
+  
   if ((nx>=0)&&(ny>=0)&&(nx<COLC)&&(ny<ROWC)) {
     uint8_t tileid=g.map->v[ny*COLC+nx];
     // Stump and Hole are in fixed positions on every tilesheet.
     // If we were doing things right, it would be a POI command on the map, but this is a 9-day game jam...
+    // TURTLE and RABBIT modes do land here; they mostly behave like FREE. They can go into holes, but not stumps.
     if ((tileid==0x2e)||(tileid==0x2f)) {
+      if (SPRITE->mode==HERO_MODE_RABBIT) return;
+      if (SPRITE->mode==HERO_MODE_TURTLE) return;
       hero_begin_tree(sprite,tileid);
     } else if ((tileid==0x3e)||(tileid==0x3f)) {
       hero_begin_hole(sprite,tileid);

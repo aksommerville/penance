@@ -19,17 +19,17 @@
 
 /* SPELLS
 Foot:
-  Fireball   LLLL or RRRR
   Flower     DDUD
-  Disembody  UULRDU
+  Fireball   LLLL or RRRR
+  Disembody  ULRDU
 Hole:
-  Rabbit
-  Bird
-  Turtle
+  Rabbit     RRDR
+  Bird       UULRU
+  Turtle     LLRRD
 Tree:
-  Teleport
-  Crow
-  Open
+  Teleport   DDD
+  Crow       URDLU
+  Open       LRLUU
 */
 
 #include <egg/egg.h>

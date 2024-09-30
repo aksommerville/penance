@@ -48,6 +48,24 @@ static void hero_animate(struct sprite *sprite,double elapsed) {
   } else if (SPRITE->mode==HERO_MODE_HURT) {
     sprite->tileid=0x10;
     sprite->xform=(SPRITE->facedir==DIR_E)?0:EGG_XFORM_XREV;
+    
+  // Bird.
+  } else if (SPRITE->mode==HERO_MODE_BIRD) {
+    sprite->tileid=0x70;
+    sprite->xform=(SPRITE->facedir==DIR_E)?0:EGG_XFORM_XREV;
+    if ((SPRITE->animclock-=elapsed)<=0.0) {
+      SPRITE->animclock+=0.200;
+      if (++(SPRITE->animframe)>=4) SPRITE->animframe=0;
+    }
+    switch (SPRITE->animframe) {
+      case 1: case 3: sprite->tileid+=1; break;
+      case 2: sprite->tileid+=2; break;
+    }
+    
+  // Hurt, as a bird.
+  } else if (SPRITE->mode==HERO_MODE_BIRDHURT) {
+    sprite->tileid=0x73;
+    sprite->xform=(SPRITE->facedir==DIR_E)?0:EGG_XFORM_XREV;
 
   // Hole spells.
   } else if (SPRITE->mode==HERO_MODE_HOLE) {
@@ -74,12 +92,22 @@ static void hero_animate(struct sprite *sprite,double elapsed) {
       if ((SPRITE->animframe+=1)>=3) SPRITE->animframe=0;
     }
     sprite->tileid=0x00+SPRITE->animframe;
+    switch (SPRITE->mode) {
+      case HERO_MODE_RABBIT: sprite->tileid+=0x60; break;
+      case HERO_MODE_BIRD: sprite->tileid+=0x70; break;
+      case HERO_MODE_TURTLE: sprite->tileid+=0x80; break;
+    }
     sprite->xform=(SPRITE->facedir==DIR_W)?EGG_XFORM_XREV:0;
     
   // Idle.
   } else {
     SPRITE->animclock=0.0;
     sprite->tileid=0;
+    switch (SPRITE->mode) {
+      case HERO_MODE_RABBIT: sprite->tileid+=0x60; break;
+      case HERO_MODE_BIRD: sprite->tileid+=0x70; break;
+      case HERO_MODE_TURTLE: sprite->tileid+=0x80; break;
+    }
     sprite->xform=(SPRITE->facedir==DIR_W)?EGG_XFORM_XREV:0;
   }
 }
@@ -88,9 +116,8 @@ static void hero_animate(struct sprite *sprite,double elapsed) {
  * Walking and spellclock.
  */
  
-static void hero_update_FREE(struct sprite *sprite,double elapsed) {
+static void hero_update_FREE(struct sprite *sprite,double elapsed,double walkspeed) {
   if (SPRITE->indx||SPRITE->indy) {
-    const double walkspeed=6.0; // tile/sec
     double dx=SPRITE->indx*elapsed*walkspeed;
     double dy=SPRITE->indy*elapsed*walkspeed;
     SPRITE->pvx=sprite->x;
@@ -159,7 +186,8 @@ static void hero_update_FIREBALL(struct sprite *sprite,double elapsed) {
  
 static void hero_update_HURT(struct sprite *sprite,double elapsed) {
   if ((SPRITE->hurtclock-=elapsed)<=0.0) {
-    SPRITE->mode=HERO_MODE_FREE;
+    if (SPRITE->mode==HERO_MODE_BIRDHURT) SPRITE->mode=HERO_MODE_BIRD;
+    else SPRITE->mode=HERO_MODE_FREE;
     if (SPRITE->indx<0) SPRITE->facedir=SPRITE->movedir=DIR_W;
     else if (SPRITE->indx>0) SPRITE->facedir=SPRITE->movedir=DIR_E;
     return;
@@ -179,10 +207,12 @@ static void hero_update_HURT(struct sprite *sprite,double elapsed) {
   }
   // And the motion stuff:
   hero_rectify_position(sprite);
-  int cellx=(int)sprite->x; if (sprite->x<0.0) cellx--;
-  int celly=(int)sprite->y; if (sprite->y<0.0) celly--;
-  if ((cellx!=SPRITE->cellx)||(celly!=SPRITE->celly)) {
-    hero_quantized_motion(sprite,cellx,celly);
+  if (SPRITE->mode!=HERO_MODE_BIRDHURT) {
+    int cellx=(int)sprite->x; if (sprite->x<0.0) cellx--;
+    int celly=(int)sprite->y; if (sprite->y<0.0) celly--;
+    if ((cellx!=SPRITE->cellx)||(celly!=SPRITE->celly)) {
+      hero_quantized_motion(sprite,cellx,celly);
+    }
   }
 }
 
@@ -193,6 +223,7 @@ static int hero_mode_vulnerable(int mode) {
   switch (mode) {
     case HERO_MODE_GHOST:
     case HERO_MODE_FLOWER:
+    case HERO_MODE_TURTLE:
       return 0;
   }
   return 1;
@@ -219,19 +250,25 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
       SPRITE->hurtdx=nx*16.0;
       SPRITE->hurtdy=ny*16.0;
       SPRITE->hurtclock=0.200;
-      SPRITE->mode=HERO_MODE_HURT;
+      if ((SPRITE->mode==HERO_MODE_BIRD)||(SPRITE->mode==HERO_MODE_BIRDHURT)) SPRITE->mode=HERO_MODE_BIRDHURT;
+      else SPRITE->mode=HERO_MODE_HURT;
       SPRITE->spellc=0;
       break;
     }
   }
 
   switch (SPRITE->mode) {
-    case HERO_MODE_FREE: hero_update_FREE(sprite,elapsed); break;
+    case HERO_MODE_FREE: hero_update_FREE(sprite,elapsed,6.0); break;
     case HERO_MODE_TREE:
     case HERO_MODE_HOLE: hero_update_spells(sprite,elapsed); break;
     case HERO_MODE_GHOST: hero_update_GHOST(sprite,elapsed); break;
     case HERO_MODE_FIREBALL: hero_update_FIREBALL(sprite,elapsed); break;
     case HERO_MODE_HURT: hero_update_HURT(sprite,elapsed); break;
+    // The transform modes are similar enough to FREE that we borrow it:
+    case HERO_MODE_RABBIT: hero_update_FREE(sprite,elapsed,10.0); break;
+    case HERO_MODE_BIRD: hero_update_FREE(sprite,elapsed,8.0); break;
+    case HERO_MODE_TURTLE: hero_update_FREE(sprite,elapsed,3.0); break;
+    case HERO_MODE_BIRDHURT: hero_update_HURT(sprite,elapsed); break;
   }
   hero_animate(sprite,elapsed);
 }

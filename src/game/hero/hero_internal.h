@@ -10,6 +10,10 @@
 #define HERO_MODE_FLOWER 4
 #define HERO_MODE_FIREBALL 5
 #define HERO_MODE_HURT 6
+#define HERO_MODE_RABBIT 7
+#define HERO_MODE_BIRD 8
+#define HERO_MODE_TURTLE 9
+#define HERO_MODE_BIRDHURT 10
 
 struct sprite_hero {
   struct sprite hdr;

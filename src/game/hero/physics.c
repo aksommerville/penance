@@ -1,5 +1,60 @@
 #include "hero_internal.h"
 
+/* Collision panic can and does happen.
+ * Call this to select a new position in emergencies only, allowing anywhere on the current map.
+ * Mostly this happens when the bird transforms back into Dot over water, or you get hurt as a bird.
+ */
+ 
+static uint8_t ph_hazards[COLC*ROWC]={0};
+ 
+static int hero_emergency_reposition_rect(struct sprite *sprite,int x,int y,int w,int h) {
+  if (x<0) { w+=x; x=0; }
+  if (y<0) { h+=y; y=0; }
+  if (x>COLC-w) w=COLC-x;
+  if (y>ROWC-h) h=ROWC-y;
+  const uint8_t *map=g.map->v+y*COLC+x;
+  const uint8_t *hazmap=ph_hazards+y*COLC+x;
+  int yi=h,row=y;
+  for (;yi-->0;row++,map+=COLC,hazmap+=COLC) {
+    const uint8_t *cellp=map;
+    const uint8_t *hazp=hazmap;
+    int xi=w,col=x;
+    for (;xi-->0;col++,cellp++,hazp++) {
+      if (*hazp) continue;
+      uint8_t prop=g.map->tileprops[*cellp];
+      if (prop) continue;
+      //fprintf(stderr,"Emergency reposition to (%d,%d)\n",col,row);
+      sprite->x=col+0.5;
+      sprite->y=row+0.5;
+      return 1;
+    }
+  }
+  return 0;
+}
+ 
+static void hero_emergency_reposition(struct sprite *sprite) {
+  memset(ph_hazards,0,COLC*ROWC);
+  int spri=GRP(HAZARD)->spritec;
+  while (spri-->0) {
+    const struct sprite *hazard=GRP(HAZARD)->spritev[spri];
+    int x=(int)hazard->x,y=(int)hazard->y;
+    if ((x>=0)&&(y>=0)&&(x<COLC)&&(y<ROWC)) ph_hazards[y*COLC+x]=1;
+  }
+  int x=(int)sprite->x,y=(int)sprite->y;
+  int radius=1;
+  for (;;radius++) {
+    int w=(radius<<1)+1;
+    if (w>=COLC) {
+      //fprintf(stderr,"%s DOUBLE PANIC!\n",__func__);
+      return;
+    }
+    if (hero_emergency_reposition_rect(sprite,x-radius,y-radius,w,1)) return;
+    if (hero_emergency_reposition_rect(sprite,x-radius,y+radius,w,1)) return;
+    if (hero_emergency_reposition_rect(sprite,x-radius,y-radius+1,1,w-2)) return;
+    if (hero_emergency_reposition_rect(sprite,x+radius,y-radius+1,1,w-2)) return;
+  }
+}
+
 /* Rectify position in place.
  */
  
@@ -37,6 +92,8 @@ void hero_rectify_position(struct sprite *sprite) {
     int col=cola; for (;col<=colz;col++,colp++) {
       uint8_t prop=g.map->tileprops[*colp];
       switch (SPRITE->mode) { // Ghosts and birds can pass over holes.
+        case HERO_MODE_BIRD:
+        case HERO_MODE_BIRDHURT:
         case HERO_MODE_GHOST: {
             if (prop==2) continue;
           } break;
@@ -52,14 +109,20 @@ void hero_rectify_position(struct sprite *sprite) {
   }
   if (!collision) return;
   
+  /* If we didn't examine a full set of 4 tiles, copy bits over.
+   */
+  if (cola==colz) collision=(collision|((collision&10)>>1)|((collision&5)<<1))&15;
+  if (rowa==rowz) collision=(collision|(collision>>2)|(collision<<2))&15;
+  
   /* If all 4 bits are set, panic. Restore the last known position.
    * If there's exactly one bit clear, snuggle into the corner, obviously.
    */
   switch (collision) {
     case 0x0f: {
-        fprintf(stderr,"%s:%d: Collision panic\n",__FILE__,__LINE__);
+        //fprintf(stderr,"%s:%d: Collision panic\n",__FILE__,__LINE__);
         sprite->x=SPRITE->pvx;
         sprite->y=SPRITE->pvy;
+        hero_emergency_reposition(sprite);
       } return;
     case 0x0e: { // NW
         sprite->x=(double)(cola+1)-RRADIUS;
