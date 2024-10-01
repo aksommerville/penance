@@ -29,10 +29,25 @@ static void hero_cast_crow(struct sprite *sprite) {
 }
 
 /* The Spell of Opening.
+ * It's also the Spell of Closing. Look for 4 specific tiles (0xe0,0xe1,0xf0,0xf1) and toggle them with their neighbors +2.
+ * Obviously this is a poor way to do things, but I'm on a tight schedule.
  */
  
 static void hero_cast_open(struct sprite *sprite) {
-  fprintf(stderr,"TODO %s\n",__func__);
+  uint8_t *p=g.map->v;
+  int i=COLC*ROWC;
+  for (;i-->0;p++) {
+    switch (*p) {
+      case 0xe0: *p=0xe2; break;
+      case 0xe1: *p=0xe3; break;
+      case 0xe2: *p=0xe0; break;
+      case 0xe3: *p=0xe1; break;
+      case 0xf0: *p=0xf2; break;
+      case 0xf1: *p=0xf3; break;
+      case 0xf2: *p=0xf0; break;
+      case 0xf3: *p=0xf1; break;
+    }
+  }
 }
 
 /* Finish tree-spell mode.
@@ -296,7 +311,7 @@ void sprite_hero_input(struct sprite *sprite,int input,int pvinput) {
   /* Apply or lift blackout, if warranted.
    */
   if (SPRITE->input_blackout) {
-    if (input&~EGG_BTN_CD) input=0; // Still waiting.
+    if (input&(EGG_BTN_LEFT|EGG_BTN_RIGHT|EGG_BTN_UP|EGG_BTN_DOWN)) input=0; // Still waiting.
     else SPRITE->input_blackout=0; // OK proceed.
   }
   

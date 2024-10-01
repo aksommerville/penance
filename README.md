@@ -13,7 +13,7 @@ Week:
 - [ ] Tree stumps, for casting environmental spells.
 - - [x] Teleport.
 - - [ ] Summon guidance crow.
-- - [ ] Spell of Opening.
+- - [x] Spell of Opening.
 - [ ] Sound effects.
 - [ ] Allow hazard sprites to indicate explicit rejection direction.
 - [ ] Fireworks when transforming to/from animal.
