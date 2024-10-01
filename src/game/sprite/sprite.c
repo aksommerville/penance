@@ -53,14 +53,13 @@ struct sprite *sprite_spawn_for_map(int x,int y,const uint8_t *def,int defc) {
   }
   return sprite_spawn_with_type(
     (double)x+0.5,(double)y+0.5,
-    type,0,0,def,defc
+    type,def,defc
   );
 }
 
 struct sprite *sprite_spawn_with_type(
   double x,double y,
   const struct sprite_type *type,
-  const uint8_t *arg,int argc,
   const uint8_t *def,int defc
 ) {
   struct sprite *sprite=sprite_new(type);
@@ -107,7 +106,7 @@ struct sprite *sprite_spawn_with_type(
     }
   }
   
-  if (type->init&&(type->init(sprite,arg,argc,def,defc)<0)) {
+  if (type->init&&(type->init(sprite,def,defc)<0)) {
     sprite_kill_now(sprite);
     return 0;
   }

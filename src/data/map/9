@@ -4,7 +4,7 @@ a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
 a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
 a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
 a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
-a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
+a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4
 a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
 a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
 a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
@@ -12,3 +12,6 @@ a4a4a4a4a4a4a4a4a4f4f4a4a4a4a4a4a4a4a4a4
 
 image outdoors
 location 16 14
+sprite @5,4 candle1
+sprite @7,4 candle2
+sprite @9,4 candle3

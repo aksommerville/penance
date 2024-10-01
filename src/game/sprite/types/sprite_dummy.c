@@ -7,7 +7,7 @@ struct sprite_dummy {
 #define SPRITE ((struct sprite_dummy*)sprite)
 
 //static void _dummy_del(struct sprite *sprite)
-//static int _dummy_init(struct sprite *sprite,const uint8_t *arg,int argc,const uint8_t *def,int defc)
+//static int _dummy_init(struct sprite *sprite,const uint8_t *def,int defc)
 //static void _dummy_update(struct sprite *sprite,double elapsed)
 //static void _dummy_render(struct sprite *sprite,int16_t addx,int16_t addy)
 

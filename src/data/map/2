@@ -12,3 +12,6 @@
 
 image outdoors
 location 17 16
+sprite @17,7 candle1
+sprite @17,8 candle2
+sprite @17,9 candle3

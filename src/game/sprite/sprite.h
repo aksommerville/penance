@@ -26,10 +26,10 @@ struct sprite_type {
   int objlen;
   void (*del)(struct sprite *sprite);
   
-  /* (arg) from the spawn point, and (def) from the resource.
-   * Generic fields from (def), and location, are already applied when this gets called.
+  /* Generic fields from (def), and location, are already applied when this gets called.
+   * I'm not providing a means to pass data via spawn points. Make a separate sprite resource for everything.
    */
-  int (*init)(struct sprite *sprite,const uint8_t *arg,int argc,const uint8_t *def,int defc);
+  int (*init)(struct sprite *sprite,const uint8_t *def,int defc);
   
   void (*update)(struct sprite *sprite,double elapsed);
   
@@ -65,7 +65,6 @@ struct sprite *sprite_spawn_for_map(
 struct sprite *sprite_spawn_with_type(
   double x,double y,
   const struct sprite_type *type,
-  const uint8_t *arg,int argc,
   const uint8_t *def,int defc
 );
 
@@ -121,6 +120,7 @@ extern const struct sprite_type sprite_type_hero;
 extern const struct sprite_type sprite_type_fleshpuppet;
 extern const struct sprite_type sprite_type_fireball;
 extern const struct sprite_type sprite_type_bonfire;
+extern const struct sprite_type sprite_type_candle;
 
 // ids get assigned in this order. Use the same as the ^ declarations above.
 #define FOR_EACH_SPRITE_TYPE \
@@ -128,11 +128,13 @@ extern const struct sprite_type sprite_type_bonfire;
   _(hero) \
   _(fleshpuppet) \
   _(fireball) \
-  _(bonfire)
+  _(bonfire) \
+  _(candle)
 
 const struct sprite_type *sprite_type_by_id(int id);
 
 void sprite_fireball_set_direction(struct sprite *sprite,double dx,double dy);
 void sprite_bonfire_set_ttl(struct sprite *sprite,double ttl);
+int sprite_candle_light(struct sprite *sprite); // 0 if invalid or already lit
 
 #endif

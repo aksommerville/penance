@@ -14,6 +14,8 @@
 #define DIR_E 0x08
 #define DIR_S 0x02
 
+#define CANDLE_COUNT 3
+
 // Spells are cast into a circular buffer this long.
 #define SPELL_LIMIT 8
 
@@ -57,6 +59,7 @@ extern struct globals {
   int mapid_load_soon;
   struct menu *menuv[MENU_STACK_LIMIT];
   int menuc;
+  uint8_t candlev[CANDLE_COUNT]; // Not going to generalize global state, there's so little of it.
 } g;
 
 int penance_load_map(int mapid);

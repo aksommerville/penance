@@ -22,6 +22,7 @@ static void _fireball_update(struct sprite *sprite,double elapsed) {
     sprite_kill_later(sprite);
     return;
   }
+  
   // If we cross a tile of physics 3 "flammable", replace it with zero, kill me, and produce a time-limited bonfire.
   // Don't allow burning on the outermost column or row. Physics doesn't read across map gaps, so that would lead to flicker problems
   // where you could walk into a neighbor map, directly into a wall.
@@ -32,7 +33,7 @@ static void _fireball_update(struct sprite *sprite,double elapsed) {
     if (prop==3) {
       g.map->v[y*COLC+x]=0;
       sprite_kill_later(sprite);
-      struct sprite *bonfire=sprite_spawn_with_type(x+0.5,y+0.5,&sprite_type_bonfire,0,0,0,0);
+      struct sprite *bonfire=sprite_spawn_with_type(x+0.5,y+0.5,&sprite_type_bonfire,0,0);
       if (bonfire) {
         bonfire->imageid=sprite->imageid;
         bonfire->tileid=0x24;
@@ -41,6 +42,19 @@ static void _fireball_update(struct sprite *sprite,double elapsed) {
       //TODO sound effect
       return;
     }
+  }
+  
+  // If we touch a candle sprite, light it and stop.
+  int i=GRP(VISIBLE)->spritec;
+  while (i-->0) {
+    struct sprite *candle=GRP(VISIBLE)->spritev[i];
+    if (candle->type!=&sprite_type_candle) continue;
+    double dx=sprite->x-candle->x; if (dx>1.0) continue;
+    double dy=sprite->y-candle->y; if (dy>1.0) continue;
+    if (dx*dx+dy*dy>1.0) continue;
+    if (!sprite_candle_light(candle)) continue;
+    sprite_kill_later(sprite);
+    return;
   }
 }
 

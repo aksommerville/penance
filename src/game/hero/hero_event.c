@@ -139,7 +139,7 @@ static void hero_end_hole(struct sprite *sprite) {
 static void hero_cast_fireball(struct sprite *sprite,double dx) {
   SPRITE->mode=HERO_MODE_FIREBALL;
   SPRITE->spellclock=0.500;
-  struct sprite *fireball=sprite_spawn_with_type(sprite->x+dx,sprite->y,&sprite_type_fireball,0,0,0,0);
+  struct sprite *fireball=sprite_spawn_with_type(sprite->x+dx,sprite->y,&sprite_type_fireball,0,0);
   if (!fireball) return;
   //TODO sound effect
   fireball->imageid=sprite->imageid;
@@ -177,7 +177,7 @@ static void hero_cast_disembody(struct sprite *sprite) {
   //TODO sound effect
   SPRITE->mode=HERO_MODE_GHOST;
   sprite->layer++;
-  struct sprite *fleshpuppet=sprite_spawn_with_type(sprite->x,sprite->y,&sprite_type_fleshpuppet,0,0,0,0);
+  struct sprite *fleshpuppet=sprite_spawn_with_type(sprite->x,sprite->y,&sprite_type_fleshpuppet,0,0);
   if (fleshpuppet) {
     sprite_group_add(GRP(UPDATE),fleshpuppet);
     sprite_group_add(GRP(VISIBLE),fleshpuppet);
@@ -372,7 +372,7 @@ void hero_quantized_motion(struct sprite *sprite,int nx,int ny) {
 void hero_map_changed(struct sprite *sprite) {
   if (SPRITE->mode==HERO_MODE_GHOST) {
     if (g.map->rid==SPRITE->ghost_mapid) {
-      struct sprite *fleshpuppet=sprite_spawn_with_type(SPRITE->ghost_x,SPRITE->ghost_y,&sprite_type_fleshpuppet,0,0,0,0);
+      struct sprite *fleshpuppet=sprite_spawn_with_type(SPRITE->ghost_x,SPRITE->ghost_y,&sprite_type_fleshpuppet,0,0);
       if (fleshpuppet) {
         sprite_group_add(GRP(UPDATE),fleshpuppet);
         sprite_group_add(GRP(VISIBLE),fleshpuppet);

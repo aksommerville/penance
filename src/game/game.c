@@ -24,7 +24,7 @@ static int penance_load_map_object(struct map *map) {
           if (GRP(HERO)->spritec) break;
           double x=(double)arg[0]+0.5;
           double y=(double)arg[1]+0.5;
-          struct sprite *sprite=sprite_spawn_with_type(x,y,&sprite_type_hero,0,0,0,0);
+          struct sprite *sprite=sprite_spawn_with_type(x,y,&sprite_type_hero,0,0);
           if (!sprite) return -1;
         } break;
       case 0x23: { // song

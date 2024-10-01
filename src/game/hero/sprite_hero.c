@@ -11,7 +11,7 @@ static void _hero_del(struct sprite *sprite) {
  * We do it all here.
  */
  
-static int _hero_init(struct sprite *sprite,const uint8_t *arg,int argc,const uint8_t *def,int defc) {
+static int _hero_init(struct sprite *sprite,const uint8_t *def,int defc) {
   sprite->imageid=RID_image_hero;
   sprite->tileid=0x00;
   sprite->xform=0;

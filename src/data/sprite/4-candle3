@@ -1,0 +1,5 @@
+type candle
+image hero
+tileid 0x28
+groups UPDATE,VISIBLE
+0x3f 2u16

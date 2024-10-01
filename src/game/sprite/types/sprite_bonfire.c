@@ -9,7 +9,7 @@ struct sprite_bonfire {
 
 #define SPRITE ((struct sprite_bonfire*)sprite)
 
-static int _bonfire_init(struct sprite *sprite,const uint8_t *arg,int argc,const uint8_t *def,int defc) {
+static int _bonfire_init(struct sprite *sprite,const uint8_t *def,int defc) {
   if (sprite_group_add(GRP(VISIBLE),sprite)<0) return -1;
   if (sprite_group_add(GRP(UPDATE),sprite)<0) return -1;
   if (sprite_group_add(GRP(HAZARD),sprite)<0) return -1;

@@ -433,6 +433,52 @@ static int sprite_cmd_groups(struct sr_encoder *dst,const char *src,int srcc,con
   return 0;
 }
 
+/* Unknown sprite command.
+ * We can do generic ones with a numeric opcode, they work exactly the same as map commands then.
+ */
+ 
+static int sprite_cmd_generic(
+  struct sr_encoder *dst,
+  const char *kw,int kwc,
+  const char *arg,int argc,
+  const char *srcpath,int lineno
+) {
+  int argp=0,opcode;
+  if ((sr_int_eval(&opcode,kw,kwc)<2)||(opcode<0)||(opcode>0xff)) {
+    fprintf(stderr,"%s:%d: Unknown sprite command '%.*s'. Add around %s:%d if this is new.\n",srcpath,lineno,kwc,kw,__FILE__,__LINE__);
+    return -2;
+  }
+  if (sr_encode_u8(dst,opcode)<0) return -1;
+  int lenp=dst->c;
+  if ((opcode>=0xe0)&&(opcode<0xf0)) { // explicit length; emit placeholder.
+    if (sr_encode_u8(dst,0)<0) return -1;
+  }
+  while (argp<argc) {
+    const char *token=arg+argp;
+    int tokenc=0;
+    while ((argp<argc)&&((unsigned char)arg[argp++]>0x20)) tokenc++;
+    while ((argp<argc)&&((unsigned char)arg[argp]<=0x20)) argp++;
+    int err=map_arg_compile(dst,opcode,-1,token,tokenc,srcpath,lineno);
+    if (err<0) return err;
+  }
+  int cmdlen=dst->c-lenp;
+  if ((opcode>=0xe0)&&(opcode<0xf0)) {
+    cmdlen--;
+    if (cmdlen>0xff) {
+      fprintf(stderr,"%s:%d: Invalid command length %d\n",srcpath,lineno,cmdlen);
+      return -2;
+    }
+    ((uint8_t*)dst->v)[lenp]=cmdlen;
+  } else {
+    int expect=map_cmdlen(opcode);
+    if (cmdlen!=expect) {
+      fprintf(stderr,"%s:%d: Sprite command 0x%02x expects %d bytes parameter, found %d\n",srcpath,lineno,opcode,expect,cmdlen);
+      return -2;
+    }
+  }
+  return 0;
+}
+
 /* Compile one sprite.
  */
  
@@ -455,11 +501,7 @@ static int digest_sprite(struct sr_encoder *dst,const char *src,int srcc,const c
     else if ((kwc==5)&&!memcmp(kw,"image",5)) err=sprite_cmd_image(dst,line+linep,linec-linep,srcpath,lineno);
     else if ((kwc==6)&&!memcmp(kw,"tileid",6)) err=sprite_cmd_tileid(dst,line+linep,linec-linep,srcpath,lineno);
     else if ((kwc==6)&&!memcmp(kw,"groups",6)) err=sprite_cmd_groups(dst,line+linep,linec-linep,srcpath,lineno);
-    
-    else {
-      fprintf(stderr,"%s:%d: Unknown sprite command '%.*s'. Add around %s:%d if this is new.\n",srcpath,lineno,kwc,kw,__FILE__,__LINE__);
-      return -2;
-    }
+    else err=sprite_cmd_generic(dst,kw,kwc,line+linep,linec-linep,srcpath,lineno);
     if (err<0) {
       if (err!=-2) fprintf(stderr,"%s:%d: Unspecified error processing '%.*s' sprite command.\n",srcpath,lineno,kwc,kw);
       return -2;
