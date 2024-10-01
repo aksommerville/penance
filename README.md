@@ -10,15 +10,13 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 
 Week:
 - [x] Candles to light.
+- [ ] Editing map commands is broken, they aren't saving.
+- [ ] Don't put anything burnable on the borders.
 - [ ] Sound effects.
 - [ ] Allow hazard sprites to indicate explicit rejection direction.
 - [ ] Fireworks when transforming to/from animal.
 - [ ] Challenges:
 - - [ ] Wind that toggles on and off, so you have to turn into a flower when it's on.
-- - [ ] Aiming cannon. Turn into a ghost and make it aim at a switch.
-- - [ ] Fly across water. Teach bird spell.
-- - [ ] Cross wall. Teach ghost spell.
-- - [ ] Locked door, but not the one on the temple.
 - - [ ] Bullet hell that only a turtle can get thru alive.
 - - [ ] Multiple switches that you can't get between them fast enough, unless you're a rabbit. Introduce the switches first with an easier challenge.
 
@@ -44,3 +42,20 @@ Stretch goals or uncertain:
 - [ ] Needs an extra click to start on Itch, what gives?
 
 - [ ] fleshpuppet should take damage while ghost
+
+## Recommended Course
+
+- crow. Should be the first thing you learn, otherwise who can you ask.
+- fireball. Must be before candles. Put a positioned spell first.
+- open. Good to be early, so you can enter the temple and see your progress.
+- candle1 WEST
+- rabbit
+- turtle
+- candle2
+- teleport. Teach wherever candle2 is. The part leading to candle3 is not accessible on foot.
+- bird
+- ghost
+- flower
+- candle3
+- Temple: Wrap-up
+
