@@ -13,4 +13,6 @@ void hero_map_changed(struct sprite *sprite);
 
 int hero_is_human();
 
+void hero_apply_wind(struct sprite *sprite,double dx);
+
 #endif

@@ -79,3 +79,11 @@ void sprite_fireball_set_direction(struct sprite *sprite,double dx,double dy) {
   else if (dy>0.0) sprite->xform=EGG_XFORM_SWAP;
   else if (dy<0.0) sprite->xform=EGG_XFORM_SWAP|EGG_XFORM_XREV;
 }
+
+/* Blow out.
+ */
+ 
+void sprite_fireball_blow_out(struct sprite *sprite) {
+  //TODO animate?
+  sprite_kill_later(sprite);
+}

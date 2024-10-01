@@ -122,6 +122,7 @@ extern const struct sprite_type sprite_type_fireball;
 extern const struct sprite_type sprite_type_bonfire;
 extern const struct sprite_type sprite_type_candle;
 extern const struct sprite_type sprite_type_terminator;
+extern const struct sprite_type sprite_type_wind;
 
 // ids get assigned in this order. Use the same as the ^ declarations above.
 #define FOR_EACH_SPRITE_TYPE \
@@ -131,11 +132,13 @@ extern const struct sprite_type sprite_type_terminator;
   _(fireball) \
   _(bonfire) \
   _(candle) \
-  _(terminator)
+  _(terminator) \
+  _(wind)
 
 const struct sprite_type *sprite_type_by_id(int id);
 
 void sprite_fireball_set_direction(struct sprite *sprite,double dx,double dy);
+void sprite_fireball_blow_out(struct sprite *sprite);
 void sprite_bonfire_set_ttl(struct sprite *sprite,double ttl);
 int sprite_candle_light(struct sprite *sprite); // 0 if invalid or already lit
 

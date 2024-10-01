@@ -36,7 +36,16 @@ void hero_animate(struct sprite *sprite,double elapsed) {
     
   // Flower.
   } else if (SPRITE->mode==HERO_MODE_FLOWER) {
-    sprite->tileid=0x21;
+    if (SPRITE->wind) {
+      SPRITE->wind=0;
+      if ((SPRITE->animclock-=elapsed)<=0) {
+        SPRITE->animclock+=0.150;
+        if (++(SPRITE->animframe)>=2) SPRITE->animframe=0;
+      }
+      sprite->tileid=0x14+SPRITE->animframe;
+    } else {
+      sprite->tileid=0x21;
+    }
     sprite->xform=0;
     
   // Fireball.
@@ -292,7 +301,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     case HERO_MODE_HURT: hero_update_HURT(sprite,elapsed); break;
     // The transform modes are similar enough to FREE that we borrow it:
     case HERO_MODE_RABBIT: hero_update_FREE(sprite,elapsed,10.0); break;
-    case HERO_MODE_BIRD: hero_update_FREE(sprite,elapsed,8.0); break;
+    case HERO_MODE_BIRD: hero_update_FREE(sprite,elapsed,6.0); break;
     case HERO_MODE_TURTLE: hero_update_FREE(sprite,elapsed,3.0); break;
     case HERO_MODE_BIRDHURT: hero_update_HURT(sprite,elapsed); break;
   }
@@ -380,4 +389,26 @@ int hero_is_human() {
       return 1;
   }
   return 0;
+}
+
+/* Apply wind.
+ */
+ 
+void hero_apply_wind(struct sprite *sprite,double dx) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return;
+  SPRITE->wind=1;
+  if (SPRITE->mode==HERO_MODE_FLOWER) return;
+  if (SPRITE->mode==HERO_MODE_HURT) return;
+  if (SPRITE->mode==HERO_MODE_BIRDHURT) return;
+  if (SPRITE->mode==HERO_MODE_HOLE) return;
+  if (SPRITE->mode==HERO_MODE_TREE) SPRITE->mode=HERO_MODE_FREE;
+  sprite->x+=dx;
+  hero_rectify_position(sprite);
+  if ((SPRITE->mode!=HERO_MODE_BIRD)&&(SPRITE->mode!=HERO_MODE_GHOST)) {
+    int cellx=(int)sprite->x; if (sprite->x<0.0) cellx--;
+    int celly=(int)sprite->y; if (sprite->y<0.0) celly--;
+    if ((cellx!=SPRITE->cellx)||(celly!=SPRITE->celly)) {
+      hero_quantized_motion(sprite,cellx,celly);
+    }
+  }
 }

@@ -11,12 +11,13 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 Required:
 - [x] Initial keystrokes can get lost during the hello fade-out.
 - [ ] Challenges:
-- - [ ] Wind that toggles on and off, so you have to turn into a flower when it's on.
+- - [x] Wind that toggles on and off, so you have to turn into a flower when it's on.
 - - [ ] Bullet hell that only a turtle can get thru alive.
 - - [ ] Multiple switches that you can't get between them fast enough, unless you're a rabbit. Introduce the switches first with an easier challenge.
 - [ ] Temple interior.
 - [x] Use the bridge somewhere, it's a shame not to.
 - [ ] Don't put anything burnable on the borders.
+- [x] Educate player about respell somehow.
 - [ ] Sound effects.
 - [ ] Allow hazard sprites to indicate explicit rejection direction.
 - [ ] Fireworks when transforming to/from animal.

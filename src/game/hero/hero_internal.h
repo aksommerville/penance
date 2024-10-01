@@ -33,6 +33,8 @@ struct sprite_hero {
   double ghost_x,ghost_y;
   double hurtdx,hurtdy;
   double hurtclock;
+  int respell; // 0,HERO_MODE_GHOST,HERO_MODE_FIREBALL,HERO_MODE_FLOWER. Last foot spell cast.
+  int wind;
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)

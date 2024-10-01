@@ -152,6 +152,7 @@ static void hero_cast_fireball(struct sprite *sprite,double dx) {
   } else {
     SPRITE->facedir=DIR_W;
   }
+  SPRITE->respell=HERO_MODE_FIREBALL;
 }
  
 static void hero_cast_fireballl(struct sprite *sprite) { hero_cast_fireball(sprite,-1.0); }
@@ -162,6 +163,10 @@ static void hero_cast_fireballr(struct sprite *sprite) { hero_cast_fireball(spri
  
 static void hero_cast_flower(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_FLOWER;
+  SPRITE->respell=HERO_MODE_FLOWER;
+  SPRITE->wind=0;
+  SPRITE->animclock=0.0;
+  SPRITE->animframe=0;
   //TODO sound effect
 }
 
@@ -187,6 +192,7 @@ static void hero_cast_disembody(struct sprite *sprite) {
   SPRITE->ghost_mapid=g.map->rid;
   SPRITE->ghost_x=sprite->x;
   SPRITE->ghost_y=sprite->y;
+  SPRITE->respell=HERO_MODE_GHOST;
 }
 
 /* End ghost mode (by pressing South).
@@ -289,7 +295,11 @@ static void hero_dpad(struct sprite *sprite,int8_t dx,int8_t dy) {
  
 static void hero_action_begin(struct sprite *sprite) {
   switch (SPRITE->mode) {
-    case HERO_MODE_FREE: break; // Do whatever the button does normally... Nothing? There aren't items or anything.
+    case HERO_MODE_FREE: switch (SPRITE->respell) {
+        case HERO_MODE_FLOWER: hero_cast_flower(sprite); break;
+        case HERO_MODE_FIREBALL: hero_cast_fireball(sprite,(SPRITE->facedir==DIR_W)?-1.0:1.0); break;
+        case HERO_MODE_GHOST: hero_cast_disembody(sprite); break;
+      } break;
     case HERO_MODE_TREE: hero_end_tree(sprite); break;
     case HERO_MODE_HOLE: hero_end_hole(sprite); break;
     case HERO_MODE_GHOST: hero_end_ghost(sprite); break;
