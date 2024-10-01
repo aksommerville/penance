@@ -35,12 +35,14 @@ void menu_pop(struct menu *menu) {
       g.menuc--;
       memmove(g.menuv+i,g.menuv+i+1,sizeof(void*)*(g.menuc-i));
       menu_del(menu);
-      return;
+      break;
     }
   } else if (g.menuc) {
     g.menuc--;
     menu_del(g.menuv[g.menuc]);
   }
+  // Force input to look fresh at the next poll.
+  g.pvinput=0;
 }
 
 /* Create and push.

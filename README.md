@@ -8,27 +8,21 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 
 ## TODO
 
-Week:
-- [x] Candles to light.
-- [x] Editing map commands is broken, they aren't saving.
-- [ ] Don't put anything burnable on the borders.
-- [ ] Sound effects.
-- [ ] Allow hazard sprites to indicate explicit rejection direction.
-- [ ] Fireworks when transforming to/from animal.
+Required:
+- [x] Initial keystrokes can get lost during the hello fade-out.
 - [ ] Challenges:
 - - [ ] Wind that toggles on and off, so you have to turn into a flower when it's on.
 - - [ ] Bullet hell that only a turtle can get thru alive.
 - - [ ] Multiple switches that you can't get between them fast enough, unless you're a rabbit. Introduce the switches first with an easier challenge.
-- [ ] Initial keystrokes can get lost during the hello fade-out.
-
-Saturday:
-- [ ] Monsters.
-- [x] Goals.
-- [ ] Crow. Have the whole flow finished first.
-
-Final Sunday:
-- [x] Finale.
+- [ ] Temple interior.
+- [x] Use the bridge somewhere, it's a shame not to.
+- [ ] Don't put anything burnable on the borders.
+- [ ] Sound effects.
+- [ ] Allow hazard sprites to indicate explicit rejection direction.
+- [ ] Fireworks when transforming to/from animal.
+- [ ] Crow. Or maybe drop it. Is there any need for a crow's assistance?
 - [ ] Hello: Roll in credits after a delay?
+- [ ] Needs an extra click to start on Itch, what gives?
 - [ ] Pics and such for Itch page.
 - [ ] Open Itch page to public. Currently password "dot-in-a-habit"
 
@@ -40,7 +34,6 @@ Stretch goals or uncertain:
 - - [ ] Drums for Doors Without Walls.
 - - [ ] Review instruments again, after I've heard them all a few times.
 - [ ] Jammio cameo
-- [ ] Needs an extra click to start on Itch, what gives?
 - [ ] fleshpuppet should take damage while ghost. There's very few places where damage is possible, I don't think this matters.
 
 ## Recommended Course
