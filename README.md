@@ -10,7 +10,7 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 
 Week:
 - [x] Candles to light.
-- [ ] Editing map commands is broken, they aren't saving.
+- [x] Editing map commands is broken, they aren't saving.
 - [ ] Don't put anything burnable on the borders.
 - [ ] Sound effects.
 - [ ] Allow hazard sprites to indicate explicit rejection direction.
