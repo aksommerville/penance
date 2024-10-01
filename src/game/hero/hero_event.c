@@ -17,7 +17,8 @@ static void hero_begin_tree(struct sprite *sprite,uint8_t tileid) {
  */
  
 static void hero_cast_teleport(struct sprite *sprite) {
-  fprintf(stderr,"TODO %s\n",__func__);
+  menu_push(&menu_type_teleport);
+  sprite->y-=1.500; // Stay on the stump. Mode has changed to FREE and that's OK; hero_animate() won't have been called.
 }
 
 /* Summon the helpful crow.
@@ -181,6 +182,7 @@ static void hero_end_ghost(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_FREE;
   sprite->x=SPRITE->ghost_x;
   sprite->y=SPRITE->ghost_y;
+  sprite->layer--;
   if (SPRITE->ghost_mapid==g.map->rid) { // Already on the right map, great. Just kill the fleshpuppet.
     int i=GRP(KEEPALIVE)->spritec;
     while (i-->0) {

@@ -51,7 +51,22 @@ static int penance_load_map_object(struct map *map) {
 int penance_load_map(int mapid) {
   struct map *map=map_by_id(mapid);
   if (!map) return -1;
-  return penance_load_map_object(map);
+  
+  struct sprite *hero=0;
+  if (GRP(HERO)->spritec>=1) {
+    hero=GRP(HERO)->spritev[0];
+    if (sprite_ref(hero)<0) return -1;
+  }
+  sprite_group_remove(GRP(KEEPALIVE),hero);
+  sprite_group_kill(GRP(KEEPALIVE));
+  sprite_group_add(GRP(KEEPALIVE),hero);
+  sprite_del(hero);
+  
+  if (penance_load_map_object(map)<0) return -1;
+  
+  if (hero) hero_map_changed(hero);
+  
+  return 0;
 }
 
 int penance_navigate(int dx,int dy) {

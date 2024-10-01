@@ -3,11 +3,18 @@
 /* Globals.
  */
  
+#define STUMP_LIMIT 8
+ 
 static const uint8_t tileprops_default[256]={0};
  
 static struct {
   const uint8_t *tilesheetv[TILESHEET_LIMIT]; // sparse, indexed by rid
   struct map *mapv[LONG_LIMIT*LAT_LIMIT]; // sparse
+  int x,y,w,h; // World extent in (mapv).
+  struct stump {
+    int x,y; // Map position in world. We don't care about the stump's position in map.
+  } stumpv[STUMP_LIMIT];
+  int stumpc;
   struct rom_res *spritev;
   int spritec,spritea;
 } maps={0};
@@ -28,6 +35,7 @@ static int maps_add_resource(const uint8_t *src,int srcc,int rid) {
   map->tileprops=tileprops_default;
   memcpy(map->v,src,COLC*ROWC);
   
+  // Read commands. Only thing we actually care about at this time is 0x22 location.
   struct map_command_reader reader;
   map_command_reader_init_map(&reader,map);
   const uint8_t *arg;
@@ -51,6 +59,44 @@ static int maps_add_resource(const uint8_t *src,int srcc,int rid) {
   map->x=x;
   map->y=y;
   maps.mapv[y*LONG_LIMIT+x]=map;
+  
+  // Extend global bounds if needed.
+  if (maps.w) {
+    if (x<maps.x) {
+      maps.w+=maps.x-x;
+      maps.x=x;
+    } else if (x>=maps.x+maps.w) {
+      maps.w=x+1-maps.x;
+    }
+    if (y<maps.y) {
+      maps.h+=maps.y-y;
+      maps.y=y;
+    } else if (y>=maps.y+maps.h) {
+      maps.h=y+1-maps.y;
+    }
+  } else {
+    maps.x=x;
+    maps.y=y;
+    maps.w=1;
+    maps.h=1;
+  }
+  
+  // Search for stumps and note if we get one.
+  // The stump is 0x2e,0x2f regardless of tilesheet.
+  if (maps.stumpc<STUMP_LIMIT) {
+    const uint8_t *p=map->v;
+    int i=COLC*ROWC;
+    for (;i-->0;p++) {
+      if (*p==0x2e) {
+        struct stump *stump=maps.stumpv+maps.stumpc++;
+        stump->x=x;
+        stump->y=y;
+        map->stump=1;
+        break;
+      }
+    }
+  }
+  
   return 0;
 }
 
@@ -110,6 +156,11 @@ int maps_reset(const void *rom,int romc) {
     }
   }
   
+  if (!maps.w) {
+    fprintf(stderr,"No maps!\n");
+    return -2;
+  }
+  
   // Link and validate.
   struct map **p=maps.mapv;
   int i=LONG_LIMIT*LAT_LIMIT;
@@ -158,6 +209,25 @@ int maps_get_sprite(void *dstpp,int rid) {
     }
   }
   return 0;
+}
+
+/* Misc state.
+ */
+ 
+void maps_get_world_bounds(int *x,int *y,int *w,int *h) {
+  *x=maps.x;
+  *y=maps.y;
+  *w=maps.w;
+  *h=maps.h;
+}
+
+int maps_get_stump(int *x,int *y,int p) {
+  if (p<0) return 0;
+  if (p>=maps.stumpc) return 0;
+  const struct stump *stump=maps.stumpv+p;
+  *x=stump->x;
+  *y=stump->y;
+  return 1;
 }
 
 /* Command reader.

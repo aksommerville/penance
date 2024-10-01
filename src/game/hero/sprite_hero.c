@@ -27,7 +27,7 @@ static int _hero_init(struct sprite *sprite,const uint8_t *arg,int argc,const ui
 /* Advance animation counters and select the appropriate frame.
  */
  
-static void hero_animate(struct sprite *sprite,double elapsed) {
+void hero_animate(struct sprite *sprite,double elapsed) {
 
   // Ghost.
   if (SPRITE->mode==HERO_MODE_GHOST) {

@@ -20,6 +20,7 @@ struct map {
   const uint8_t *tileprops;
   uint16_t rid;
   uint8_t x,y;
+  int stump; // True if there's a stump record for it. (ie false if there is a stump but our buffer filled)
 };
 
 int maps_reset(const void *rom,int romc);
@@ -30,6 +31,12 @@ struct map *map_by_location(int x,int y);
 /* Since we're in there anyway for maps and tilesheets, we also cache all the sprite resources at boot.
  */
 int maps_get_sprite(void *dstpp,int rid);
+
+/* World bounds are in maps.
+ * Stumps each have a position in global map coords, and index from zero.
+ */
+void maps_get_world_bounds(int *x,int *y,int *w,int *h);
+int maps_get_stump(int *x,int *y,int p);
 
 struct map_command_reader {
   const uint8_t *v;

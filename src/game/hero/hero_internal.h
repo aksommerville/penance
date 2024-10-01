@@ -40,4 +40,6 @@ struct sprite_hero {
 void hero_rectify_position(struct sprite *sprite);
 void hero_quantized_motion(struct sprite *sprite,int nx,int ny);
 
+void hero_animate(struct sprite *sprite,double elapsed);
+
 #endif

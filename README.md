@@ -11,7 +11,7 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 Week:
 - [x] General menus.
 - [ ] Tree stumps, for casting environmental spells.
-- - [ ] Teleport.
+- - [x] Teleport.
 - - [ ] Summon guidance crow.
 - - [ ] Spell of Opening.
 - [ ] Sound effects.
@@ -23,6 +23,7 @@ Week:
 - - [ ] Aiming cannon. Turn into a ghost and make it aim at a switch.
 - - [ ] Put some cluestones where you need to either teleport, bird, or ghost to reach them.
 - - [ ] Bullet hell that only a turtle can get thru alive.
+- - [ ] Multiple switches that you can't get between them fast enough, unless you're a rabbit. Introduce the switches first with an easier challenge.
 
 Saturday:
 - [ ] Monsters.
@@ -42,3 +43,6 @@ Stretch goals or uncertain:
 - - [ ] Drums for Doors Without Walls.
 - - [ ] Review instruments again, after I've heard them all a few times.
 - [ ] Jammio cameo
+- [ ] Needs an extra click to start on Itch, what gives?
+
+- [ ] fleshpuppet should take damage while ghost
