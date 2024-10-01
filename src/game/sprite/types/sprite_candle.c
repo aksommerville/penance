@@ -48,6 +48,13 @@ int sprite_candle_light(struct sprite *sprite) {
   if (SPRITE->lit) return 0;
   SPRITE->lit=1;
   SPRITE->animclock=0.0;
-  if ((SPRITE->candleid>=0)&&(SPRITE->candleid<CANDLE_COUNT)) g.candlev[SPRITE->candleid]=1;
+  if ((SPRITE->candleid>=0)&&(SPRITE->candleid<CANDLE_COUNT)) {
+    g.candlev[SPRITE->candleid]=1;
+    int alllit=1,i=CANDLE_COUNT;
+    while (i-->0) if (!g.candlev[i]) { alllit=0; break; }
+    if (alllit) {
+      egg_play_song(RID_song_antechamber,0,1);
+    }
+  }
   return 1;
 }

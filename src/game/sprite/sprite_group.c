@@ -350,6 +350,7 @@ void sprite_group_render(struct sprite_group *group,int addx,int addy) {
     } else if (!sprite->imageid) {
       // Obviously not going to work, skip it.
     } else {
+      //TODO Consecutive (imageid) are extremely likely to be identical. Skip texcache_get_image() when unchanged.
       graf_draw_tile(&g.graf,
         texcache_get_image(&g.texcache,sprite->imageid),
         (int)(sprite->x*TILESIZE)+addx,

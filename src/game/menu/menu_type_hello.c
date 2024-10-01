@@ -36,7 +36,12 @@ static void _hello_input(struct menu *menu,int input,int pvinput) {
     MENU->dismissed=1;
     MENU->alpha=1.0;
     menu->opaque=0;
+    g.gameover=0;
+    memset(g.candlev,0,sizeof(g.candlev));
+    sprite_group_kill(GRP(HERO));
+    maps_reset(g.rom,g.romc);
     penance_load_map(1);
+    egg_play_song(RID_song_doors_without_walls,0,1);
   }
 }
 

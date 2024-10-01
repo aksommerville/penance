@@ -27,10 +27,10 @@ static int penance_load_map_object(struct map *map) {
           struct sprite *sprite=sprite_spawn_with_type(x,y,&sprite_type_hero,0,0);
           if (!sprite) return -1;
         } break;
-      case 0x23: { // song
+      /*case 0x23: { // song XXX Song will only change programmatically.
           int songid=(arg[0]<<8)|arg[1];
           egg_play_song(songid,0,1);
-        } break;
+        } break;*/
       case 0x40: { // sprite
           double x=(double)arg[0]+0.5;
           double y=(double)arg[1]+0.5;
@@ -129,4 +129,16 @@ int penance_check_navigation() {
   
   //TODO doors. i want to see if we can get by without
   return 0;
+}
+
+/* End game (success).
+ */
+ 
+void penance_gameover() {
+  g.gameover=1;
+  egg_play_song(RID_song_take_wing,0,0);
+  if (GRP(HERO)->spritec>=1) {
+    struct sprite *hero=GRP(HERO)->spritev[0];
+    hero_map_changed(hero);
+  }
 }

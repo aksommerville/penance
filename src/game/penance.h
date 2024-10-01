@@ -60,6 +60,7 @@ extern struct globals {
   struct menu *menuv[MENU_STACK_LIMIT];
   int menuc;
   uint8_t candlev[CANDLE_COUNT]; // Not going to generalize global state, there's so little of it.
+  int gameover; // Nonzero after we enter the triangle with all candles lit. Outtro animation.
 } g;
 
 int penance_load_map(int mapid);
@@ -69,5 +70,7 @@ int penance_navigate(int dx,int dy);
  * This should be done well outside the usual update cycle, since a lot of things can change.
  */
 int penance_check_navigation();
+
+void penance_gameover();
 
 #endif

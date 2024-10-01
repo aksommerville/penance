@@ -19,14 +19,15 @@ Week:
 - - [ ] Wind that toggles on and off, so you have to turn into a flower when it's on.
 - - [ ] Bullet hell that only a turtle can get thru alive.
 - - [ ] Multiple switches that you can't get between them fast enough, unless you're a rabbit. Introduce the switches first with an easier challenge.
+- [ ] Initial keystrokes can get lost during the hello fade-out.
 
 Saturday:
 - [ ] Monsters.
-- [ ] Goals.
+- [x] Goals.
 - [ ] Crow. Have the whole flow finished first.
 
 Final Sunday:
-- [ ] Finale.
+- [x] Finale.
 - [ ] Hello: Roll in credits after a delay?
 - [ ] Pics and such for Itch page.
 - [ ] Open Itch page to public. Currently password "dot-in-a-habit"
@@ -40,8 +41,7 @@ Stretch goals or uncertain:
 - - [ ] Review instruments again, after I've heard them all a few times.
 - [ ] Jammio cameo
 - [ ] Needs an extra click to start on Itch, what gives?
-
-- [ ] fleshpuppet should take damage while ghost
+- [ ] fleshpuppet should take damage while ghost. There's very few places where damage is possible, I don't think this matters.
 
 ## Recommended Course
 

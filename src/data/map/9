@@ -1,17 +1,18 @@
 a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4
-a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
-a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
-a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
-a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
-a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
+a4a4a4a4f4f4f4f4f4f4f4a4a4a4a4a4a4a4a4a4
+a4a4a4a4f4f4f4f4f4f4f4a4a4a4a4a4a4a4a4a4
+a4a4a4a4f4f4f4f4f4f4f4a4a4a4a4a4a4a4a4a4
+a4a4a4a4f4f4f4f4f4f4f4a4a4a4a4a4a4a4a4a4
 a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4
-a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
-a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
-a4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4a4
+a4a4a4a4f4f4f4f4f4f4f4f4f4f4a4a4a4a4a4a4
+a4a4a4a4f4f4e5e6e7f4f4f4f4f4a4a4a4a4a4a4
+a4a4a4a4f4f4f5f6f7f4f4f4f4f4a4a4a4a4a4a4
+a4a4a4a4f4f4f4f4f4f4f4f4f4f4a4a4a4a4a4a4
 a4a4a4a4a4a4a4a4a4f4f4a4a4a4a4a4a4a4a4a4
 
 image outdoors
 location 16 14
-sprite @5,4 candle1
-sprite @7,4 candle2
-sprite @9,4 candle3
+sprite @5,2 candle1
+sprite @7,2 candle2
+sprite @9,2 candle3
+sprite @7,8 terminator

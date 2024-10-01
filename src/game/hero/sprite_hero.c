@@ -234,6 +234,32 @@ static int hero_mode_vulnerable(int mode) {
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
 
+  // When the game is over, everything is suspended, we're doing a non-interactive animation.
+  if (g.gameover) {
+    sprite->layer=100;
+    SPRITE->animclock+=elapsed;
+    if (SPRITE->animclock<4.0) { // still
+      sprite->tileid=0x03;
+      sprite->xform=0;
+    } else if (SPRITE->animclock<5.0) { // grow wings (0x04..0x08)
+      int frame=(int)((SPRITE->animclock-4.0)*5.0);
+      if (frame<0) frame=0; else if (frame>4) frame=4;
+      sprite->tileid=0x04+frame;
+    } else if (SPRITE->animclock<10.0) { // flying up
+      sprite->y-=elapsed*2.0;
+      const double animrate=6.0; // hz
+      int frame=((int)((SPRITE->animclock-3.0)*animrate))&3;
+      switch (frame) {
+        case 0: case 2: sprite->tileid=0x09; break;
+        case 1: sprite->tileid=0x0a; break;
+        case 3: sprite->tileid=0x0b; break;
+      }
+    } else { // end of sequence
+      menu_push(&menu_type_farewell);
+    }
+    return;
+  }
+
   // Check hazards.
   if (GRP(HAZARD)->spritec&&hero_mode_vulnerable(SPRITE->mode)) {
     const double radius=0.666; // All hazard sprites have the same radius. I... think we can get away with that?
@@ -273,12 +299,6 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   hero_animate(sprite,elapsed);
 }
 
-/* Render. XXX Trying not to need this.
- */
- 
-static void _hero_render(struct sprite *sprite,int16_t addx,int16_t addy) {
-}
-
 /* Render overlay.
  * After all sprites have rendered.
  */
@@ -294,6 +314,24 @@ static uint8_t spell_tile(uint8_t dir) {
 }
  
 void hero_draw_overlay(struct sprite *sprite,int16_t addx,int16_t addy) {
+
+  // Game over: Celestial light appears in the first 4 seconds, then lingers forever.
+  if (g.gameover) {
+    int16_t midx=(int16_t)(sprite->x*TILESIZE);
+    int16_t loy=TILESIZE*8+(TILESIZE>>1); // Must be fixed so it doesn't roll back up with her.
+    if (SPRITE->animclock<3.0) {
+      int16_t h=(int16_t)((loy*SPRITE->animclock)/3.0);
+      graf_draw_rect(&g.graf,midx-1,0,2,h,0xfff8f080);
+    } else if (SPRITE->animclock<4.0) {
+      int16_t w=2+(int16_t)((SPRITE->animclock-3.0)*22);
+      if (w<2) w=2; else if (w>24) w=24;
+      graf_draw_rect(&g.graf,midx-(w>>1),0,w,loy,0xfff8f080);
+    } else {
+      graf_draw_rect(&g.graf,midx-12,0,24,loy,0xfff8f080);
+    }
+    return;
+  }
+
   // Spell?
   if (SPRITE->spellc&&((SPRITE->mode==HERO_MODE_TREE)||(SPRITE->mode==HERO_MODE_HOLE))) {
     int wordc=SPRITE->spellc,overflow=0;
@@ -325,5 +363,21 @@ const struct sprite_type sprite_type_hero={
   .del=_hero_del,
   .init=_hero_init,
   .update=_hero_update,
-  //.render=_hero_render,
 };
+
+/* Test humanity.
+ */
+ 
+int hero_is_human() {
+  if (GRP(HERO)->spritec<1) return 0;
+  const struct sprite *sprite=GRP(HERO)->spritev[0];
+  switch (SPRITE->mode) {
+    case HERO_MODE_FREE:
+    case HERO_MODE_TREE:
+    case HERO_MODE_HOLE:
+    case HERO_MODE_HURT:
+    case HERO_MODE_FIREBALL:
+      return 1;
+  }
+  return 0;
+}

@@ -370,6 +370,10 @@ void hero_quantized_motion(struct sprite *sprite,int nx,int ny) {
  */
  
 void hero_map_changed(struct sprite *sprite) {
+  if (g.gameover) {
+    SPRITE->animclock=0.0;
+    return;
+  }
   if (SPRITE->mode==HERO_MODE_GHOST) {
     if (g.map->rid==SPRITE->ghost_mapid) {
       struct sprite *fleshpuppet=sprite_spawn_with_type(SPRITE->ghost_x,SPRITE->ghost_y,&sprite_type_fleshpuppet,0,0);

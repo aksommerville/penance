@@ -121,6 +121,7 @@ extern const struct sprite_type sprite_type_fleshpuppet;
 extern const struct sprite_type sprite_type_fireball;
 extern const struct sprite_type sprite_type_bonfire;
 extern const struct sprite_type sprite_type_candle;
+extern const struct sprite_type sprite_type_terminator;
 
 // ids get assigned in this order. Use the same as the ^ declarations above.
 #define FOR_EACH_SPRITE_TYPE \
@@ -129,7 +130,8 @@ extern const struct sprite_type sprite_type_candle;
   _(fleshpuppet) \
   _(fireball) \
   _(bonfire) \
-  _(candle)
+  _(candle) \
+  _(terminator)
 
 const struct sprite_type *sprite_type_by_id(int id);
 
