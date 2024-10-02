@@ -11,9 +11,10 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 Required:
 - [x] Tints are broken. In web, the highlighted triangle is green. Should be yellow.
 - [x] Temple interior.
-- [ ] Placeholder graphics, all over the place.
+- [x] Placeholder graphics, all over the place.
 - [x] Speed clock and high score.
-- [ ] Don't put anything burnable on the borders.
+- [x] Don't put anything burnable on the borders.
+- [ ] !!! Forbid transforming out of bird if there's no vacant space. (eg just north of the island)
 - [ ] Sound effects.
 - [ ] Fireworks when transforming to/from animal.
 - [ ] Crow. Or maybe drop it. Is there any need for a crow's assistance? ...have somebody play at the review session Wednesday
