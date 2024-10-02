@@ -128,6 +128,7 @@ extern const struct sprite_type sprite_type_missile;
 extern const struct sprite_type sprite_type_treadle;
 extern const struct sprite_type sprite_type_lock;
 extern const struct sprite_type sprite_type_scoreboard;
+extern const struct sprite_type sprite_type_fireworks;
 
 // ids get assigned in this order. Use the same as the ^ declarations above.
 #define FOR_EACH_SPRITE_TYPE \
@@ -143,13 +144,15 @@ extern const struct sprite_type sprite_type_scoreboard;
   _(missile) \
   _(treadle) \
   _(lock) \
-  _(scoreboard)
+  _(scoreboard) \
+  _(fireworks)
 
 const struct sprite_type *sprite_type_by_id(int id);
 
 void sprite_fireball_set_direction(struct sprite *sprite,double dx,double dy);
 void sprite_fireball_blow_out(struct sprite *sprite);
 void sprite_bonfire_set_ttl(struct sprite *sprite,double ttl);
+void sprite_bonfire_blow(struct sprite *sprite,int dx); // Must call every frame.
 int sprite_candle_light(struct sprite *sprite); // 0 if invalid or already lit
 int sprite_candle_is_lit(const struct sprite *sprite);
 void sprite_missile_target_hero(struct sprite *sprite);

@@ -140,6 +140,7 @@ static void hero_end_transform(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_FREE;
   hero_rectify_position(sprite); // We might be transforming out of BIRD over water.
   sfx(SFX_UNTRANSFORM);
+  struct sprite *fireworks=sprite_spawn_with_type(sprite->x,sprite->y,&sprite_type_fireworks,0,0);
 }
 
 /* Finish hole-spell mode.
