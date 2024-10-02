@@ -40,6 +40,7 @@ static void _hello_input(struct menu *menu,int input,int pvinput) {
     memset(g.candlev,0,sizeof(g.candlev));
     sprite_group_kill(GRP(HERO));
     maps_reset(g.rom,g.romc);
+    g.playtime=0.0;
     penance_load_map(1);
     egg_play_song(RID_song_doors_without_walls,0,1);
   }

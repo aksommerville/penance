@@ -129,6 +129,10 @@ int penance_check_navigation() {
  
 void penance_gameover() {
   g.gameover=1;
+  if (g.playtime<g.besttime) {
+    g.besttime=g.playtime;
+    penance_save_hiscore();
+  }
   egg_play_song(RID_song_take_wing,0,0);
   if (GRP(HERO)->spritec>=1) {
     struct sprite *hero=GRP(HERO)->spritev[0];

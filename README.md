@@ -12,10 +12,11 @@ Required:
 - [x] Tints are broken. In web, the highlighted triangle is green. Should be yellow.
 - [x] Temple interior.
 - [ ] Placeholder graphics, all over the place.
+- [x] Speed clock and high score.
 - [ ] Don't put anything burnable on the borders.
 - [ ] Sound effects.
 - [ ] Fireworks when transforming to/from animal.
-- [ ] Crow. Or maybe drop it. Is there any need for a crow's assistance?
+- [ ] Crow. Or maybe drop it. Is there any need for a crow's assistance? ...have somebody play at the review session Wednesday
 - [ ] Hello: Roll in credits after a delay?
 - [ ] Needs an extra click to start on Itch, what gives?
 - [ ] Pics and such for Itch page.

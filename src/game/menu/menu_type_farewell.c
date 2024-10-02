@@ -23,7 +23,7 @@ static const struct farewell_subtitle {
   { 2.0,""},
   { 7.0,"Code, graphics, music\n  AK Sommerville"},
   { 2.0,""},
-  {10.0,"Developed in 9 days for\nGDEX Game Jam 2024"},
+  {10.0,"Written in 9 days for\nGDEX Game Jam 2024"},
   { 2.0,""},
   { 7.0,"Thanks for playing!\n-AK and Dot"},
 };

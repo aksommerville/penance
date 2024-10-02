@@ -61,6 +61,8 @@ extern struct globals {
   int menuc;
   uint8_t candlev[CANDLE_COUNT]; // Not going to generalize global state, there's so little of it.
   int gameover; // Nonzero after we enter the triangle with all candles lit. Outtro animation.
+  double playtime;
+  double besttime;
 } g;
 
 int penance_load_map(int mapid);
@@ -72,5 +74,8 @@ int penance_navigate(int dx,int dy);
 int penance_check_navigation();
 
 void penance_gameover();
+
+void penance_load_hiscore();
+void penance_save_hiscore();
 
 #endif

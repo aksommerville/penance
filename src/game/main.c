@@ -25,6 +25,7 @@ int egg_client_init() {
   if (font_add_image_resource(g.font,0x0020,RID_image_witchy_0020)<0) return -1;
   if ((g.texid_tiles=egg_texture_new())<1) return -1;
   
+  penance_load_hiscore();
   if (sprite_groups_init()<0) return -1;
   if (maps_reset(g.rom,g.romc)<0) return -1;
   
@@ -62,6 +63,7 @@ void egg_client_update(double elapsed) {
     struct menu *menu=g.menuv[g.menuc-1];
     menu->type->update(menu,elapsed);
   } else {
+    if (!g.gameover) g.playtime+=elapsed;
     sprite_group_update(GRP(UPDATE),elapsed);
     sprite_group_kill(GRP(DEATHROW));
     penance_check_navigation();
@@ -99,4 +101,50 @@ void egg_client_render() {
   }
   
   graf_flush(&g.graf);
+}
+
+/* High score.
+ */
+ 
+void penance_load_hiscore() {
+  g.besttime=999999.999;
+  char tmp[9]; // MM:SS.mmm
+  int tmpc=egg_store_get(tmp,sizeof(tmp),"besttime",8);
+  if (tmpc==9) {
+    if (
+      ((tmp[0]>='0')&&(tmp[0]<='9'))&&
+      ((tmp[1]>='0')&&(tmp[1]<='9'))&&
+      (tmp[2]==':')&&
+      ((tmp[3]>='0')&&(tmp[3]<='9'))&&
+      ((tmp[4]>='0')&&(tmp[4]<='9'))&&
+      (tmp[5]=='.')&&
+      ((tmp[6]>='0')&&(tmp[6]<='9'))&&
+      ((tmp[7]>='0')&&(tmp[7]<='9'))&&
+      ((tmp[8]>='0')&&(tmp[8]<='9'))
+    ) {
+      int min=((tmp[0]-'0')*10)+tmp[1]-'0';
+      int sec=((tmp[3]-'0')*10)+tmp[4]-'0';
+      int mil=((tmp[6]-'0')*100)+((tmp[7]-'0')*10)+tmp[8]-'0';
+      g.besttime=min*60+sec+(mil/1000.0);
+    }
+  }
+}
+
+void penance_save_hiscore() {
+  int mil=(int)(g.besttime*1000.0);
+  int sec=mil/1000; mil%=1000;
+  int min=sec/60; sec%=60;
+  if (min>99) min=sec=99;
+  char tmp[9]={
+    '0'+min/10,
+    '0'+min%10,
+    ':',
+    '0'+sec/10,
+    '0'+sec%10,
+    '.',
+    '0'+mil/100,
+    '0'+(mil/10)%10,
+    '0'+mil%10,
+  };
+  egg_store_set("besttime",8,tmp,9);
 }
