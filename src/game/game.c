@@ -27,10 +27,6 @@ static int penance_load_map_object(struct map *map) {
           struct sprite *sprite=sprite_spawn_with_type(x,y,&sprite_type_hero,0,0);
           if (!sprite) return -1;
         } break;
-      /*case 0x23: { // song XXX Song will only change programmatically.
-          int songid=(arg[0]<<8)|arg[1];
-          egg_play_song(songid,0,1);
-        } break;*/
       case 0x40: { // sprite
           double x=(double)arg[0]+0.5;
           double y=(double)arg[1]+0.5;
@@ -38,10 +34,7 @@ static int penance_load_map_object(struct map *map) {
           const uint8_t *serial=0;
           int serialc=maps_get_sprite(&serial,rid);
           struct sprite *sprite=sprite_spawn_for_map(x,y,serial,serialc);
-          if (!sprite) {
-            fprintf(stderr,"Failed to spawn sprite:%d for map:%d\n",rid,map->rid);
-            return -2;
-          }
+          if (!sprite) break; // It's ok, sprites are allowed to fail to abort construction.
         } break;
     }
   }

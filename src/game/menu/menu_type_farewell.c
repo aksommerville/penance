@@ -110,7 +110,7 @@ static void _farewell_update(struct menu *menu,double elapsed) {
       const struct farewell_subtitle *st=farewell_subtitlev+MENU->subtitlep;
       MENU->subtitleclock+=st->duration;
       if (st->src&&st->src[0]) {
-        MENU->subtitle_texid=font_tex_multiline(g.font,st->src,-1,g.fbw,g.fbh-136,0xe0d8e8ff);
+        MENU->subtitle_texid=font_tex_multiline(g.font,st->src,-1,g.fbw,g.fbh-136,0xd0c8c0ff);
         egg_texture_get_status(&MENU->subtitlew,&MENU->subtitleh,MENU->subtitle_texid);
       }
     } else {

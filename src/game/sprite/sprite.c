@@ -91,6 +91,9 @@ struct sprite *sprite_spawn_with_type(
       case 0x22: { // tileid
           sprite->tileid=v[0];
         } break;
+      case 0x23: { // layer
+          sprite->layer=(int16_t)((v[0]<<8)|v[1]);
+        } break;
       case 0x40: { // grpmask
           int grpmask=(v[0]<<24)|(v[1]<<16)|(v[2]<<8)|v[3];
           int i=0,bit=1; for (;i<32;i++,bit<<=1) {

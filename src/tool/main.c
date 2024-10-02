@@ -432,6 +432,17 @@ static int sprite_cmd_groups(struct sr_encoder *dst,const char *src,int srcc,con
   if (sr_encode_intbe(dst,mask,4)<0) return -1;
   return 0;
 }
+ 
+static int sprite_cmd_layer(struct sr_encoder *dst,const char *src,int srcc,const char *srcpath,int lineno) {
+  int layer;
+  if ((sr_int_eval(&layer,src,srcc)<2)||(layer<-32768)||(layer>32767)) {
+    fprintf(stderr,"%s:%d: Expected integer in -32768..32767 for 'layer', found '%.*s'\n",srcpath,lineno,srcc,src);
+    return -2;
+  }
+  if (sr_encode_u8(dst,0x23)<0) return -1;
+  if (sr_encode_intbe(dst,layer,2)<0) return -1;
+  return 0;
+}
 
 /* Unknown sprite command.
  * We can do generic ones with a numeric opcode, they work exactly the same as map commands then.
@@ -501,6 +512,7 @@ static int digest_sprite(struct sr_encoder *dst,const char *src,int srcc,const c
     else if ((kwc==5)&&!memcmp(kw,"image",5)) err=sprite_cmd_image(dst,line+linep,linec-linep,srcpath,lineno);
     else if ((kwc==6)&&!memcmp(kw,"tileid",6)) err=sprite_cmd_tileid(dst,line+linep,linec-linep,srcpath,lineno);
     else if ((kwc==6)&&!memcmp(kw,"groups",6)) err=sprite_cmd_groups(dst,line+linep,linec-linep,srcpath,lineno);
+    else if ((kwc==5)&&!memcmp(kw,"layer",5)) err=sprite_cmd_layer(dst,line+linep,linec-linep,srcpath,lineno);
     else err=sprite_cmd_generic(dst,kw,kwc,line+linep,linec-linep,srcpath,lineno);
     if (err<0) {
       if (err!=-2) fprintf(stderr,"%s:%d: Unspecified error processing '%.*s' sprite command.\n",srcpath,lineno,kwc,kw);

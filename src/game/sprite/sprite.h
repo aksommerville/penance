@@ -125,6 +125,8 @@ extern const struct sprite_type sprite_type_terminator;
 extern const struct sprite_type sprite_type_wind;
 extern const struct sprite_type sprite_type_dualephant;
 extern const struct sprite_type sprite_type_missile;
+extern const struct sprite_type sprite_type_treadle;
+extern const struct sprite_type sprite_type_lock;
 
 // ids get assigned in this order. Use the same as the ^ declarations above.
 #define FOR_EACH_SPRITE_TYPE \
@@ -137,7 +139,9 @@ extern const struct sprite_type sprite_type_missile;
   _(terminator) \
   _(wind) \
   _(dualephant) \
-  _(missile)
+  _(missile) \
+  _(treadle) \
+  _(lock)
 
 const struct sprite_type *sprite_type_by_id(int id);
 
@@ -147,5 +151,6 @@ void sprite_bonfire_set_ttl(struct sprite *sprite,double ttl);
 int sprite_candle_light(struct sprite *sprite); // 0 if invalid or already lit
 void sprite_missile_target_hero(struct sprite *sprite);
 void sprite_missile_launch(struct sprite *sprite,double dx,double dy);
+void sprite_lock_set_lamp(struct sprite *sprite,int index,int value);
 
 #endif

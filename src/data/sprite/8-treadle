@@ -1,0 +1,5 @@
+type treadle
+image hero
+tileid 0x16
+layer -1
+groups VISIBLE,UPDATE

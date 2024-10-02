@@ -1,0 +1,4 @@
+type lock
+image hero
+tileid 0x18
+groups VISIBLE,UPDATE
