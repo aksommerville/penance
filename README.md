@@ -14,7 +14,7 @@ Required:
 - [x] Placeholder graphics, all over the place.
 - [x] Speed clock and high score.
 - [x] Don't put anything burnable on the borders.
-- [ ] !!! Forbid transforming out of bird if there's no vacant space. (eg just north of the island)
+- [x] !!! Forbid transforming out of bird if there's no vacant space. (eg just north of the island)
 - [ ] Sound effects.
 - [ ] Fireworks when transforming to/from animal.
 - [ ] Crow. Or maybe drop it. Is there any need for a crow's assistance? ...have somebody play at the review session Wednesday

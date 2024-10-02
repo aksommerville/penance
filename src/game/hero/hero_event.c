@@ -105,6 +105,25 @@ static void hero_cast_turtle(struct sprite *sprite) {
 }
 
 static void hero_end_transform(struct sprite *sprite) {
+
+  /* If we're transforming out of BIRD, check first that there is at least one vacant cell.
+   * There's a screen in our world that's nothing but water and rocks, and it would be disastrous to untransform there.
+   * Otherwise, it's fine to unbird over water; physics rectification will find a safe place for you to land.
+   */
+  if (SPRITE->mode==HERO_MODE_BIRD) {
+    const uint8_t *cell=g.map->v;
+    int i=COLC*ROWC,ok=0;
+    for (;i-->0;cell++) {
+      if (g.map->tileprops[*cell]) continue;
+      ok=1;
+      break;
+    }
+    if (!ok) {
+      //TODO rejection sound effect
+      return;
+    }
+  }
+
   SPRITE->mode=HERO_MODE_FREE;
   hero_rectify_position(sprite); // We might be transforming out of BIRD over water.
   //TODO sound effect
