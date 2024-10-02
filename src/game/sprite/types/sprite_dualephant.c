@@ -34,6 +34,7 @@ static void dualephant_init_missile(struct sprite *sprite,struct sprite *missile
 
 static void dualephant_fire(struct sprite *sprite) {
   struct sprite *missile;
+  sfx(SFX_DUALEPHANT_FIRE);
   if (missile=sprite_spawn_with_type(sprite->x-1.0,sprite->y-1.0,&sprite_type_missile,0,0)) {
     dualephant_init_missile(sprite,missile);
   }

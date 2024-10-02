@@ -78,4 +78,36 @@ void penance_gameover();
 void penance_load_hiscore();
 void penance_save_hiscore();
 
+/* Sound effects.
+ */
+#define SFX_BURN_TREE 1
+#define SFX_LIGHT_CANDLE 2
+#define SFX_EMERGENCY_MANEUVER 3
+#define SFX_TREADLE_ON 4
+#define SFX_TREADLE_OFF 5
+#define SFX_UNLOCK 6
+#define SFX_DEFLECT_MISSILE 7
+#define SFX_TRANSFORM 8
+#define SFX_UNTRANSFORM 9
+#define SFX_REJECT_UNTRANSFORM 10
+#define SFX_INVALID_SPELL 11
+#define SFX_FIREBALL 12
+#define SFX_FLOWER 13
+#define SFX_UNFLOWER 14
+#define SFX_GHOST 15
+#define SFX_UNGHOST 16
+#define SFX_ENTER_HOLE 17
+#define SFX_ENTER_TREE 18
+#define SFX_HURT 19
+#define SFX_TELEPORT_NOOP 20
+#define SFX_TELEPORT_REJECT 21
+#define SFX_TELEPORT_ACCEPT 22
+#define SFX_TELEPORT_OPEN 23
+#define SFX_OPENING_ACCEPT 24
+#define SFX_OPENING_REJECT 25
+#define SFX_ENCODE_PIP 26
+#define SFX_DUALEPHANT_FIRE 27
+#define SFX_WIND_BLOW 28
+#define sfx(id) egg_play_sound(2,id)
+
 #endif

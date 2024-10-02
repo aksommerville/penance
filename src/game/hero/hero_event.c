@@ -4,6 +4,7 @@
  */
  
 static void hero_begin_tree(struct sprite *sprite,uint8_t tileid) {
+  sfx(SFX_ENTER_TREE);
   sprite->y=SPRITE->celly;
   sprite->x=SPRITE->cellx+((tileid==0x2e)?1.0:0.0);
   SPRITE->mode=HERO_MODE_TREE;
@@ -19,6 +20,7 @@ static void hero_begin_tree(struct sprite *sprite,uint8_t tileid) {
 static void hero_cast_teleport(struct sprite *sprite) {
   menu_push(&menu_type_teleport);
   sprite->y-=1.500; // Stay on the stump. Mode has changed to FREE and that's OK; hero_animate() won't have been called.
+  sfx(SFX_TELEPORT_OPEN);
 }
 
 /* Summon the helpful crow.
@@ -35,19 +37,21 @@ static void hero_cast_crow(struct sprite *sprite) {
  
 static void hero_cast_open(struct sprite *sprite) {
   uint8_t *p=g.map->v;
-  int i=COLC*ROWC;
+  int i=COLC*ROWC,effective=0;
   for (;i-->0;p++) {
     switch (*p) {
-      case 0xe0: *p=0xe2; break;
-      case 0xe1: *p=0xe3; break;
-      case 0xe2: *p=0xe0; break;
-      case 0xe3: *p=0xe1; break;
-      case 0xf0: *p=0xf2; break;
-      case 0xf1: *p=0xf3; break;
-      case 0xf2: *p=0xf0; break;
-      case 0xf3: *p=0xf1; break;
+      case 0xe0: *p=0xe2; effective=1; break;
+      case 0xe1: *p=0xe3; effective=1; break;
+      case 0xe2: *p=0xe0; effective=1; break;
+      case 0xe3: *p=0xe1; effective=1; break;
+      case 0xf0: *p=0xf2; effective=1; break;
+      case 0xf1: *p=0xf3; effective=1; break;
+      case 0xf2: *p=0xf0; effective=1; break;
+      case 0xf3: *p=0xf1; effective=1; break;
     }
   }
+  if (effective) sfx(SFX_OPENING_ACCEPT);
+  else sfx(SFX_OPENING_REJECT);
 }
 
 /* Finish tree-spell mode.
@@ -57,6 +61,7 @@ static void hero_cast_open(struct sprite *sprite) {
 static void hero_end_tree(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_FREE;
   sprite->y+=1.500;
+  if (!SPRITE->spellc) return;
   #define SPELLCHECK(tag,...) { \
     const uint8_t spell[]={__VA_ARGS__}; \
     if ((SPRITE->spellc==sizeof(spell))&&!memcmp(SPRITE->spellv,spell,sizeof(spell))) { \
@@ -70,12 +75,15 @@ static void hero_end_tree(struct sprite *sprite) {
   SPELLCHECK(open,DIR_W,DIR_E,DIR_W,DIR_N,DIR_N)
   #undef SPELLCHECK
   SPRITE->spellc=0;
+  sfx(SFX_INVALID_SPELL);
+  //TODO visual repudiation
 }
 
 /* Enter hole-spell mode.
  */
  
 static void hero_begin_hole(struct sprite *sprite,uint8_t tileid) {
+  sfx(SFX_ENTER_HOLE);
   sprite->y=SPRITE->celly+0.5+(1.0/TILESIZE);
   sprite->x=SPRITE->cellx+((tileid==0x3e)?1.0:0.0);
   SPRITE->mode=HERO_MODE_HOLE;
@@ -90,23 +98,23 @@ static void hero_begin_hole(struct sprite *sprite,uint8_t tileid) {
  
 static void hero_cast_rabbit(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_RABBIT;
-  //TODO sound effect
+  sfx(SFX_TRANSFORM);
 }
  
 static void hero_cast_bird(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_BIRD;
   sprite->y-=1.000; // Normally you get pushed off the hole after casting, but for bird no need to.
-  //TODO sound effect
+  sfx(SFX_TRANSFORM);
 }
  
 static void hero_cast_turtle(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_TURTLE;
-  //TODO sound effect
+  sfx(SFX_TRANSFORM);
 }
  
 static void hero_cast_jammio(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_JAMMIO;
-  //TODO sound effect
+  sfx(SFX_TRANSFORM);
 }
 
 static void hero_end_transform(struct sprite *sprite) {
@@ -124,14 +132,14 @@ static void hero_end_transform(struct sprite *sprite) {
       break;
     }
     if (!ok) {
-      //TODO rejection sound effect
+      sfx(SFX_REJECT_UNTRANSFORM);
       return;
     }
   }
 
   SPRITE->mode=HERO_MODE_FREE;
   hero_rectify_position(sprite); // We might be transforming out of BIRD over water.
-  //TODO sound effect
+  sfx(SFX_UNTRANSFORM);
 }
 
 /* Finish hole-spell mode.
@@ -141,6 +149,7 @@ static void hero_end_transform(struct sprite *sprite) {
 static void hero_end_hole(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_FREE;
   sprite->y+=1.000;
+  if (!SPRITE->spellc) return;
   #define SPELLCHECK(tag,...) { \
     const uint8_t spell[]={__VA_ARGS__}; \
     if ((SPRITE->spellc==sizeof(spell))&&!memcmp(SPRITE->spellv,spell,sizeof(spell))) { \
@@ -155,7 +164,8 @@ static void hero_end_hole(struct sprite *sprite) {
   SPELLCHECK(jammio,DIR_N,DIR_N,DIR_S,DIR_S,DIR_W,DIR_E,DIR_W,DIR_E)
   #undef SPELLCHECK
   SPRITE->spellc=0;
-  //TODO repudiation
+  sfx(SFX_INVALID_SPELL);
+  //TODO visual repudiation
 }
 
 /* Throw fireball.
@@ -166,7 +176,7 @@ static void hero_cast_fireball(struct sprite *sprite,double dx) {
   SPRITE->spellclock=0.500;
   struct sprite *fireball=sprite_spawn_with_type(sprite->x+dx,sprite->y,&sprite_type_fireball,0,0);
   if (!fireball) return;
-  //TODO sound effect
+  sfx(SFX_FIREBALL);
   fireball->imageid=sprite->imageid;
   fireball->tileid=0x22;
   sprite_fireball_set_direction(fireball,dx*12.0,0.0);
@@ -192,19 +202,19 @@ static void hero_cast_flower(struct sprite *sprite) {
   SPRITE->wind=0;
   SPRITE->animclock=0.0;
   SPRITE->animframe=0;
-  //TODO sound effect
+  sfx(SFX_FLOWER);
 }
 
 static void hero_end_flower(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_FREE;
-  //TODO sound effect
+  sfx(SFX_UNFLOWER);
 }
 
 /* Turn into ghost.
  */
  
 static void hero_cast_disembody(struct sprite *sprite) {
-  //TODO sound effect
+  sfx(SFX_GHOST);
   SPRITE->mode=HERO_MODE_GHOST;
   sprite->layer++;
   struct sprite *fleshpuppet=sprite_spawn_with_type(sprite->x,sprite->y,&sprite_type_fleshpuppet,0,0);
@@ -224,7 +234,7 @@ static void hero_cast_disembody(struct sprite *sprite) {
  */
  
 static void hero_end_ghost(struct sprite *sprite) {
-  //TODO sound effect
+  sfx(SFX_UNGHOST);
   SPRITE->mode=HERO_MODE_FREE;
   sprite->x=SPRITE->ghost_x;
   sprite->y=SPRITE->ghost_y;
@@ -278,6 +288,8 @@ static void hero_spell_add(struct sprite *sprite,uint8_t word) {
   SPRITE->spellclock=0.333;
   if (SPRITE->mode==HERO_MODE_FREE) {
     hero_check_free_spell(sprite);
+  } else if ((SPRITE->mode==HERO_MODE_TREE)||(SPRITE->mode==HERO_MODE_HOLE)) {
+    sfx(SFX_ENCODE_PIP);
   }
 }
 
@@ -343,6 +355,7 @@ static void hero_action_end(struct sprite *sprite) {
  */
  
 void sprite_hero_input(struct sprite *sprite,int input,int pvinput) {
+  if (g.gameover) return;
 
   /* Apply or lift blackout, if warranted.
    */

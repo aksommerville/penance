@@ -115,6 +115,7 @@ static int _teleport_init(struct menu *menu) {
  */
  
 static void teleport_move_cursor(struct menu *menu,int dx,int dy) {
+  sfx(SFX_ENCODE_PIP);
   int nx=MENU->cx+dx,ny=MENU->cy+dy;
   struct map *map=map_by_location(nx,ny);
   if (!map) return;
@@ -163,13 +164,19 @@ static void teleport_warp(struct menu *menu,const struct map *map) {
  
 static void _teleport_input(struct menu *menu,int input,int pvinput) {
   if ((input&EGG_BTN_SOUTH)&&!(pvinput&EGG_BTN_SOUTH)) {
-    //TODO sound effects, fireworks
+    //TODO fireworks
     if ((MENU->cx==g.map->x)&&(MENU->cy==g.map->y)) {
+      sfx(SFX_TELEPORT_NOOP);
       teleport_dismiss(menu);
     } else {
       const struct map *map=map_by_location(MENU->cx,MENU->cy);
-      if (!map||!map->stump) teleport_dismiss(menu);
-      else teleport_warp(menu,map);
+      if (!map||!map->stump) {
+        sfx(SFX_TELEPORT_REJECT);
+        teleport_dismiss(menu);
+      } else {
+        sfx(SFX_TELEPORT_ACCEPT);
+        teleport_warp(menu,map);
+      }
     }
     menu_pop(menu);
     return;

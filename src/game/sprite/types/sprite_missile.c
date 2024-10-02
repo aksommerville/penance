@@ -26,7 +26,7 @@ static void _missile_update(struct sprite *sprite,double elapsed) {
       double dy=sprite->y-hero->y;
       double d2=dx*dx+dy*dy;
       if (d2<=0.80) {
-        //TODO sound effect
+        sfx(SFX_DEFLECT_MISSILE);
         SPRITE->deflected=1;
         double d=sqrt(d2);
         double v=sqrt(SPRITE->dx*SPRITE->dx+SPRITE->dy*SPRITE->dy);

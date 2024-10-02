@@ -46,7 +46,7 @@ void sprite_lock_set_lamp(struct sprite *sprite,int index,int value) {
       // Clearing the map cell manages the physics of unlocking, and also the persistence.
       g.map->v[y*COLC+x]=0;
     }
-    //TODO Sound effect
+    sfx(SFX_UNLOCK);
     //TODO Fireworks?
     sprite_kill_later(sprite);
   }

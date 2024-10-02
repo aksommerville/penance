@@ -281,7 +281,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
       double dx=sprite->x-hazard->x;
       double dy=sprite->y-hazard->y;
       if (dx*dx+dy*dy>radius2) continue;
-      //TODO sound effect
+      sfx(SFX_HURT);
       double distance=sqrt(dx*dx+dy*dy);
       double nx=dx/distance,ny=dy/distance;
       SPRITE->hurtdx=nx*16.0;

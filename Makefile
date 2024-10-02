@@ -26,6 +26,9 @@ DATAFILES:=$(filter src/data/%,$(SRCFILES))
 OPT_ALL_CFILES:=$(shell find $(EGG_SDK)/src/opt -name '*.c')
 OPT_CFILES:=$(filter $(addprefix $(EGG_SDK)/src/opt/,$(addsuffix /%,$(OPT_ENABLE))),$(OPT_ALL_CFILES))
 
+#XXX This is not doing what I expected. I wanted only *directory* changes, ie add, remove, rename.
+# But due to fucking swap files, there's a fake directory change every time I save anything.
+# ...or maybe it really is triggering on the files. Even `vim -n` triggers it.
 TOC_H:=mid/egg_rom_toc.h
 DATADIRS:=$(shell find src/data -type d)
 $(TOC_H):$(DATADIRS);$(PRECMD) $(EGG_SDK)/out/eggdev list src/data -ftoc > $@

@@ -85,7 +85,7 @@ static void _fireball_update(struct sprite *sprite,double elapsed) {
         bonfire->tileid=0x24;
         sprite_bonfire_set_ttl(bonfire,1.000);
       }
-      //TODO sound effect
+      sfx(SFX_BURN_TREE);
       return;
     }
   }
@@ -100,7 +100,7 @@ static void _fireball_update(struct sprite *sprite,double elapsed) {
     if (dx*dx+dy*dy>1.0) continue;
     if (!sprite_candle_light(candle)) continue;
     sprite_kill_later(sprite);
-    //TODO sound effect
+    sfx(SFX_LIGHT_CANDLE);
     return;
   }
   
@@ -120,7 +120,7 @@ static void _fireball_update(struct sprite *sprite,double elapsed) {
       (victim->type==&sprite_type_dualephant)||
       (victim->type==&sprite_type_wind)
     ) {
-      //TODO sound effect "Rrrrr!"
+      sfx(SFX_EMERGENCY_MANEUVER);
       SPRITE->emergency_maneuver=1;
       SPRITE->emergency_y=victim->y+1.5;
       SPRITE->animclock=0.0;

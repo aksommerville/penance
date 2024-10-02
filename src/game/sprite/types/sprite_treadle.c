@@ -49,16 +49,18 @@ static void _treadle_update(struct sprite *sprite,double elapsed) {
   if (npressed!=SPRITE->pressed) {
     SPRITE->pressed=npressed;
     if (SPRITE->pressed) {
-      //TODO Sound effect
-      sprite->tileid=SPRITE->tileid0+1;
-      SPRITE->lit=1;
-      treadle_notify_lock(sprite);
+      if (!SPRITE->lit) {
+        sfx(SFX_TREADLE_ON);
+        sprite->tileid=SPRITE->tileid0+1;
+        SPRITE->lit=1;
+        treadle_notify_lock(sprite);
+      }
     } else {
       SPRITE->clock=2.250;
     }
   } else if (SPRITE->lit&&!SPRITE->pressed) {
     if ((SPRITE->clock-=elapsed)<=0.0) {
-      //TODO Sound effect
+      sfx(SFX_TREADLE_OFF);
       sprite->tileid=SPRITE->tileid0;
       SPRITE->lit=0;
       treadle_notify_lock(sprite);

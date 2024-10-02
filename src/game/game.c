@@ -120,7 +120,6 @@ int penance_check_navigation() {
   if ((hero->x>COLC)&&neighbor_map_exists(1,0)) return penance_navigate(1,0);
   if ((hero->y>ROWC)&&neighbor_map_exists(0,1)) return penance_navigate(0,1);
   
-  //TODO doors. i want to see if we can get by without
   return 0;
 }
 

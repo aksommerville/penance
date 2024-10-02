@@ -31,6 +31,7 @@ static void wind_begin_INHALE(struct sprite *sprite) {
 }
 
 static void wind_begin_EXHALE(struct sprite *sprite) {
+  sfx(SFX_WIND_BLOW);
   SPRITE->stage=WIND_STAGE_EXHALE;
   SPRITE->stageclock=1.250;
   int16_t ylo=(int16_t)((sprite->y-1.5)*TILESIZE);

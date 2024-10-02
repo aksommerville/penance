@@ -9,12 +9,9 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 ## TODO
 
 Required:
-- [ ] Sound effects.
+- [x] Sound effects.
 - [ ] Fireworks when transforming to/from animal.
 - [ ] Crow. Or maybe drop it. Is there any need for a crow's assistance? ...have somebody play at the review session Wednesday
-- [x] Needs an extra click to start on Itch, what gives? ...trivially reproducible, just iframe the main html.
-- - ...but now it's not happening anymore on itch. Whatever. Added a "click you have to" message to the description.
-- [ ] Pics and such for Itch page.
 - [ ] Open Itch page to public. Currently password "dot-in-a-habit"
 
 Stretch goals or uncertain:
@@ -24,7 +21,7 @@ Stretch goals or uncertain:
 - [ ] Music.
 - - [ ] Drums for Doors Without Walls.
 - - [ ] Review instruments again, after I've heard them all a few times.
-- [x] Jammio cameo
+- - [ ] '' sound effects.
 - [ ] fleshpuppet should take damage while ghost. There's very few places where damage is possible, I don't think this matters.
 
 ## Recommended Course
