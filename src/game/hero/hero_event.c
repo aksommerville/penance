@@ -103,6 +103,11 @@ static void hero_cast_turtle(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_TURTLE;
   //TODO sound effect
 }
+ 
+static void hero_cast_jammio(struct sprite *sprite) {
+  SPRITE->mode=HERO_MODE_JAMMIO;
+  //TODO sound effect
+}
 
 static void hero_end_transform(struct sprite *sprite) {
 
@@ -147,6 +152,7 @@ static void hero_end_hole(struct sprite *sprite) {
   SPELLCHECK(rabbit,DIR_E,DIR_E,DIR_S,DIR_E)
   SPELLCHECK(bird,DIR_N,DIR_N,DIR_W,DIR_E,DIR_N)
   SPELLCHECK(turtle,DIR_W,DIR_W,DIR_E,DIR_E,DIR_S)
+  SPELLCHECK(jammio,DIR_N,DIR_N,DIR_S,DIR_S,DIR_W,DIR_E,DIR_W,DIR_E)
   #undef SPELLCHECK
   SPRITE->spellc=0;
   //TODO repudiation
@@ -326,6 +332,7 @@ static void hero_action_begin(struct sprite *sprite) {
     case HERO_MODE_RABBIT: hero_end_transform(sprite); break;
     case HERO_MODE_BIRD: hero_end_transform(sprite); break;
     case HERO_MODE_TURTLE: hero_end_transform(sprite); break;
+    case HERO_MODE_JAMMIO: hero_end_transform(sprite); break;
   }
 }
  
@@ -388,6 +395,7 @@ void hero_quantized_motion(struct sprite *sprite,int nx,int ny) {
     if ((tileid==0x2e)||(tileid==0x2f)) {
       if (SPRITE->mode==HERO_MODE_RABBIT) return;
       if (SPRITE->mode==HERO_MODE_TURTLE) return;
+      if (SPRITE->mode==HERO_MODE_JAMMIO) return;
       hero_begin_tree(sprite,tileid);
     } else if ((tileid==0x3e)||(tileid==0x3f)) {
       hero_begin_hole(sprite,tileid);

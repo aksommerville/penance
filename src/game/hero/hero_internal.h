@@ -14,6 +14,7 @@
 #define HERO_MODE_BIRD 8
 #define HERO_MODE_TURTLE 9
 #define HERO_MODE_BIRDHURT 10
+#define HERO_MODE_JAMMIO 11
 
 struct sprite_hero {
   struct sprite hdr;

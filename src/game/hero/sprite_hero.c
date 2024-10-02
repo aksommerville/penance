@@ -105,6 +105,7 @@ void hero_animate(struct sprite *sprite,double elapsed) {
       case HERO_MODE_RABBIT: sprite->tileid+=0x60; break;
       case HERO_MODE_BIRD: sprite->tileid+=0x70; break;
       case HERO_MODE_TURTLE: sprite->tileid+=0x80; break;
+      case HERO_MODE_JAMMIO: sprite->tileid+=0x1c; break;
     }
     sprite->xform=(SPRITE->facedir==DIR_W)?EGG_XFORM_XREV:0;
     
@@ -116,6 +117,7 @@ void hero_animate(struct sprite *sprite,double elapsed) {
       case HERO_MODE_RABBIT: sprite->tileid+=0x60; break;
       case HERO_MODE_BIRD: sprite->tileid+=0x70; break;
       case HERO_MODE_TURTLE: sprite->tileid+=0x80; break;
+      case HERO_MODE_JAMMIO: sprite->tileid+=0x1c; break;
     }
     sprite->xform=(SPRITE->facedir==DIR_W)?EGG_XFORM_XREV:0;
   }
@@ -303,6 +305,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     case HERO_MODE_RABBIT: hero_update_FREE(sprite,elapsed,10.0); break;
     case HERO_MODE_BIRD: hero_update_FREE(sprite,elapsed,6.0); break;
     case HERO_MODE_TURTLE: hero_update_FREE(sprite,elapsed,3.0); break;
+    case HERO_MODE_JAMMIO: hero_update_FREE(sprite,elapsed,6.0); break;
     case HERO_MODE_BIRDHURT: hero_update_HURT(sprite,elapsed); break;
   }
   hero_animate(sprite,elapsed);

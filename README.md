@@ -9,27 +9,22 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 ## TODO
 
 Required:
-- [x] Tints are broken. In web, the highlighted triangle is green. Should be yellow.
-- [x] Temple interior.
-- [x] Placeholder graphics, all over the place.
-- [x] Speed clock and high score.
-- [x] Don't put anything burnable on the borders.
-- [x] !!! Forbid transforming out of bird if there's no vacant space. (eg just north of the island)
 - [ ] Sound effects.
 - [ ] Fireworks when transforming to/from animal.
 - [ ] Crow. Or maybe drop it. Is there any need for a crow's assistance? ...have somebody play at the review session Wednesday
-- [ ] Hello: Roll in credits after a delay?
-- [ ] Needs an extra click to start on Itch, what gives?
+- [x] Needs an extra click to start on Itch, what gives? ...trivially reproducible, just iframe the main html.
+- - ...but now it's not happening anymore on itch. Whatever. Added a "click you have to" message to the description.
 - [ ] Pics and such for Itch page.
 - [ ] Open Itch page to public. Currently password "dot-in-a-habit"
 
 Stretch goals or uncertain:
+- [ ] Hello: Roll in credits after a delay?
 - [ ] Static map animation, eg ripples on water.
 - [ ] Visual transitions.
 - [ ] Music.
 - - [ ] Drums for Doors Without Walls.
 - - [ ] Review instruments again, after I've heard them all a few times.
-- [ ] Jammio cameo
+- [x] Jammio cameo
 - [ ] fleshpuppet should take damage while ghost. There's very few places where damage is possible, I don't think this matters.
 
 ## Recommended Course
