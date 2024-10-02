@@ -9,8 +9,8 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 ## TODO
 
 Required:
-- [ ] Tints are broken. In web, the highlighted triangle is green. Should be yellow.
-- [ ] Temple interior.
+- [x] Tints are broken. In web, the highlighted triangle is green. Should be yellow.
+- [x] Temple interior.
 - [ ] Placeholder graphics, all over the place.
 - [ ] Don't put anything burnable on the borders.
 - [ ] Sound effects.

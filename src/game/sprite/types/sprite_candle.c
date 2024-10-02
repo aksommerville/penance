@@ -58,3 +58,8 @@ int sprite_candle_light(struct sprite *sprite) {
   }
   return 1;
 }
+
+int sprite_candle_is_lit(const struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_candle)) return 0;
+  return SPRITE->lit;
+}

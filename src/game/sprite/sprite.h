@@ -149,6 +149,7 @@ void sprite_fireball_set_direction(struct sprite *sprite,double dx,double dy);
 void sprite_fireball_blow_out(struct sprite *sprite);
 void sprite_bonfire_set_ttl(struct sprite *sprite,double ttl);
 int sprite_candle_light(struct sprite *sprite); // 0 if invalid or already lit
+int sprite_candle_is_lit(const struct sprite *sprite);
 void sprite_missile_target_hero(struct sprite *sprite);
 void sprite_missile_launch(struct sprite *sprite,double dx,double dy);
 void sprite_lock_set_lamp(struct sprite *sprite,int index,int value);

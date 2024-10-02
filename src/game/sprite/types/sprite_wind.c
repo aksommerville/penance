@@ -77,6 +77,17 @@ static void wind_blow(struct sprite *sprite,double elapsed) {
 }
 
 static void _wind_update(struct sprite *sprite,double elapsed) {
+
+  // If there's a candle and it's lit, stop blowing, just stay in IDLE.
+  if (SPRITE->stage==WIND_STAGE_IDLE) {
+    int i=GRP(VISIBLE)->spritec;
+    while (i-->0) {
+      struct sprite *candle=GRP(VISIBLE)->spritev[i];
+      if (candle->type!=&sprite_type_candle) continue;
+      if (sprite_candle_is_lit(candle)) return;
+    }
+  }
+
   if ((SPRITE->stageclock-=elapsed)<=0.0) {
     switch (SPRITE->stage) {
       case WIND_STAGE_IDLE: wind_begin_INHALE(sprite); break;
