@@ -1,0 +1,4 @@
+type dualephant
+image hero
+tileid 0x57
+groups VISIBLE,UPDATE

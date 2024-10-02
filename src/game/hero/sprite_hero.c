@@ -391,6 +391,11 @@ int hero_is_human() {
   return 0;
 }
 
+int hero_is_turtle(const struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return 0;
+  return (SPRITE->mode==HERO_MODE_TURTLE);
+}
+
 /* Apply wind.
  */
  
@@ -403,6 +408,23 @@ void hero_apply_wind(struct sprite *sprite,double dx) {
   if (SPRITE->mode==HERO_MODE_HOLE) return;
   if (SPRITE->mode==HERO_MODE_TREE) SPRITE->mode=HERO_MODE_FREE;
   sprite->x+=dx;
+  hero_rectify_position(sprite);
+  if ((SPRITE->mode!=HERO_MODE_BIRD)&&(SPRITE->mode!=HERO_MODE_GHOST)) {
+    int cellx=(int)sprite->x; if (sprite->x<0.0) cellx--;
+    int celly=(int)sprite->y; if (sprite->y<0.0) celly--;
+    if ((cellx!=SPRITE->cellx)||(celly!=SPRITE->celly)) {
+      hero_quantized_motion(sprite,cellx,celly);
+    }
+  }
+}
+
+/* Nudge (when turtle is hit by a missile.
+ */
+ 
+void hero_nudge(struct sprite *sprite,double nx,double ny) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return;
+  sprite->x+=0.125*nx;
+  sprite->y+=0.125*ny;
   hero_rectify_position(sprite);
   if ((SPRITE->mode!=HERO_MODE_BIRD)&&(SPRITE->mode!=HERO_MODE_GHOST)) {
     int cellx=(int)sprite->x; if (sprite->x<0.0) cellx--;

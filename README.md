@@ -12,7 +12,7 @@ Required:
 - [x] Initial keystrokes can get lost during the hello fade-out.
 - [ ] Challenges:
 - - [x] Wind that toggles on and off, so you have to turn into a flower when it's on.
-- - [ ] Bullet hell that only a turtle can get thru alive.
+- - [x] Bullet hell that only a turtle can get thru alive.
 - - [ ] Multiple switches that you can't get between them fast enough, unless you're a rabbit. Introduce the switches first with an easier challenge.
 - [ ] Temple interior.
 - [x] Use the bridge somewhere, it's a shame not to.

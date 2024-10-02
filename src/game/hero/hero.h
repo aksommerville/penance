@@ -12,7 +12,9 @@ void hero_draw_overlay(struct sprite *sprite,int16_t addx,int16_t addy);
 void hero_map_changed(struct sprite *sprite);
 
 int hero_is_human();
+int hero_is_turtle(const struct sprite *sprite);
 
 void hero_apply_wind(struct sprite *sprite,double dx);
+void hero_nudge(struct sprite *sprite,double nx,double ny);
 
 #endif
