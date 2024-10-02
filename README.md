@@ -10,6 +10,7 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 
 Required:
 - [x] Sound effects.
+- [x] Sound effect in web. All screwed up compared to native.
 - [ ] Fireworks when transforming to/from animal.
 - [ ] Crow. Or maybe drop it. Is there any need for a crow's assistance? ...have somebody play at the review session Wednesday
 - [ ] Open Itch page to public. Currently password "dot-in-a-habit"

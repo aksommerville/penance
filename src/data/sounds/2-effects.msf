@@ -1,6 +1,6 @@
 sound 1 SFX_BURN_TREE
 channel 0
-  master e0
+  master f8
   sub 0060
   level ff 0000 0000   0050 0050 ffff ffff   0030 0030 4000 4000   0300 0300 0000 0000
   gain 0c00 80 00
@@ -10,7 +10,7 @@ events
   
 sound 2 SFX_LIGHT_CANDLE
 channel 0
-  master e0
+  master d0
   sub 0040
   level ff 0000 0000   0030 0030 ffff ffff   0030 0030 8000 8000   0100 0100 0000 0000
   gain 1000 80 00
@@ -25,7 +25,7 @@ events
   
 sound 3 SFX_EMERGENCY_MANEUVER
 channel 0
-  master c0
+  master 80
   fm 0200 0500
   pitchenv ff 8000 8000   0360 0360 8200 8200
   level ff 0000 0000   0060 0060 ffff ffff   0300 0300 0000 0000
@@ -39,7 +39,7 @@ channel 0
   master e0
   sub 0200
   level ff 0000 0000   0010 0010 ffff ffff   0020 0020 1800 1800   0180 0180 0000 0000
-  gain 0200 ff 00
+  gain 0400 ff 00
 events
   note 0 d5 0x40 0
   delay 400
@@ -49,7 +49,7 @@ channel 0
   master e0
   sub 01c0
   level ff 0000 0000   0020 0020 ffff ffff   0020 0020 1c00 1c00   0200 0200 0000 0000
-  gain 0180 ff 00
+  gain 0380 ff 00
 events
   note 0 g4 0x40 0
   delay 400
@@ -82,7 +82,7 @@ events
   
 sound 8 SFX_TRANSFORM
 channel 0
-  master a0
+  master 40
   shape 02
   pitchenv ff 8000 8800    0060 0060 8000 8000
   level ff 0000 0000    0018 0018 ffff ffff    0020 0020 6000 6000    0180 0180 0000 0000
@@ -104,7 +104,7 @@ events
   
 sound 9 SFX_UNTRANSFORM
 channel 0
-  master a0
+  master 40
   shape 02
   pitchenv ff 8000 8800    0060 0060 8000 8000
   level ff 0000 0000    0018 0018 ffff ffff    0020 0020 6000 6000    0180 0180 0000 0000
@@ -148,7 +148,7 @@ events
   
 sound 12 SFX_FIREBALL
 channel 0
-  master e0
+  master 40
   shape 02
   pitchenv ff 8800 8800    0080 0080 8400 8400    0100 0100 8000 8000
   level ff 0000 0000   0030 0030 ffff ffff    0028 0028 4000 4000   00c0 00c0 0000 0000
@@ -158,7 +158,7 @@ events
   
 sound 13 SFX_FLOWER
 channel 0
-  master e0
+  master 70
   fm 0080 0200
   fmenv ff 2000 0000    0080 0080 8000 ffff   0080 0080 4000 0000
   level ff 0000 0000    0020 0020 ffff ffff   0020 0020 3000 3000    0060 0060 0000 0000
@@ -170,7 +170,7 @@ events
   
 sound 14 SFX_UNFLOWER
 channel 0
-  master e0
+  master 70
   fm 0080 0200
   fmenv ff 2000 0000    0080 0080 8000 ffff   0080 0080 4000 c000
   level ff 0000 0000    0020 0020 ffff ffff   0020 0020 3000 3000    0060 0060 0000 0000
@@ -182,7 +182,7 @@ events
   
 sound 15 SFX_GHOST
 channel 0
-  master a0
+  master 40
   shape 02
   pitchenv ff 8000 8800    0060 0060 8000 8000
   level ff 0000 0000    0018 0018 ffff ffff    0020 0020 6000 6000    0180 0180 0000 0000
@@ -204,7 +204,7 @@ events
   
 sound 16 SFX_UNGHOST
 channel 0
-  master a0
+  master 40
   shape 02
   pitchenv ff 8000 8800    0060 0060 8000 8000
   level ff 0000 0000    0018 0018 ffff ffff    0020 0020 6000 6000    0180 0180 0000 0000
@@ -226,7 +226,7 @@ events
   
 sound 17 SFX_ENTER_HOLE
 channel 0
-  master 60
+  master 30
   shape 01
   pitchenv ff 8400 8400    0200 0200 8000 8000
   level ff 0000 0000    0040 0040 ffff ffff    0040 0040 2000 2000    0120 0120 0000 0000
@@ -246,7 +246,7 @@ events
   
 sound 19 SFX_HURT
 channel 0
-  master e0
+  master 80
   fm 0100 0300
   fmenv ff 8000 8000    0030 0030 ffff ffff    0100 0100 8000 8000
   level ff 0000 0000    0030 0030 ffff ffff    0020 0020 4000 4000    0200 0200 0000 0000
@@ -277,7 +277,7 @@ events
   
 sound 22 SFX_TELEPORT_ACCEPT
 channel 0
-  master e0
+  master a0
   fm 0300 0500
   fmenv ff 8000 8000    0180 0180 ffff ffff    0200 0200 0000 0000
   level ff 0000 0000    0018 0018 ffff ffff    0018 0018 2000 2000    02c0 02c0 0000 0000
@@ -306,7 +306,7 @@ events
 
 sound 24 SFX_OPENING_ACCEPT
 channel 0
-  master e0
+  master 80
   fm 0200 0200
   level ff 0000 0000    000a 000a ffff ffff    0018 0018 2000 2000    0200 0200 0000 0000
   delay 0080 c0 80 80 a0
@@ -333,7 +333,7 @@ events
 
 sound 26 SFX_ENCODE_PIP
 channel 0
-  master e0
+  master 60
   shape 00
   harmonics c000 4000 2000 1000 0400 0080
   level ff 0000 0000    0020 0020 ffff ffff    0018 0018 2000 2000    00c0 00c0 0000 0000
@@ -344,7 +344,7 @@ events
   
 sound 27 SFX_DUALEPHANT_FIRE
 channel 0
-  master 70
+  master 40
   shape 01
   pitchenv ff 8400 8400    0200 0200 8000 8000
   level ff 0000 0000    0030 0030 ffff ffff    0018 0018 2000 2000    0100 0100 0000 0000
@@ -354,7 +354,7 @@ events
   
 sound 28 SFX_WIND_BLOW
 channel 0
-  master e0
+  master a0
   sub 0080
   level ff 0000 0000    0040 0040 ffff ffff    0580 0580 ffff ffff    0100 0100 0000 0000
   gain 0400 ff 00
