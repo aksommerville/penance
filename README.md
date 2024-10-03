@@ -15,24 +15,12 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 - [ ] Music.
 - - [ ] Review instruments again, after I've heard them all a few times.
 - - [ ] '' sound effects.
-- [ ] fleshpuppet should take damage while ghost. There's very few places where damage is possible, I don't think this matters.
+- [x] fleshpuppet should take damage while ghost. There's very few places where damage is possible, I don't think this matters.
 - [ ] The lock puzzle feels wrong. Bad sound effects, and I'm not sure, the moment of unlocking, it just doesn't pop.
+- [ ] Build for Pi. Include linux-x86 and raspi binaries on Itch.
+- [ ] Make nice mp3s of all the music and share those too.
 
-## Recommended Course
-
-- crow. Should be the first thing you learn, otherwise who can you ask.
-- fireball. Must be before candles. Put a positioned spell first.
-- open. Good to be early, so you can enter the temple and see your progress.
-- candle1 WEST
-- rabbit
-- turtle
-- candle2
-- teleport. Teach wherever candle2 is. The part leading to candle3 is not accessible on foot.
-- bird
-- ghost
-- flower
-- candle3
-- Temple: Wrap-up
+## Playtest high scores
 
 16:27.190 Jamesanity
 18:39.783 Earthshine (Darius)

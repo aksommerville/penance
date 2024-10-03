@@ -15,6 +15,18 @@ static void _fleshpuppet_update(struct sprite *sprite,double elapsed) {
     if (SPRITE->animframe) sprite->tileid++;
     else sprite->tileid--;
   }
+  // If we strike a hazard, wake up.
+  int i=GRP(HAZARD)->spritec;
+  while (i-->0) {
+    struct sprite *hazard=GRP(HAZARD)->spritev[i];
+    double dx=sprite->x-hazard->x;
+    double dy=sprite->y-hazard->y;
+    double d2=dx*dx+dy*dy;
+    if (d2>=0.666) continue;
+    sprite_kill_later(sprite);
+    hero_unghost();
+    return;
+  }
 }
 
 /* Type definition.

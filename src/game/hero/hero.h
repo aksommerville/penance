@@ -17,4 +17,6 @@ int hero_is_turtle(const struct sprite *sprite);
 void hero_apply_wind(struct sprite *sprite,double dx);
 void hero_nudge(struct sprite *sprite,double nx,double ny);
 
+void hero_unghost();
+
 #endif

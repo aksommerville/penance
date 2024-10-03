@@ -246,17 +246,28 @@ static void hero_end_ghost(struct sprite *sprite) {
   sprite->x=SPRITE->ghost_x;
   sprite->y=SPRITE->ghost_y;
   sprite->layer--;
-  if (SPRITE->ghost_mapid==g.map->rid) { // Already on the right map, great. Just kill the fleshpuppet.
+  /* If we're on the right map, kill the fleshpuppet.
+   * Take the fleshpuppet's position too, if there is one.
+   * It might have been moved by wind or something.
+   */
+  if (SPRITE->ghost_mapid==g.map->rid) {
     int i=GRP(KEEPALIVE)->spritec;
     while (i-->0) {
       struct sprite *fleshpuppet=GRP(KEEPALIVE)->spritev[i];
       if (fleshpuppet->type!=&sprite_type_fleshpuppet) continue;
+      sprite->x=fleshpuppet->x;
+      sprite->y=fleshpuppet->y;
       sprite_kill_later(fleshpuppet);
       break;
     }
   } else { // Need to change maps.
     g.mapid_load_soon=SPRITE->ghost_mapid;
   }
+}
+
+void hero_unghost() {
+  if (GRP(HERO)->spritec<1) return;
+  hero_end_ghost(GRP(HERO)->spritev[0]);
 }
 
 /* Check the tail of (spellv) for foot spells.
