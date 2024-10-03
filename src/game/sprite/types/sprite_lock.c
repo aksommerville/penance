@@ -17,7 +17,7 @@ static int _lock_init(struct sprite *sprite,const uint8_t *def,int defc) {
 
 static void _lock_update(struct sprite *sprite,double elapsed) {
   if (SPRITE->unlock_clock>0.0) {
-    if ((SPRITE->unlock_clock+=elapsed)>4.0) {
+    if ((SPRITE->unlock_clock+=elapsed)>2.0) {
       sprite_kill_later(sprite);
       return;
     }

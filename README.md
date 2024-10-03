@@ -8,28 +8,14 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 
 ## TODO
 
-Required:
-- [x] Sound effects.
-- [x] Sound effect in web. All screwed up compared to native.
-- [x] Fireworks when transforming to/from animal. ...only "from". Stepping out of the hole is good, doesn't need accentuation.
-- [x] Crow. Or maybe drop it. Is there any need for a crow's assistance? ...have somebody play at the review session Wednesday. Drop it.
 - [ ] Open Itch page to public. Currently password "dot-in-a-habit"
-
-Stretch goals or uncertain:
-- [ ] Make the three cluestones more distinctive.
-- [x] Change the finale to night with a big full moon.
 - [ ] Hello: Roll in credits after a delay?
 - [ ] Static map animation, eg ripples on water.
 - [ ] Visual transitions.
 - [ ] Music.
-- - [ ] Drums for Doors Without Walls.
 - - [ ] Review instruments again, after I've heard them all a few times.
 - - [ ] '' sound effects.
 - [ ] fleshpuppet should take damage while ghost. There's very few places where damage is possible, I don't think this matters.
-- [x] Bonfires react to wind.
-- [ ] Tone down the lake just south of the fireball cluestone. Or put a secret there. Looks like a secret.
-- [x] Can we lead them into the tree stump harder at first? ...yes: Put the stump out in the middle of the clearing.
-- [ ] Vertical fireball? Or just "nyrrrgh" when they go UUUU or DDDD.
 
 ## Recommended Course
 

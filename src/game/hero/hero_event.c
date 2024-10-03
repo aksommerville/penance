@@ -194,6 +194,12 @@ static void hero_cast_fireball(struct sprite *sprite,double dx) {
 static void hero_cast_fireballl(struct sprite *sprite) { hero_cast_fireball(sprite,-1.0); }
 static void hero_cast_fireballr(struct sprite *sprite) { hero_cast_fireball(sprite,1.0); }
 
+static void hero_cast_invalid(struct sprite *sprite) {
+  // Called for loose UUUU and DDDD. A user might think that those would cause a vertical fireball, but we don't do vertical.
+  sfx(SFX_INVALID_SPELL);
+  SPRITE->spellc=0;
+}
+
 /* Turn into flower.
  */
  
@@ -271,6 +277,8 @@ static void hero_check_free_spell(struct sprite *sprite) {
   SPELLCHECK(fireballr,DIR_E,DIR_E,DIR_E,DIR_E)
   SPELLCHECK(flower,DIR_S,DIR_S,DIR_N,DIR_S)
   SPELLCHECK(disembody,DIR_N,DIR_W,DIR_E,DIR_S,DIR_N)
+  SPELLCHECK(invalid,DIR_N,DIR_N,DIR_N,DIR_N)
+  SPELLCHECK(invalid,DIR_S,DIR_S,DIR_S,DIR_S)
   #undef SPELLCHECK
 }
 

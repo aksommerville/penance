@@ -59,12 +59,8 @@ instrument 5 DWW Bass
   level 02 0000 0000   0028 0014 8000 ffff    0032 003c 0c00 1800   0080 0200 0000 0000
 
 instrument 6 DWW Drums
-  master 00
-  pan 80
-  wheel 00c8
-  shape 00
-  level 02 0000 0000   0028 0014 8000 ffff    0032 003c 1500 4000   0200 0400 0000 0000
-  gain 0c00 80 00
+  master ff
+  drums 0001 00 c0 ff
 
 instrument 7 DWW Rhythm Guitar
   master 80

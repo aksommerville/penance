@@ -25,7 +25,7 @@ events
   
 sound 3 SFX_EMERGENCY_MANEUVER
 channel 0
-  master 80
+  master 40
   fm 0200 0500
   pitchenv ff 8000 8000   0360 0360 8200 8200
   level ff 0000 0000   0060 0060 ffff ffff   0300 0300 0000 0000
@@ -153,7 +153,7 @@ channel 0
   pitchenv ff 8800 8800    0080 0080 8400 8400    0100 0100 8000 8000
   level ff 0000 0000   0030 0030 ffff ffff    0028 0028 4000 4000   00c0 00c0 0000 0000
 events
-  note 0 as5 0x40 0
+  note 0 as6 0x40 0
   delay 300
   
 sound 13 SFX_FLOWER
