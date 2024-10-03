@@ -57,8 +57,8 @@ static void _dualephant_update(struct sprite *sprite,double elapsed) {
 }
 
 static void _dualephant_render(struct sprite *sprite,int16_t addx,int16_t addy) {
-  int16_t dstx=(int16_t)((sprite->x-0.5)*TILESIZE);
-  int16_t dsty=(int16_t)((sprite->y-1.5)*TILESIZE);
+  int16_t dstx=(int16_t)((sprite->x-0.5)*TILESIZE)+addx;
+  int16_t dsty=(int16_t)((sprite->y-1.5)*TILESIZE)+addy;
   int16_t srcx=112,srcy=80,w=TILESIZE<<1,h=TILESIZE<<1;
   if (SPRITE->clock>=SHOOT_TIME) { srcx+=TILESIZE<<2; w+=TILESIZE; dstx-=TILESIZE; }
   else if (SPRITE->clock>=INHALE_TIME) srcx+=TILESIZE<<1;

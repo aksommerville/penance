@@ -41,7 +41,7 @@ static void _hello_input(struct menu *menu,int input,int pvinput) {
     sprite_group_kill(GRP(HERO));
     maps_reset(g.rom,g.romc);
     g.playtime=0.0;
-    penance_load_map(1);
+    penance_load_map(1,TRANSITION_CUT); // We do the transition.
     egg_play_song(RID_song_doors_without_walls,0,1);
   }
 }

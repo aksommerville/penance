@@ -103,8 +103,8 @@ static void _wind_update(struct sprite *sprite,double elapsed) {
 }
 
 static void _wind_render(struct sprite *sprite,int16_t addx,int16_t addy) {
-  int16_t dstx=(int16_t)((sprite->x-0.5)*TILESIZE);
-  int16_t dsty=(int16_t)((sprite->y-1.5)*TILESIZE);
+  int16_t dstx=(int16_t)((sprite->x-0.5)*TILESIZE)+addx;
+  int16_t dsty=(int16_t)((sprite->y-1.5)*TILESIZE)+addy;
   int16_t srcx=(sprite->tileid&0x0f)*TILESIZE;
   int16_t srcy=(sprite->tileid>>4)*TILESIZE;
   srcx+=SPRITE->stage*(TILESIZE<<1);

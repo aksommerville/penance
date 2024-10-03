@@ -63,10 +63,78 @@ void egg_client_update(double elapsed) {
     struct menu *menu=g.menuv[g.menuc-1];
     menu->type->update(menu,elapsed);
   } else {
+    if (g.transition) {
+      if ((g.transition_clock+=elapsed)>=TRANSITION_TIME) {
+        g.transition=0;
+      }
+    }
     if (!g.gameover) g.playtime+=elapsed;
     sprite_group_update(GRP(UPDATE),elapsed);
     sprite_group_kill(GRP(DEATHROW));
     penance_check_navigation();
+  }
+}
+
+/* Render game at given location.
+ */
+ 
+static void render_game_at(int16_t dstx,int16_t dsty) {
+  graf_draw_tile_buffer(&g.graf,g.texid_tiles,dstx+8,dsty+8,g.map->v,COLC,ROWC,COLC);
+  sprite_group_render(GRP(VISIBLE),dstx,dsty);
+  if (GRP(HERO)->spritec>=1) hero_draw_overlay(GRP(HERO)->spritev[0],dstx,dsty);
+}
+
+/* Render game to some other texture.
+ * For capturing the "from" frame.
+ */
+ 
+void penance_render_game_to(int texid) {
+  graf_flush(&g.graf);
+  graf_set_output(&g.graf,texid);
+  render_game_at(0,0);
+  graf_flush(&g.graf);
+  graf_set_output(&g.graf,1);
+}
+
+/* Pan.
+ */
+ 
+static void render_game_pan(int dx,int dy) {
+  double norm=1.0-(g.transition_clock/TRANSITION_TIME); // How far displaced, 1=>0
+  int16_t dstx=(int16_t)(norm*dx*g.fbw);
+  int16_t dsty=(int16_t)(norm*dy*g.fbh);
+  graf_draw_decal(
+    &g.graf,g.transition_pvbits,
+    dstx-dx*g.fbw,dsty-dy*g.fbh,
+    0,0,g.fbw,g.fbh,0
+  );
+  render_game_at(dstx,dsty);
+}
+
+/* Fade.
+ */
+ 
+static void render_game_fade() {
+  render_game_at(0,0);
+  int alpha=(int)((1.0-(g.transition_clock/TRANSITION_TIME))*255.0);
+  if (alpha<0) alpha=0; else if (alpha>0xff) alpha=0xff;
+  graf_set_alpha(&g.graf,alpha);
+  graf_draw_decal(&g.graf,g.transition_pvbits,0,0,0,0,g.fbw,g.fbh,0);
+  graf_set_alpha(&g.graf,0xff);
+}
+
+/* Render game with transition.
+ */
+ 
+static void render_game() {
+  switch (g.transition) {
+    case TRANSITION_CUT: render_game_at(0,0); break; // aka no transition, normal render.
+    case TRANSITION_PAN_LEFT: render_game_pan(-1,0); break;
+    case TRANSITION_PAN_RIGHT: render_game_pan(1,0); break;
+    case TRANSITION_PAN_UP: render_game_pan(0,-1); break;
+    case TRANSITION_PAN_DOWN: render_game_pan(0,1); break;
+    case TRANSITION_FADE: render_game_fade(); break;
+    default: render_game_at(0,0);
   }
 }
 
@@ -88,9 +156,7 @@ void egg_client_render() {
   
   // No opaque menu, draw the game. There is always a game, even during hello and farewell.
   if (opaquep<0) {
-    graf_draw_tile_buffer(&g.graf,g.texid_tiles,8,8,g.map->v,COLC,ROWC,COLC);
-    sprite_group_render(GRP(VISIBLE),0,0);
-    if (GRP(HERO)->spritec>=1) hero_draw_overlay(GRP(HERO)->spritev[0],0,0);
+    render_game();
   }
   
   // Draw each menu from (opaquep) up.

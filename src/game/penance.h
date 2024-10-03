@@ -34,6 +34,15 @@ Tree:
   Open       LRLUU
 */
 
+#define TRANSITION_CUT 0
+#define TRANSITION_PAN_LEFT 1
+#define TRANSITION_PAN_RIGHT 2
+#define TRANSITION_PAN_UP 3
+#define TRANSITION_PAN_DOWN 4
+#define TRANSITION_FADE 5
+
+#define TRANSITION_TIME 0.500
+
 #include <egg/egg.h>
 #include <opt/stdlib/egg-stdlib.h>
 #include <opt/text/text.h>
@@ -63,9 +72,12 @@ extern struct globals {
   int gameover; // Nonzero after we enter the triangle with all candles lit. Outtro animation.
   double playtime;
   double besttime;
+  int transition;
+  double transition_clock; // 0=>TRANSITION_TIME
+  int transition_pvbits; // texid, capture of the last frame of the "from" scene
 } g;
 
-int penance_load_map(int mapid);
+int penance_load_map(int mapid,int transition);
 int penance_navigate(int dx,int dy);
 
 /* If a door or neighbor needs entered, make it happen.
@@ -77,6 +89,8 @@ void penance_gameover();
 
 void penance_load_hiscore();
 void penance_save_hiscore();
+
+void penance_render_game_to(int texid);
 
 /* Sound effects.
  */

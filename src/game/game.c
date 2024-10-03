@@ -41,7 +41,7 @@ static int penance_load_map_object(struct map *map) {
   return 0;
 }
  
-int penance_load_map(int mapid) {
+int penance_load_map(int mapid,int transition) {
   struct map *map=map_by_id(mapid);
   if (!map) return -1;
   
@@ -49,15 +49,29 @@ int penance_load_map(int mapid) {
   if (GRP(HERO)->spritec>=1) {
     hero=GRP(HERO)->spritev[0];
     if (sprite_ref(hero)<0) return -1;
+    sprite_group_remove(GRP(KEEPALIVE),hero);
+    sprite_group_remove(GRP(VISIBLE),hero);
   }
-  sprite_group_remove(GRP(KEEPALIVE),hero);
+
+  if (transition) {
+    if (g.transition_pvbits<=0) {
+      g.transition_pvbits=egg_texture_new();
+      if (egg_texture_load_raw(g.transition_pvbits,EGG_TEX_FMT_RGBA,g.fbw,g.fbh,g.fbw<<2,0,0)<0) return -1;
+    }
+    penance_render_game_to(g.transition_pvbits);
+  }
+  
   sprite_group_kill(GRP(KEEPALIVE));
   sprite_group_add(GRP(KEEPALIVE),hero);
+  sprite_group_add(GRP(VISIBLE),hero);
   sprite_del(hero);
   
   if (penance_load_map_object(map)<0) return -1;
   
   if (hero) hero_map_changed(hero);
+  
+  g.transition_clock=0.0;
+  g.transition=transition;
   
   return 0;
 }
@@ -73,14 +87,23 @@ int penance_navigate(int dx,int dy) {
   if (GRP(HERO)->spritec>=1) {
     hero=GRP(HERO)->spritev[0];
     if (sprite_ref(hero)<0) return -1;
+    sprite_group_remove(GRP(KEEPALIVE),hero);
+    sprite_group_remove(GRP(VISIBLE),hero);
     hero->x-=dx*COLC;
     hero->y-=dy*ROWC;
   }
   
+  // Capture the scene for transition's "from" bits.
+  if (g.transition_pvbits<=0) {
+    g.transition_pvbits=egg_texture_new();
+    if (egg_texture_load_raw(g.transition_pvbits,EGG_TEX_FMT_RGBA,g.fbw,g.fbh,g.fbw<<2,0,0)<0) return -1;
+  }
+  penance_render_game_to(g.transition_pvbits);
+  
   // Drop all sprites. Except the hero if she exists.
-  sprite_group_remove(GRP(KEEPALIVE),hero);
   sprite_group_kill(GRP(KEEPALIVE));
   sprite_group_add(GRP(KEEPALIVE),hero);
+  sprite_group_add(GRP(VISIBLE),hero);
   sprite_del(hero);
   
   // Run all map commands and record it globally.
@@ -88,6 +111,13 @@ int penance_navigate(int dx,int dy) {
   
   // Hero might have extra things to do when the map changes.
   if (hero) hero_map_changed(hero);
+  
+  // Prepare transition.
+  g.transition_clock=0;
+  if (dx<0) g.transition=TRANSITION_PAN_LEFT;
+  else if (dx>0) g.transition=TRANSITION_PAN_RIGHT;
+  else if (dy<0) g.transition=TRANSITION_PAN_UP;
+  else g.transition=TRANSITION_PAN_DOWN;
   
   return 0;
 }
@@ -107,8 +137,11 @@ int penance_check_navigation() {
   if (g.mapid_load_soon) {
     int mapid=g.mapid_load_soon;
     g.mapid_load_soon=0;
-    return penance_load_map(mapid);
+    return penance_load_map(mapid,TRANSITION_FADE);
   }
+  
+  // Forbid navigation during a transition.
+  if (g.transition) return 0;
 
   if (GRP(HERO)->spritec<1) return 0;
   struct sprite *hero=GRP(HERO)->spritev[0];
