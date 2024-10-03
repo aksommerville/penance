@@ -9,13 +9,12 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 ## TODO
 
 - [ ] Open Itch page to public. Currently password "dot-in-a-habit"
-- [ ] Hello: Roll in credits after a delay?
-- [ ] Static map animation, eg ripples on water.
-- [x] Visual transitions.
+- [x] Hello: Roll in credits after a delay?
+- [x] Static map animation, eg ripples on water. ...nix. We don't have enough tilesheet left to do it right.
+- [ ] Shorten Take Wing, and the end sequence. The final walk in particular just drags on.
 - [ ] Music.
 - - [ ] Review instruments again, after I've heard them all a few times.
 - - [ ] '' sound effects.
-- [x] fleshpuppet should take damage while ghost. There's very few places where damage is possible, I don't think this matters.
 - [ ] The lock puzzle feels wrong. Bad sound effects, and I'm not sure, the moment of unlocking, it just doesn't pop.
 - [ ] Build for Pi. Include linux-x86 and raspi binaries on Itch.
 - [ ] Make nice mp3s of all the music and share those too.
