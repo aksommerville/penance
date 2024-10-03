@@ -399,6 +399,19 @@ int hero_is_turtle(const struct sprite *sprite) {
   return (SPRITE->mode==HERO_MODE_TURTLE);
 }
 
+int hero_get_form_raccoonwise(const struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return 0xff;
+  switch (SPRITE->mode) {
+    case HERO_MODE_GHOST: return 1;
+    case HERO_MODE_FLOWER: return 2;
+    case HERO_MODE_JAMMIO: return 3;
+    case HERO_MODE_BIRD: return 4;
+    case HERO_MODE_RABBIT: return 5;
+    case HERO_MODE_TURTLE: return 6;
+  }
+  return 0; // Normal. Wearing a Nun mask.
+}
+
 /* Apply wind.
  */
  
