@@ -18,15 +18,16 @@ static const struct farewell_subtitle {
   double duration;
   const char *src;
 } farewell_subtitlev[]={
-  { 5.0,""},
-  { 7.0,"Starring\n  Dot Vine"},
-  { 2.0,""},
-  { 7.0,"Code, graphics, music\n  AK Sommerville"},
-  { 2.0,""},
-  {10.0,"Written in 9 days for\nGDEX Game Jam 2024"},
-  { 2.0,""},
-  { 7.0,"Thanks for playing!\n-AK and Dot"},
+  { 0.5,""},
+  { 4.0,"Starring\n  Dot Vine"},
+  { 1.0,""},
+  { 5.0,"Code, graphics, music\n  AK Sommerville"},
+  { 1.0,""},
+  { 5.5,"Written in 9 days for\nGDEX Game Jam 2024"},
+  { 1.0,""},
+  { 4.0,"Thanks for playing!\n-AK and Dot"},
 };
+// We have about 23 seconds of song.
  
 struct menu_farewell {
   struct menu hdr;
@@ -77,16 +78,15 @@ static void _farewell_input(struct menu *menu,int input,int pvinput) {
 static void farewell_advance(struct menu *menu) {
   MENU->stage++;
   switch (MENU->stage) {
-    // At the current timing (10,10,20, and 10 from sprite_hero), we enter FINAL with about 8 seconds left in the song. Feels good.
     case FAREWELL_STAGE_FLYAWAY: {
-        MENU->stageclock=10.0;
+        MENU->stageclock=6.0;
         menu->opaque=1; // After FADEOUT1, we don't need the game rendered anymore.
       } break;
     case FAREWELL_STAGE_FLYHOME: {
-        MENU->stageclock=10.0;
+        MENU->stageclock=6.0;
       } break;
     case FAREWELL_STAGE_INSIDE: {
-        MENU->stageclock=20.0;
+        MENU->stageclock=9.0;
       } break;
     case FAREWELL_STAGE_FINAL: {
         MENU->stageclock=60.0;
@@ -138,13 +138,13 @@ static void farewell_render_FLYAWAY(struct menu *menu) {
   
   // Dot flying.
   int16_t doty=28;
-  int16_t dotx=(int16_t)((MENU->stageclock*256.0)/10.0);
+  int16_t dotx=(int16_t)((MENU->stageclock*300.0)/10.0);
   uint8_t dottile=0x0c+((int)((fmod(MENU->stageclock,0.750)/0.750)*4.0)&3);
   graf_draw_tile(&g.graf,texcache_get_image(&g.texcache,RID_image_hero),dotx,doty,dottile,0);
   
   // Fade out fore and aft.
   int fadealpha=0;
-  if (MENU->stageclock>9.5) fadealpha=(MENU->stageclock-9.5)*512.0;
+  if (MENU->stageclock>5.5) fadealpha=(MENU->stageclock-5.5)*512.0;
   else if (MENU->stageclock<0.5) fadealpha=(0.5-MENU->stageclock)*512.0;
   if (fadealpha>0xff) fadealpha=0xff;
   if (fadealpha>0) graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
@@ -160,14 +160,14 @@ static void farewell_render_FLYHOME(struct menu *menu) {
   
   // Dot flying.
   int16_t doty=28;
-  int16_t dotx=64+(int16_t)((MENU->stageclock*256.0)/10.0);
+  int16_t dotx=64+(int16_t)((MENU->stageclock*300.0)/10.0);
   if (dotx<130) doty+=130-dotx;
   uint8_t dottile=0x0c+((int)((fmod(MENU->stageclock,0.750)/0.750)*4.0)&3);
   graf_draw_tile(&g.graf,texcache_get_image(&g.texcache,RID_image_hero),dotx,doty,dottile,0);
   
   // Fade out fore and aft.
   int fadealpha=0;
-  if (MENU->stageclock>9.5) fadealpha=(MENU->stageclock-9.5)*512.0;
+  if (MENU->stageclock>5.5) fadealpha=(MENU->stageclock-5.5)*512.0;
   else if (MENU->stageclock<0.5) fadealpha=(0.5-MENU->stageclock)*512.0;
   if (fadealpha>0xff) fadealpha=0xff;
   if (fadealpha>0) graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
@@ -175,13 +175,13 @@ static void farewell_render_FLYHOME(struct menu *menu) {
 
 /* INSIDE
  * Timing:
- *   20 Start
- *   19.5 Fade in complete
- *   17.0 Transfer habit
- *   16.0 Bow
- *   14.0 Bow complete
- *   12.0 Begin walking. Dot faces left
- *    0.5 Fade out
+ *   9   20 Start
+ *   8.5 19.5 Fade in complete
+ *   7   17.0 Transfer habit
+ *   6   16.0 Bow
+ *   5   14.0 Bow complete
+ *   4   12.0 Begin walking. Dot faces left
+ *   0.5  0.5 Fade out
  */
  
 static void farewell_render_INSIDE(struct menu *menu) {
@@ -192,9 +192,9 @@ static void farewell_render_INSIDE(struct menu *menu) {
   // Mother Superior is 16x32 and has 3 frames.
   {
     int msx=0; // 0=plain, 16=holding habit, 32=bowing
-    if (MENU->stageclock<14.0) msx=16;
-    else if (MENU->stageclock<16.0) msx=32;
-    else if (MENU->stageclock<17.0) msx=16;
+    if (MENU->stageclock<5.0) msx=16;
+    else if (MENU->stageclock<6.0) msx=32;
+    else if (MENU->stageclock<7.0) msx=16;
     graf_draw_decal(&g.graf,texid,200,72,msx,416,16,32,0);
   }
   
@@ -203,16 +203,16 @@ static void farewell_render_INSIDE(struct menu *menu) {
     int dotx=180; // End around 60.
     int srcx=0; // 0=holding habit, 16=neutral (also walk), 32=bow, 48=walk
     int xform=0; // Right is natural.
-    if (MENU->stageclock<12.0) { // Walking.
+    if (MENU->stageclock<4.0) { // Walking.
       if (((int)(MENU->stageclock*5.0))&1) srcx=48;
       else srcx=16;
       xform=EGG_XFORM_XREV;
-      dotx-=(int)(((12.0-MENU->stageclock)*120.0)/12.0);
-    } else if (MENU->stageclock<14.0) { // Done bowing, standing around awkwardly.
+      dotx-=(int)(((4.0-MENU->stageclock)*120.0)/12.0);
+    } else if (MENU->stageclock<5.0) { // Done bowing, standing around awkwardly.
       srcx=16;
-    } else if (MENU->stageclock<16.0) { // Bowing
+    } else if (MENU->stageclock<6.0) { // Bowing
       srcx=32;
-    } else if (MENU->stageclock<17.0) { // Habit transferred.
+    } else if (MENU->stageclock<7.0) { // Habit transferred.
       srcx=16;
     }
     graf_draw_decal(&g.graf,texid,dotx,72,srcx,384,16,32,xform);
@@ -220,7 +220,7 @@ static void farewell_render_INSIDE(struct menu *menu) {
   
   // Fade out fore and aft.
   int fadealpha=0;
-  if (MENU->stageclock>19.5) fadealpha=(MENU->stageclock-9.5)*512.0;
+  if (MENU->stageclock>8.5) fadealpha=(MENU->stageclock-8.5)*512.0;
   else if (MENU->stageclock<0.5) fadealpha=(0.5-MENU->stageclock)*512.0;
   if (fadealpha>0xff) fadealpha=0xff;
   if (fadealpha>0) graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
