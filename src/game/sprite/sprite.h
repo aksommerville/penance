@@ -162,5 +162,6 @@ int sprite_candle_is_lit(const struct sprite *sprite);
 void sprite_missile_target_hero(struct sprite *sprite);
 void sprite_missile_launch(struct sprite *sprite,double dx,double dy);
 void sprite_lock_set_lamp(struct sprite *sprite,int index,int value);
+int sprite_lock_is_locked(const struct sprite *sprite);
 
 #endif

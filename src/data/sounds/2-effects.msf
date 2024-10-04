@@ -33,26 +33,28 @@ channel 0
 events
   note 0 g4 0x40 0
   delay 800
-
+  
 sound 4 SFX_TREADLE_ON
 channel 0
   master e0
-  sub 0200
-  level ff 0000 0000   0010 0010 ffff ffff   0020 0020 1800 1800   0180 0180 0000 0000
-  gain 0400 ff 00
+  fm 0200 0300
+  pitchenv ff 8000 8000    0100 0100 8800 8800
+  fmenv ff 0000 0000   0100 0100 ffff ffff
+  level ff 0000 0000   0030 0030 ffff ffff    0030 0030 2800 2800    0070 0070 0000 0000
 events
-  note 0 d5 0x40 0
-  delay 400
+  note 0 a4 0x40 0
+  delay 256
   
 sound 5 SFX_TREADLE_OFF
 channel 0
   master e0
-  sub 01c0
-  level ff 0000 0000   0020 0020 ffff ffff   0020 0020 1c00 1c00   0200 0200 0000 0000
-  gain 0380 ff 00
+  fm 0200 0300
+  pitchenv ff 8800 8800    0100 0100 8000 8000
+  fmenv ff 0000 0000   0100 0100 ffff ffff
+  level ff 0000 0000   0030 0030 ffff ffff    0030 0030 2800 2800    0070 0070 0000 0000
 events
-  note 0 g4 0x40 0
-  delay 400
+  note 0 a4 0x40 0
+  delay 256
   
 sound 6 SFX_UNLOCK
 channel 0
@@ -361,3 +363,13 @@ channel 0
 events
   note 0 a5 0x40 0
   delay 2500
+  
+sound 29 SFX_TICK
+channel 0
+  master e0
+  sub 0050
+  level ff 0000 0000    000a 000a ffff ffff    000a 000a 1800 1800    0060 0060 0000 0000
+  gain 0800 c0 00
+events
+  note 0 g4 0x40 0
+  delay 120

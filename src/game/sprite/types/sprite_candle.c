@@ -52,7 +52,7 @@ int sprite_candle_light(struct sprite *sprite) {
     g.candlev[SPRITE->candleid]=1;
     int alllit=1,i=CANDLE_COUNT;
     while (i-->0) if (!g.candlev[i]) { alllit=0; break; }
-    if (alllit) {
+    if (alllit&&ENABLE_MUSIC) {
       egg_play_song(RID_song_antechamber,0,1);
     }
   }

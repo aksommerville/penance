@@ -234,7 +234,7 @@ static void hello_render_ENLIST(struct menu *menu) {
  
 static int _hello_init(struct menu *menu) {
   menu->opaque=1;
-  egg_play_song(RID_song_penance_prima,0,1);
+  if (ENABLE_MUSIC) egg_play_song(RID_song_penance_prima,0,1);
   hello_begin_FADE_IN_TITLE(menu);
   return 0;
 }
@@ -251,7 +251,7 @@ static void _hello_input(struct menu *menu,int input,int pvinput) {
     g.playtime=0.0;
     g.bonus=g.jammio=g.spellusage=0;
     penance_load_map(1,TRANSITION_CUT);
-    egg_play_song(RID_song_doors_without_walls,0,1);
+    if (ENABLE_MUSIC) egg_play_song(RID_song_doors_without_walls,0,1);
     menu_pop(menu);
     return;
   }

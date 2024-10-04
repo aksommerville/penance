@@ -9,6 +9,9 @@
 #define ROWC 11
 #define TILESIZE 16
 
+// I need a music killswitch while testing sound effects. Users don't get this privilege, sorry.
+#define ENABLE_MUSIC 1
+
 #define DIR_N 0x40
 #define DIR_W 0x10
 #define DIR_E 0x08
@@ -130,6 +133,7 @@ void penance_render_game_to(int texid);
 #define SFX_ENCODE_PIP 26
 #define SFX_DUALEPHANT_FIRE 27
 #define SFX_WIND_BLOW 28
+#define SFX_TICK 29
 #define sfx(id) egg_play_sound(2,id)
 
 #endif

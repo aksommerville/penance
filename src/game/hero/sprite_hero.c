@@ -412,6 +412,16 @@ int hero_get_form_raccoonwise(const struct sprite *sprite) {
   return 0; // Normal. Wearing a Nun mask.
 }
 
+int hero_feet_touch_ground(const struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return 0;
+  switch (SPRITE->mode) {
+    case HERO_MODE_GHOST: return 0;
+    case HERO_MODE_BIRD: return 0;
+    case HERO_MODE_BIRDHURT: return 0;
+  }
+  return 1;
+}
+
 /* Apply wind.
  */
  

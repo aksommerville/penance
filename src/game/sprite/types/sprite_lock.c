@@ -58,7 +58,11 @@ void sprite_lock_set_lamp(struct sprite *sprite,int index,int value) {
       g.map->v[y*COLC+x]=0;
     }
     sfx(SFX_UNLOCK);
-    //TODO Fireworks?
-    //sprite_kill_later(sprite);
   }
+}
+
+int sprite_lock_is_locked(const struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_lock)) return 0;
+  if (SPRITE->unlock_clock>0.0) return 0;
+  return 1;
 }

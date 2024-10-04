@@ -165,7 +165,7 @@ void penance_gameover() {
     g.besttime=g.playtime;
     penance_save_hiscore();
   }
-  egg_play_song(RID_song_take_wing,0,0);
+  if (ENABLE_MUSIC) egg_play_song(RID_song_take_wing,0,0);
   if (GRP(HERO)->spritec>=1) {
     struct sprite *hero=GRP(HERO)->spritev[0];
     hero_map_changed(hero);
