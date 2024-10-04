@@ -356,7 +356,7 @@ events
   
 sound 28 SFX_WIND_BLOW
 channel 0
-  master a0
+  master 20
   sub 0080
   level ff 0000 0000    0040 0040 ffff ffff    0580 0580 ffff ffff    0100 0100 0000 0000
   gain 0400 ff 00
@@ -366,7 +366,7 @@ events
   
 sound 29 SFX_TICK
 channel 0
-  master e0
+  master 40
   sub 0050
   level ff 0000 0000    000a 000a ffff ffff    000a 000a 1800 1800    0060 0060 0000 0000
   gain 0800 c0 00

@@ -53,6 +53,9 @@ Tree:
 
 #define TRANSITION_TIME 0.500
 
+// We track sound effects and decline to play the same one within s/10 or so of itself.
+#define SFXTRACK_LIMIT 8
+
 #include <egg/egg.h>
 #include <opt/stdlib/egg-stdlib.h>
 #include <opt/text/text.h>
@@ -86,6 +89,11 @@ extern struct globals {
   int transition;
   double transition_clock; // 0=>TRANSITION_TIME
   int transition_pvbits; // texid, capture of the last frame of the "from" scene
+  struct sfxtrack {
+    double when; // egg_time_real()
+    int id;
+  } sfxtrackv[SFXTRACK_LIMIT];
+  int sfxtrackc;
 } g;
 
 int penance_load_map(int mapid,int transition);
@@ -134,6 +142,8 @@ void penance_render_game_to(int texid);
 #define SFX_DUALEPHANT_FIRE 27
 #define SFX_WIND_BLOW 28
 #define SFX_TICK 29
-#define sfx(id) egg_play_sound(2,id)
+//#define sfx(id) egg_play_sound(2,id)
+#define sfx(id) _penance_sfx(id)
+void _penance_sfx(int id); // Don't call directly; use the macro.
 
 #endif

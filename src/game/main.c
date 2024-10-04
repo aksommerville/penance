@@ -214,3 +214,32 @@ void penance_save_hiscore() {
   };
   egg_store_set("besttime",8,tmp,9);
 }
+
+/* Sound effects.
+ */
+ 
+void _penance_sfx(int id) {
+  double now=egg_time_real();
+  struct sfxtrack *oldest=g.sfxtrackv;
+  struct sfxtrack *sfxtrack=g.sfxtrackv;
+  int i=g.sfxtrackc;
+  for (;i-->0;sfxtrack++) {
+    if (sfxtrack->when<oldest->when) oldest=sfxtrack;
+    if (sfxtrack->id!=id) continue;
+    if (sfxtrack->when+0.100>=now) return;
+    sfxtrack->when=now;
+    egg_play_sound(2,id);
+    return;
+  }
+  if (g.sfxtrackc<SFXTRACK_LIMIT) {
+    sfxtrack=g.sfxtrackv+g.sfxtrackc++;
+    sfxtrack->when=now;
+    sfxtrack->id=id;
+    egg_play_sound(2,id);
+    return;
+  }
+  if (oldest->id==id) return;
+  oldest->when=now;
+  oldest->id=id;
+  egg_play_sound(2,id);
+}

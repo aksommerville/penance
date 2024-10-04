@@ -14,11 +14,11 @@ events
 
 #sound 36 testing
 
-sound 36 thirty six
+sound 36 kick
 channel 0
-  master 30
+  master 80
   pan 70
-  fm 0080 0200
+  fm 0080 0100
   pitchenv ff 8400 8400    0080 0080 8000 8000
   level ff 0000 0000    0014 0014 ffff ffff    0020 0020 4000 4000    0100 0100 0000 0000
 events
@@ -49,7 +49,7 @@ events
 
 sound 42 Closed Hi Hat
 channel 0
-  master 20
+  master 10
   pan 60
   fm 0166 0400
   level ff 0000 0000    000a 000a ffff ffff    0010 0010 2000 2000    0080 0080 0000 0000
@@ -70,11 +70,10 @@ events
 
 sound 44 Pedal Hi-Hat
 channel 0
-  master 30
+  master 20
   pan 60
-  harmonics 8000 0000 ffff 6666 aaaa ffff
-  fm 0399 0300
-  pitchenv ff 8000 8000    0180 0180 8400 8400
+  fm 0399 0800
+  pitchenv ff 8000 8000    0180 0180 8100 8100
   level ff 0000 0000    0020 0020 ffff ffff    0010 0010 4000 4000    0100 0100 0000 0000
 events
   note 0 e6 0x40 0
@@ -93,13 +92,13 @@ events
 
 sound 46 Open Hi-Hat
 channel 0
-  master 30
+  master 20
   pan 50
   fm 0654 0400
   level ff 0000 0000    000c 000c ffff ffff    0018 0018 6000 6000    0200 0200 0000 0000
   tremolo 0030 c000 00
 channel 1
-  master c0
+  master 90
   pan 50
   sub 0060
   level ff 0000 0000    000c 000c ffff ffff    0018 0018 6000 6000    0200 0200 0000 0000
@@ -122,10 +121,25 @@ events
 
 sound 49 Crash Cymbal 1
 channel 0
-  master 30
+  master 10
   pan c0
   fm 0432 0400
-  level ff 0000 0000    000a 000a ffff ffff    0040 0040 2000 2000    0300 0300 0000 0000
+  level ff 0000 0000    000a 000a ffff ffff    0040 0040 8000 8000    0300 0300 0000 0000
+  tremolo 0040 c000 00
+channel 1
+  master 20
+  pan c0
+  sub 0100
+  level ff 0000 0000   000a 000a ffff ffff   0040 0040 c000 c000   0380 0380 0000 0000
+  waveshaper 4000 4000 4000 4000 4000 4000 8000 c000 c000 c000 c000 c000 c000
+channel 2
+  master 10
+  pan c0
+  fm 0732 0500
+  level ff 0000 0000    000a 000a ffff ffff    0040 0040 8000 8000    0300 0300 0000 0000
+  tremolo 0040 c000 80
 events
   note 0 g5 0x40 0
+  note 2 gs5 0x40 0
+  note 1 d5 0x40 0
   delay 1000

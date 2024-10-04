@@ -11,9 +11,8 @@ For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MO
 - [ ] Music.
 - - [ ] Review instruments again, after I've heard them all a few times.
 - - [ ] '' sound effects.
-- [x] The lock puzzle feels wrong. Bad sound effects, and I'm not sure, the moment of unlocking, it just doesn't pop.
+- - [ ] Sound blast if you blur web then refocus some time later.
 - [ ] Build for Pi. Include linux-x86 and raspi binaries on Itch.
-- [ ] Hey we got a couple days left. Make a minicomic.
 
 ## Playtest high scores
 

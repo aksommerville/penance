@@ -59,7 +59,7 @@ instrument 5 DWW Bass
   level 02 0000 0000   0028 0014 8000 ffff    0032 003c 0c00 1800   0080 0200 0000 0000
 
 instrument 6 DWW Drums
-  master ff
+  master 90
   drums 0001 00 c0 ff
 
 instrument 7 DWW Rhythm Guitar
@@ -125,7 +125,7 @@ instrument 14 Take Wing Lead
   level 02 0000 0000   0028 0014 8000 ffff    0032 003c 1500 4000   0200 0400 0000 0000
 
 instrument 15 Take Wing Bass
-  master 50
+  master 30
   pan 70
   shape 02
   level 02 0000 0000   0028 0014 8000 ffff    0032 003c 1500 4000   0200 0400 0000 0000
