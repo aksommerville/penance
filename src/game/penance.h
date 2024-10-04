@@ -30,9 +30,16 @@ Hole:
   Turtle     LLRRD
 Tree:
   Teleport   DDD
-  Crow       URDLU
   Open       LRLUU
 */
+#define SPELLBIT_FLOWER    0x01
+#define SPELLBIT_FIREBALL  0x02
+#define SPELLBIT_DISEMBODY 0x04
+#define SPELLBIT_RABBIT    0x08
+#define SPELLBIT_BIRD      0x10
+#define SPELLBIT_TURTLE    0x20
+#define SPELLBIT_TELEPORT  0x40
+#define SPELLBIT_OPEN      0x80
 
 #define TRANSITION_CUT 0
 #define TRANSITION_PAN_LEFT 1
@@ -72,6 +79,7 @@ extern struct globals {
   int gameover; // Nonzero after we enter the triangle with all candles lit. Outtro animation.
   double playtime;
   double besttime;
+  int bonus,jammio,spellusage;
   int transition;
   double transition_clock; // 0=>TRANSITION_TIME
   int transition_pvbits; // texid, capture of the last frame of the "from" scene

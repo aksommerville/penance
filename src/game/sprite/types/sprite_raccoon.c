@@ -104,6 +104,7 @@ static void raccoon_match(struct sprite *sprite) {
   SPRITE->stageclock=3.0;
   if (!memcmp(SPRITE->scorev,"\1\1\1\1\1\1\1",MASKC)) {
     SPRITE->won=1;
+    g.bonus=1;
   }
 }
 
@@ -221,8 +222,8 @@ static void _raccoon_render(struct sprite *sprite,int16_t addx,int16_t addy) {
         tileid+=1+SPRITE->animframe;
       } break;
     case STAGE_CONGRATULATE: {
-        if (SPRITE->animframe) dsty--;
         graf_draw_tile(&g.graf,texid,dstx,dsty-TILESIZE,SPRITE->tileid0+12,0);
+        if (SPRITE->animframe) dsty--;
       } break;
   }
   graf_draw_tile(&g.graf,texid,dstx,dsty,tileid,xform);

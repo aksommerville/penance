@@ -21,13 +21,7 @@ static void hero_cast_teleport(struct sprite *sprite) {
   menu_push(&menu_type_teleport);
   sprite->y-=1.500; // Stay on the stump. Mode has changed to FREE and that's OK; hero_animate() won't have been called.
   sfx(SFX_TELEPORT_OPEN);
-}
-
-/* Summon the helpful crow.
- */
- 
-static void hero_cast_crow(struct sprite *sprite) {
-  fprintf(stderr,"TODO %s\n",__func__);
+  g.spellusage|=SPELLBIT_TELEPORT;
 }
 
 /* The Spell of Opening.
@@ -50,8 +44,12 @@ static void hero_cast_open(struct sprite *sprite) {
       case 0xf3: *p=0xf1; effective=1; break;
     }
   }
-  if (effective) sfx(SFX_OPENING_ACCEPT);
-  else sfx(SFX_OPENING_REJECT);
+  if (effective) {
+    sfx(SFX_OPENING_ACCEPT);
+    g.spellusage|=SPELLBIT_OPEN;
+  } else {
+    sfx(SFX_OPENING_REJECT);
+  }
 }
 
 /* Finish tree-spell mode.
@@ -71,12 +69,10 @@ static void hero_end_tree(struct sprite *sprite) {
     } \
   }
   SPELLCHECK(teleport,DIR_S,DIR_S,DIR_S)
-  SPELLCHECK(crow,DIR_N,DIR_E,DIR_S,DIR_W,DIR_N)
   SPELLCHECK(open,DIR_W,DIR_E,DIR_W,DIR_N,DIR_N)
   #undef SPELLCHECK
   SPRITE->spellc=0;
   sfx(SFX_INVALID_SPELL);
-  //TODO visual repudiation
 }
 
 /* Enter hole-spell mode.
@@ -99,22 +95,26 @@ static void hero_begin_hole(struct sprite *sprite,uint8_t tileid) {
 static void hero_cast_rabbit(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_RABBIT;
   sfx(SFX_TRANSFORM);
+  g.spellusage|=SPELLBIT_RABBIT;
 }
  
 static void hero_cast_bird(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_BIRD;
   sprite->y-=1.000; // Normally you get pushed off the hole after casting, but for bird no need to.
   sfx(SFX_TRANSFORM);
+  g.spellusage|=SPELLBIT_BIRD;
 }
  
 static void hero_cast_turtle(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_TURTLE;
   sfx(SFX_TRANSFORM);
+  g.spellusage|=SPELLBIT_TURTLE;
 }
  
 static void hero_cast_jammio(struct sprite *sprite) {
   SPRITE->mode=HERO_MODE_JAMMIO;
   sfx(SFX_TRANSFORM);
+  g.jammio=1; // This one isn't part of (spellusage); it's a separate thing for tax purposes.
 }
 
 static void hero_end_transform(struct sprite *sprite) {
@@ -166,7 +166,6 @@ static void hero_end_hole(struct sprite *sprite) {
   #undef SPELLCHECK
   SPRITE->spellc=0;
   sfx(SFX_INVALID_SPELL);
-  //TODO visual repudiation
 }
 
 /* Throw fireball.
@@ -189,6 +188,7 @@ static void hero_cast_fireball(struct sprite *sprite,double dx) {
     SPRITE->facedir=DIR_W;
   }
   SPRITE->respell=HERO_MODE_FIREBALL;
+  g.spellusage|=SPELLBIT_FIREBALL;
 }
  
 static void hero_cast_fireballl(struct sprite *sprite) { hero_cast_fireball(sprite,-1.0); }
@@ -210,6 +210,7 @@ static void hero_cast_flower(struct sprite *sprite) {
   SPRITE->animclock=0.0;
   SPRITE->animframe=0;
   sfx(SFX_FLOWER);
+  g.spellusage|=SPELLBIT_FLOWER;
 }
 
 static void hero_end_flower(struct sprite *sprite) {
@@ -235,6 +236,7 @@ static void hero_cast_disembody(struct sprite *sprite) {
   SPRITE->ghost_x=sprite->x;
   SPRITE->ghost_y=sprite->y;
   SPRITE->respell=HERO_MODE_GHOST;
+  g.spellusage|=SPELLBIT_DISEMBODY;
 }
 
 /* End ghost mode (by pressing South).
