@@ -89,7 +89,7 @@ instrument 9 DWW Organ
 #-----------------------------------------------------------------------
 
 instrument 10 Antechamber Lead
-  master 80
+  master 60
   pan 78
   shape 00
   fm 0200 0200
@@ -97,21 +97,21 @@ instrument 10 Antechamber Lead
   level 02 0000 0000   0028 0014 8000 ffff    0032 003c 1500 4000   0200 0400 0000 0000
 
 instrument 11 Antechamber Bass
-  master 60
+  master 50
   pan 88
   shape 00
   fm 0100 0200
   level 02 0000 0000   0028 0014 8000 ffff    0032 003c 1500 4000   0200 0400 0000 0000
 
 instrument 12 Antechamber Late Pad
-  master 80
+  master 60
   pan 60
   fm 0100 0400
   fmlfo 01f4 c000 00
   level 02 0000 0000   0028 0014 8000 ffff    0032 003c 1500 4000   0200 0400 0000 0000
 
 instrument 13 Antechamber Early Frills
-  master 20
+  master 18
   pan c0
   shape 00
   level 02 0000 0000   0028 0014 8000 ffff    0032 003c 1500 4000   0200 0400 0000 0000
