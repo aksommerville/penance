@@ -373,3 +373,14 @@ channel 0
 events
   note 0 g4 0x40 0
   delay 120
+  
+sound 30 SFX_CANNON_FIRE
+channel 0
+  master 50
+  sub 00a0
+  level ff 0000 0000    0010 0010 ffff ffff    0020 0020 0400 0400    0200 0200 0000 0000
+  gain 0800 c0 00
+  delay 00a0 80 80 80 80
+events
+  note 0 cs3 0x40 0
+  delay 1000

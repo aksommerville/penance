@@ -47,6 +47,7 @@ static uint8_t scoreboard_moon_tile(uint8_t spellusage) {
 static int scoreboard_is_full_clear() {
   if (!g.bonus) return 0;
   if (!g.jammio) return 0;
+  if (!g.rescued) return 0;
   if (g.spellusage!=0xff) return 0;
   int i=CANDLE_COUNT; while (i-->0) if (!g.candlev[i]) return 0;
   return 1;
@@ -68,7 +69,7 @@ static void _scoreboard_render(struct sprite *sprite,int16_t addx,int16_t addy) 
   egg_draw_globals(0,0xff);
   
   /* Badges blow the time section.
-   * Five tiles, aligned with six grid cells: Bone, Jammio, Spell Usage, (blank), 100% (*2)
+   * Six tiles, aligned with six grid cells: Bone, Jammio, Rescue, Spell Usage, (blank), 100% (*2)
    */
   dstx=(int16_t)((sprite->x-2.0)*TILESIZE)+addx;
   dsty=(int16_t)((sprite->y+2.0)*TILESIZE)+addy;
@@ -84,8 +85,8 @@ static void _scoreboard_render(struct sprite *sprite,int16_t addx,int16_t addy) 
   }
   VTX(g.bonus?0x78:qmark) // Bone
   VTX(g.jammio?0x79:qmark) // Jammio
+  VTX(g.rescued?0x6e:qmark) // Rescue
   VTX(scoreboard_moon_tile(g.spellusage)) // Moon: 0x7a,0x7b,0x7c,0x7d
-  dstx+=TILESIZE;
   if ((SPRITE->animphase<0.750)&&scoreboard_is_full_clear()) {
     VTX(0x7e) // "100%"
     VTX(0x7f) // ''

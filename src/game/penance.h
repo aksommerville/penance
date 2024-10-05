@@ -85,7 +85,7 @@ extern struct globals {
   int gameover; // Nonzero after we enter the triangle with all candles lit. Outtro animation.
   double playtime;
   double besttime;
-  int bonus,jammio,spellusage;
+  int bonus,jammio,spellusage,rescued;
   int transition;
   double transition_clock; // 0=>TRANSITION_TIME
   int transition_pvbits; // texid, capture of the last frame of the "from" scene
@@ -142,6 +142,7 @@ void penance_render_game_to(int texid);
 #define SFX_DUALEPHANT_FIRE 27
 #define SFX_WIND_BLOW 28
 #define SFX_TICK 29
+#define SFX_CANNON_FIRE 30
 //#define sfx(id) egg_play_sound(2,id)
 #define sfx(id) _penance_sfx(id)
 void _penance_sfx(int id); // Don't call directly; use the macro.

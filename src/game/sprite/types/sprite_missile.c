@@ -19,6 +19,20 @@ static void _missile_update(struct sprite *sprite,double elapsed) {
     sprite_kill_later(sprite);
     return;
   }
+  // Also disappear if we hit a solid cell; this is important for the Bonus Baseball Challenge.
+  if ((sprite->x>0.0)&&(sprite->y>0.0)) {
+    int x=(int)sprite->x;
+    int y=(int)sprite->y;
+    if ((x<COLC)&&(y<ROWC)) {
+      switch (g.map->tileprops[g.map->v[y*COLC+x]]) {
+        case 1:
+        case 3: {
+            sprite_kill_later(sprite);
+            return;
+          }
+      }
+    }
+  }
   if (!SPRITE->deflected&&(GRP(HERO)->spritec>=1)) {
     struct sprite *hero=GRP(HERO)->spritev[0];
     if (hero_is_turtle(hero)) {

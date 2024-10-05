@@ -1,0 +1,5 @@
+type cannon
+image hero
+tileid 0xb2
+groups VISIBLE,UPDATE
+0x3f 1u16

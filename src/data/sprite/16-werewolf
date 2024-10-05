@@ -1,0 +1,4 @@
+type werewolf
+image hero
+tileid 0xb6
+groups UPDATE,VISIBLE

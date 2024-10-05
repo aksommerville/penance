@@ -66,3 +66,14 @@ int sprite_lock_is_locked(const struct sprite *sprite) {
   if (SPRITE->unlock_clock>0.0) return 0;
   return 1;
 }
+
+void sprite_lock_unlock_all() {
+  int i=GRP(VISIBLE)->spritec;
+  while (i-->0) {
+    struct sprite *sprite=GRP(VISIBLE)->spritev[i];
+    if (sprite->type!=&sprite_type_lock) continue;
+    if (SPRITE->unlock_clock>0.0) continue;
+    SPRITE->lamps=6;
+    sprite_lock_set_lamp(sprite,0,1);
+  }
+}

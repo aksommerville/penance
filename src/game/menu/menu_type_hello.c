@@ -249,7 +249,7 @@ static void _hello_input(struct menu *menu,int input,int pvinput) {
     sprite_group_kill(GRP(HERO));
     maps_reset(g.rom,g.romc);
     g.playtime=0.0;
-    g.bonus=g.jammio=g.spellusage=0;
+    g.bonus=g.jammio=g.spellusage=g.rescued=0;
     penance_load_map(1,TRANSITION_CUT);
     if (ENABLE_MUSIC) egg_play_song(RID_song_doors_without_walls,0,1);
     menu_pop(menu);
@@ -276,30 +276,6 @@ static void _hello_update(struct menu *menu,double elapsed) {
  */
  
 static void _hello_render(struct menu *menu) {
-  /*XXX
-  if (MENU->dismissed) {
-    int alpha=(int)(MENU->alpha*255.0);
-    if (alpha<0) alpha=0; else if (alpha>0xff) alpha=0xff;
-    graf_set_alpha(&g.graf,alpha);
-    graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,0x887890ff);
-  } else {
-    egg_draw_clear(1,0x887890ff);
-  }
-  int texid_hello=texcache_get_image(&g.texcache,RID_image_hello);
-  int hellow=0,helloh=0;
-  egg_texture_get_status(&hellow,&helloh,texid_hello);
-  graf_set_tint(&g.graf,0x201008ff);
-  if (!MENU->dismissed) {
-    int alpha=(int)(MENU->alpha*255.0);
-    if (alpha<0) alpha=0; else if (alpha>0xff) alpha=0xff;
-    graf_set_alpha(&g.graf,alpha);
-  }
-  graf_draw_decal(&g.graf,texid_hello,44,36,0,0,hellow,helloh,0);
-  graf_set_tint(&g.graf,0);
-  if (!MENU->dismissed) {
-    graf_set_alpha(&g.graf,0xff);
-  }
-  */
   switch (MENU->stage) {
     #define _(tag) case STAGE_##tag: hello_render_##tag(menu); break;
     FOR_EACH_STAGE
