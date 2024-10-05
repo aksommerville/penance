@@ -46,6 +46,9 @@ void egg_client_update(double elapsed) {
    */
   int input=egg_input_get_one(0);
   if (input!=g.pvinput) {
+    if ((input&EGG_BTN_AUX3)&&!(g.pvinput&EGG_BTN_AUX3)) {
+      egg_terminate(0);
+    }
     if (g.menuc) {
       struct menu *menu=g.menuv[g.menuc-1];
       menu->type->input(menu,input,g.pvinput);
