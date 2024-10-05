@@ -59,6 +59,7 @@ static void wind_blow(struct sprite *sprite,double elapsed) {
     if (victim->y>sprite->y+0.5) continue; // My (x,y) is 1/4 from top left, I'm 2x2 tiles.
     if (victim->type==&sprite_type_hero) ;
     else if (victim->type==&sprite_type_fleshpuppet) ;
+    else if (victim->type==&sprite_type_bug) ;
     else if (victim->type==&sprite_type_bonfire) {
       sprite_bonfire_blow(victim,-1);
       continue;

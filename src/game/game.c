@@ -38,6 +38,7 @@ static int penance_load_map_object(struct map *map) {
         } break;
     }
   }
+  spawn_bugs();
   return 0;
 }
  
