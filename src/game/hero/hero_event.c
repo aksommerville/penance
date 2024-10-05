@@ -141,6 +141,9 @@ static void hero_end_transform(struct sprite *sprite) {
   hero_rectify_position(sprite); // We might be transforming out of BIRD over water.
   sfx(SFX_UNTRANSFORM);
   struct sprite *fireworks=sprite_spawn_with_type(sprite->x,sprite->y,&sprite_type_fireworks,0,0);
+  
+  // Force a recheck of the grid. Stumps are inert to all transformed modes, and birds won't enter holes.
+  hero_quantized_motion(sprite,(int)sprite->x,(int)sprite->y);
 }
 
 /* Finish hole-spell mode.
