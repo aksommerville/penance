@@ -6,18 +6,13 @@ This is a sequel to my 2023 game [Full Moon](https://github.com/aksommerville/fu
 
 For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MOON".
 
-## TODO
-
-- [ ] Music.
-- - [ ] Review instruments again, after I've heard them all a few times.
-- - [ ] '' sound effects.
-- - [x] Sound blast if you blur web then refocus some time later.
-- [ ] Build for Pi. Include linux-x86 and raspi binaries on Itch.
+- [x] Islands in the baseball bonus zone: Ensure you can unbird there!
 
 ## Playtest high scores
 
 16:27.190 Jamesanity
 18:39.783 Earthshine (Darius)
+ 8:39.??? Tom
 
-2:20.183 AK 100%
-0:34:535 AK Any%
+2:49.367 AK 100%
+0:33:515 AK Any%

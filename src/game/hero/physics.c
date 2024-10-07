@@ -23,7 +23,6 @@ static int hero_emergency_reposition_rect(struct sprite *sprite,int x,int y,int 
       if (*hazp) continue;
       uint8_t prop=g.map->tileprops[*cellp];
       if (prop) continue;
-      //fprintf(stderr,"Emergency reposition to (%d,%d)\n",col,row);
       sprite->x=col+0.5;
       sprite->y=row+0.5;
       return 1;
@@ -44,8 +43,8 @@ static void hero_emergency_reposition(struct sprite *sprite) {
   int radius=1;
   for (;;radius++) {
     int w=(radius<<1)+1;
-    if (w>=COLC) {
-      //fprintf(stderr,"%s DOUBLE PANIC!\n",__func__);
+    if (radius>=COLC) {
+      //fprintf(stderr,"%s DOUBLE PANIC! radius=%d hero=%d,%d\n",__func__,radius,x,y);
       return;
     }
     if (hero_emergency_reposition_rect(sprite,x-radius,y-radius,w,1)) return;
