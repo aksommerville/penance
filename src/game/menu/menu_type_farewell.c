@@ -92,6 +92,7 @@ static void farewell_advance(struct menu *menu) {
         MENU->stageclock=60.0;
       } break;
     default: {
+        MENU->stage=FAREWELL_STAGE_FINAL;
         MENU->stageclock=50.0; // If we repeat, don't fade back in, cheat the clock down a little.
       }
   }
