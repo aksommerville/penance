@@ -170,6 +170,13 @@ static void hero_update_GHOST(struct sprite *sprite,double elapsed) {
     SPRITE->pvy=sprite->y;
     sprite->x+=dx;
     sprite->y+=dy;
+    
+    // We're able to walk through any wall, so we can always go offscreen.
+    // Prevent a silly user from flying too far afield.
+    if (sprite->x<-1.0f) sprite->x=-1.0f;
+    else if (sprite->x>COLC+1.0f) sprite->x=COLC+1.0f;
+    if (sprite->y<-1.0f) sprite->y=-1.0f;
+    else if (sprite->y>ROWC+1.0f) sprite->y=ROWC+1.0f;
   }
 }
 
@@ -444,7 +451,7 @@ void hero_apply_wind(struct sprite *sprite,double dx) {
   }
 }
 
-/* Nudge (when turtle is hit by a missile.
+/* Nudge (when turtle is hit by a missile).
  */
  
 void hero_nudge(struct sprite *sprite,double nx,double ny) {
