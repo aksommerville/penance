@@ -231,18 +231,18 @@ void _penance_sfx(int id) {
     if (sfxtrack->id!=id) continue;
     if (sfxtrack->when+0.100>=now) return;
     sfxtrack->when=now;
-    egg_play_sound(2,id);
+    egg_play_sound(id);
     return;
   }
   if (g.sfxtrackc<SFXTRACK_LIMIT) {
     sfxtrack=g.sfxtrackv+g.sfxtrackc++;
     sfxtrack->when=now;
     sfxtrack->id=id;
-    egg_play_sound(2,id);
+    egg_play_sound(id);
     return;
   }
   if (oldest->id==id) return;
   oldest->when=now;
   oldest->id=id;
-  egg_play_sound(2,id);
+  egg_play_sound(id);
 }
