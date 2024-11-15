@@ -7,7 +7,7 @@ This is a sequel to my 2023 game [Full Moon](https://github.com/aksommerville/fu
 For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MOON".
 
 - [x] Islands in the baseball bonus zone: Ensure you can unbird there!
-- [ ] Update audio for Egg synth rewrite.
+- [x] Update audio for Egg synth rewrite.
 
 ## Playtest high scores
 
