@@ -10,9 +10,9 @@
 7778330000040001010e33153432040200868787
 8788232422243432341422333323142515868787
 
-image outdoors
+image image:outdoors
 location 17 16
-sprite @17,5 lock
-sprite @3,2 treadle
-sprite @3,9 treadle
-sprite @16,9 treadle
+sprite @17,5 sprite:lock
+sprite @3,2 sprite:treadle
+sprite @3,9 sprite:treadle
+sprite @16,9 sprite:treadle

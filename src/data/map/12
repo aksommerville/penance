@@ -10,10 +10,10 @@
 8787878815342534967a87880006000001000c96
 8787878835321324258687897778221532132225
 
-image outdoors
+image image:outdoors
 location 17 18
-sprite @17,8 candle3
-sprite @17,1 wind
-sprite @1,1 bonfire
-sprite @4,2 bonfire
-sprite @14,2 bonfire
+sprite @17,8 sprite:candle3
+sprite @17,1 sprite:wind
+sprite @1,1 sprite:bonfire
+sprite @4,2 sprite:bonfire
+sprite @14,2 sprite:bonfire

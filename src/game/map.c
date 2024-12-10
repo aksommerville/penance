@@ -1,4 +1,5 @@
 #include "penance.h"
+#include "shared_symbols.h"
 
 /* Globals.
  */
@@ -6,6 +7,8 @@
 #define STUMP_LIMIT 8
  
 static const uint8_t tileprops_default[256]={0};
+
+static uint8_t tilesheet_storage[256*TILESHEET_LIMIT];
  
 static struct {
   const uint8_t *tilesheetv[TILESHEET_LIMIT]; // sparse, indexed by rid
@@ -23,29 +26,34 @@ static struct {
  */
  
 static int maps_add_resource(const uint8_t *src,int srcc,int rid) {
-  if (srcc<COLC*ROWC) {
-    fprintf(stderr,"map:%d: Invalid size %d, must be at least %d*%d==%d\n",rid,srcc,COLC,ROWC,COLC*ROWC);
+
+  struct rom_map rmap={0};
+  if (rom_map_decode(&rmap,src,srcc)<0) {
+    fprintf(stderr,"map:%d failed to decode\n",rid);
     return -1;
   }
+  if ((rmap.w!=COLC)||(rmap.h!=ROWC)) {
+    fprintf(stderr,"map:%d has size %d,%d but must be %d,%d\n",rid,rmap.w,rmap.h,COLC,ROWC);
+    return -1;
+  }
+
   struct map *map=calloc(1,sizeof(struct map));
   if (!map) return -1;
   map->rid=rid;
-  map->serial=src;
-  map->serialc=srcc;
+  map->serial=src+8; // strip the signature and dimensions; pre-egg-maps code assumed a slightly different format.
+  map->serialc=srcc-8;
   map->tileprops=tileprops_default;
-  memcpy(map->v,src,COLC*ROWC);
+  memcpy(map->v,rmap.v,COLC*ROWC);
   
   // Read commands. Only thing we actually care about at this time is 0x22 location.
-  struct map_command_reader reader;
-  map_command_reader_init_map(&reader,map);
-  const uint8_t *arg;
-  int opcode,argc;
   int x=255,y=255;
-  while ((argc=map_command_reader_next(&arg,&opcode,&reader))>=0) {
-    switch (opcode) {
+  struct rom_command_reader reader={.v=map->serial+COLC*ROWC,.c=map->serialc-COLC*ROWC};
+  struct rom_command cmd;
+  while (rom_command_reader_next(&cmd,&reader)>0) {
+    switch (cmd.opcode) {
       case 0x22: { // location
-          x=arg[0];
-          y=arg[1];
+          x=cmd.argv[0];
+          y=cmd.argv[1];
         } break;
     }
   }
@@ -105,14 +113,12 @@ static int maps_add_resource(const uint8_t *src,int srcc,int rid) {
  */
  
 static int map_link(struct map *map) {
-  struct map_command_reader reader;
-  map_command_reader_init_map(&reader,map);
-  const uint8_t *arg;
-  int opcode,argc;
-  while ((argc=map_command_reader_next(&arg,&opcode,&reader))>=0) {
-    switch (opcode) {
+  struct rom_command_reader reader={.v=map->serial+COLC*ROWC,.c=map->serialc-COLC*ROWC};
+  struct rom_command command;
+  while (rom_command_reader_next(&command,&reader)>0) {
+    switch (command.opcode) {
       case 0x20: { // image (parallel to tilesheet)
-          int tsid=(arg[0]<<8)|arg[1];
+          int tsid=(command.argv[0]<<8)|command.argv[1];
           if ((tsid<TILESHEET_LIMIT)&&maps.tilesheetv[tsid]) map->tileprops=maps.tilesheetv[tsid];
           else map->tileprops=tileprops_default;
         } break;
@@ -135,12 +141,19 @@ int maps_reset(const void *rom,int romc) {
     switch (res->tid) {
       case EGG_TID_map: if (maps_add_resource(res->v,res->c,res->rid)<0) return -1; break;
       case EGG_TID_tilesheet: {
-          if ((res->rid>=0)&&(res->rid<TILESHEET_LIMIT)&&(res->c>=256)) {
-            maps.tilesheetv[res->rid]=res->v;
-          } else {
-            fprintf(stderr,"Invalid tilesheet:%d, c=%d\n",res->rid,res->c);
+          if ((res->rid<0)||(res->rid>=TILESHEET_LIMIT)) {
+            fprintf(stderr,"Invalid tilesheet id %d\n",res->rid);
             return -2;
           }
+          uint8_t *storage=tilesheet_storage+256*res->rid;
+          struct rom_tilesheet_reader tsr;
+          if (rom_tilesheet_reader_init(&tsr,res->v,res->c)<0) return -1;
+          struct rom_tilesheet_entry ts;
+          while (rom_tilesheet_reader_next(&ts,&tsr)>0) {
+            if (ts.tableid!=NS_tilesheet_physics) continue;
+            memcpy(storage+ts.tileid,ts.v,ts.c);
+          }
+          maps.tilesheetv[res->rid]=storage;
         } break;
       case EGG_TID_sprite: {
           if (maps.spritec>=maps.spritea) {
@@ -228,57 +241,4 @@ int maps_get_stump(int *x,int *y,int p) {
   *x=stump->x;
   *y=stump->y;
   return 1;
-}
-
-/* Command reader.
- */
- 
-void map_command_reader_init_serial(struct map_command_reader *reader,const void *src,int srcc) {
-  reader->v=src;
-  reader->c=srcc;
-  reader->p=0;
-}
-
-void map_command_reader_init_res(struct map_command_reader *reader,const void *src,int srcc) {
-  if (srcc>=COLC*ROWC) {
-    reader->v=(uint8_t*)src+COLC*ROWC;
-    reader->c=srcc-COLC*ROWC;
-  } else {
-    reader->c=0;
-  }
-  reader->p=0;
-}
-
-void map_command_reader_init_map(struct map_command_reader *reader,const struct map *map) {
-  if (map) {
-    reader->v=map->serial+COLC*ROWC;
-    reader->c=map->serialc-COLC*ROWC;
-  } else {
-    reader->c=0;
-  }
-  reader->p=0;
-}
-
-int map_command_reader_next(void *dstpp,int *opcode,struct map_command_reader *reader) {
-  if (reader->p>=reader->c) return -1;
-  *opcode=reader->v[reader->p++];
-  if (!*opcode) { reader->c=0; return -1; } // 0 is explicit EOF.
-  int dstc=0;
-  switch ((*opcode)&0xe0) {
-    case 0x00: dstc=0; break;
-    case 0x20: dstc=2; break;
-    case 0x40: dstc=4; break;
-    case 0x60: dstc=6; break;
-    case 0x80: dstc=8; break;
-    case 0xa0: dstc=12; break;
-    case 0xc0: dstc=16; break;
-    case 0xe0: {
-        if (*opcode>=0xf0) return -1;
-        dstc=reader->v[reader->p++];
-      } break;
-  }
-  if (reader->p>reader->c-dstc) { reader->c=0; return -1; }
-  *(const void**)dstpp=reader->v+reader->p;
-  reader->p+=dstc;
-  return dstc;
 }

@@ -10,9 +10,9 @@
 8836373737384e4e4e4e4e363800000a00768a87
 89777777777777777777777777777777778a8787
 
-image outdoors
+image image:outdoors
 location 11 17
-sprite @2,1 target
-sprite @7,8 cannon_heatseek
-sprite @12,4 lock
-sprite @12,2 werewolf
+sprite @2,1 sprite:target
+sprite @7,8 sprite:cannon_heatseek
+sprite @12,4 sprite:lock
+sprite @12,2 sprite:werewolf

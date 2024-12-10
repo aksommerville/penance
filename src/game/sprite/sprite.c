@@ -41,11 +41,11 @@ int sprite_ref(struct sprite *sprite) {
  */
 
 struct sprite *sprite_spawn_for_map(int x,int y,const uint8_t *def,int defc) {
-  if ((defc<3)||(def[0]!=0x20)) {
+  if ((defc<7)||(def[4]!=0x20)) {
     fprintf(stderr,"ERROR: Sprite must begin with 'type' command (0x20)\n");
     return 0;
   }
-  int sprtid=(def[1]<<8)|def[2];
+  int sprtid=(def[5]<<8)|def[6];
   const struct sprite_type *type=sprite_type_by_id(sprtid);
   if (!type) {
     fprintf(stderr,"ERROR: Invalid sprite type %d\n",sprtid);
@@ -77,35 +77,36 @@ struct sprite *sprite_spawn_with_type(
   
   // Iterate (def) and apply all generic fields.
   // Sprite resources are framed exactly the same way as map commands (tho the opcodes are completely different).
-  struct map_command_reader reader={0};
-  map_command_reader_init_serial(&reader,def,defc);
-  const uint8_t *v;
-  int c,opcode;
-  while ((c=map_command_reader_next(&v,&opcode,&reader))>=0) {
-    switch (opcode) {
+  if (defc) {
+    struct rom_sprite res={0};
+    if (rom_sprite_decode(&res,def,defc)<0) { sprite_kill_now(sprite); return 0; }
+    struct rom_command_reader reader={.v=res.cmdv,.c=res.cmdc};
+    struct rom_command command;
+    while (rom_command_reader_next(&command,&reader)>0) {
+      switch (command.opcode) {
     
-      case 0x20: break; // type -- must have been processed already by our caller.
-      case 0x21: { // image
-          sprite->imageid=(v[0]<<8)|v[1];
-        } break;
-      case 0x22: { // tileid
-          sprite->tileid=v[0];
-        } break;
-      case 0x23: { // layer
-          sprite->layer=(int16_t)((v[0]<<8)|v[1]);
-        } break;
-      case 0x40: { // grpmask
-          int grpmask=(v[0]<<24)|(v[1]<<16)|(v[2]<<8)|v[3];
-          int i=0,bit=1; for (;i<32;i++,bit<<=1) {
-            if (grpmask&bit) {
-              if (sprite_group_add(sprite_groupv+i,sprite)<0) {
-                sprite_kill_now(sprite);
-                return 0;
+        case 0x20: break; // type -- must have been processed already by our caller.
+        case 0x21: { // image
+            sprite->imageid=(command.argv[0]<<8)|command.argv[1];
+          } break;
+        case 0x22: { // tileid
+            sprite->tileid=command.argv[0];
+          } break;
+        case 0x23: { // layer
+            sprite->layer=(int16_t)((command.argv[0]<<8)|command.argv[1]);
+          } break;
+        case 0x40: { // grpmask
+            int grpmask=(command.argv[0]<<24)|(command.argv[1]<<16)|(command.argv[2]<<8)|command.argv[3];
+            int i=0,bit=1; for (;i<32;i++,bit<<=1) {
+              if (grpmask&bit) {
+                if (sprite_group_add(sprite_groupv+i,sprite)<0) {
+                  sprite_kill_now(sprite);
+                  return 0;
+                }
               }
             }
-          }
-        } break;
-        
+          } break;
+      }
     }
   }
   

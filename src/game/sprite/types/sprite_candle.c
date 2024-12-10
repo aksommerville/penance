@@ -13,13 +13,13 @@ struct sprite_candle {
 
 static int _candle_init(struct sprite *sprite,const uint8_t *def,int defc) {
   SPRITE->candleid=-1;
-  struct map_command_reader reader;
-  map_command_reader_init_serial(&reader,def,defc);
-  const uint8_t *arg;
-  int argc,opcode;
-  while ((argc=map_command_reader_next(&arg,&opcode,&reader))>=0) {
-    switch (opcode) {
-      case 0x3f: SPRITE->candleid=(arg[0]<<8)|arg[1]; break;
+  struct rom_sprite res={0};
+  if (rom_sprite_decode(&res,def,defc)<0) return -1;
+  struct rom_command_reader reader={.v=res.cmdv,.c=res.cmdc};
+  struct rom_command command;
+  while (rom_command_reader_next(&command,&reader)>0) {
+    switch (command.opcode) {
+      case 0x3f: SPRITE->candleid=(command.argv[0]<<8)|command.argv[1]; break;
     }
   }
   if ((SPRITE->candleid>=0)&&(SPRITE->candleid<CANDLE_COUNT)) SPRITE->lit=g.candlev[SPRITE->candleid];

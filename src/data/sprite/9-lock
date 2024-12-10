@@ -1,4 +1,4 @@
-type lock
-image hero
-tileid 0x18
-groups VISIBLE,UPDATE
+type (u16:sprtype)lock
+image image:hero
+tileid 0x18 0
+groups 0x0000000c

@@ -10,10 +10,10 @@
 71717172f4f4f4f4f4f4f4f4f4f4707171717171
 717171736161616162f4f4606161747171717171
 
-image outdoors
+image image:outdoors
 location 16 14
-sprite @5,2 candle1
-sprite @7,2 candle2
-sprite @9,2 candle3
-sprite @7,8 terminator
-sprite @15,1 scoreboard
+sprite @5,2 sprite:candle1
+sprite @7,2 sprite:candle2
+sprite @9,2 sprite:candle3
+sprite @7,8 sprite:terminator
+sprite @15,1 sprite:scoreboard

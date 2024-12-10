@@ -38,13 +38,4 @@ int maps_get_sprite(void *dstpp,int rid);
 void maps_get_world_bounds(int *x,int *y,int *w,int *h);
 int maps_get_stump(int *x,int *y,int p);
 
-struct map_command_reader {
-  const uint8_t *v;
-  int p,c;
-};
-void map_command_reader_init_serial(struct map_command_reader *reader,const void *src,int srcc); // commands only
-void map_command_reader_init_res(struct map_command_reader *reader,const void *src,int srcc); // full resource
-void map_command_reader_init_map(struct map_command_reader *reader,const struct map *map);
-int map_command_reader_next(void *dstpp,int *opcode,struct map_command_reader *reader); // <0 when complete, 0 is legal
-
 #endif

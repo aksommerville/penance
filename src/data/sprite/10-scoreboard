@@ -1,3 +1,3 @@
-type scoreboard
-image hero
-groups VISIBLE,UPDATE
+type (u16:sprtype)scoreboard
+image image:hero
+groups 0x0000000c

@@ -1,4 +1,4 @@
-type dualephant
-image hero
-tileid 0x57
-groups VISIBLE,UPDATE
+type (u16:sprtype)dualephant
+image image:hero
+tileid 0x57 0
+groups 0x0000000c

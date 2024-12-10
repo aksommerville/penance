@@ -1,4 +1,4 @@
-type wind
-image hero
-tileid 0x35
-groups VISIBLE,UPDATE
+type (u16:sprtype)wind
+image image:hero
+tileid 0x35 0
+groups 0x0000000c

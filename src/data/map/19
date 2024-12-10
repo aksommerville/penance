@@ -10,7 +10,7 @@
 87878787897778000d070c02000001000000768a
 8787878787878977777777777777777777778a87
 
-image outdoors
+image image:outdoors
 location 13 17
-sprite @6,3 target
-sprite @3,7 lock
+sprite @6,3 sprite:target
+sprite @3,7 sprite:lock

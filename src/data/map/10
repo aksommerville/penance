@@ -10,6 +10,6 @@
 8787881412321324243213121400040000020286
 87878822233435122334341523000000000b0086
 
-image outdoors
+image image:outdoors
 location 18 16
-sprite @15,4 dualephant
+sprite @15,4 sprite:dualephant

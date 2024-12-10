@@ -1,4 +1,4 @@
-type target
-image hero
-tileid 0xb0
-groups VISIBLE,UPDATE
+type (u16:sprtype)target
+image image:hero
+tileid 0xb0 0
+groups 0x0000000c

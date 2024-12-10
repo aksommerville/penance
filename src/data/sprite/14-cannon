@@ -1,4 +1,4 @@
-type cannon
-image hero
-tileid 0xb2
-groups VISIBLE,UPDATE
+type (u16:sprtype)cannon
+image image:hero
+tileid 0xb2 0
+groups 0x0000000c

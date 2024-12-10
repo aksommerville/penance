@@ -1,4 +1,4 @@
-type terminator
-image outdoors
-tileid 0xe8
-groups VISIBLE,UPDATE
+type (u16:sprtype)terminator
+image image:outdoors
+tileid 0xe8 0
+groups 0x0000000c

@@ -1,4 +1,4 @@
-type bonfire
-image hero
-tileid 0x24
-groups VISIBLE,UPDATE,HAZARD
+type (u16:sprtype)bonfire
+image image:hero
+tileid 0x24 0
+groups 0x0000002c

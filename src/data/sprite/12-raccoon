@@ -1,4 +1,4 @@
-type raccoon
-image hero
-tileid 0x83
-groups VISIBLE,UPDATE
+type (u16:sprtype)raccoon
+image image:hero
+tileid 0x83 0
+groups 0x0000000c

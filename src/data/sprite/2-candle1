@@ -1,5 +1,5 @@
-type candle
-image hero
-tileid 0x28
-groups UPDATE,VISIBLE
-0x3f 0u16
+type (u16:sprtype)candle
+image image:hero
+tileid 0x28 0
+groups 0x0000000c
+0x3f (u16)0

@@ -13,12 +13,14 @@ struct sprite_cannon {
 #define SPRITE ((struct sprite_cannon*)sprite)
 
 static int _cannon_init(struct sprite *sprite,const uint8_t *def,int defc) {
-  struct map_command_reader reader;
-  map_command_reader_init_serial(&reader,def,defc);
-  int opcode,argc;
-  const uint8_t *arg;
-  while ((argc=map_command_reader_next(&arg,&opcode,&reader))>=0) switch (opcode) {
-    case 0x3f: SPRITE->heatseek=arg[1]; break;
+  struct rom_sprite res={0};
+  if (rom_sprite_decode(&res,def,defc)<0) return -1;
+  struct rom_command_reader reader={.v=res.cmdv,.c=res.cmdc};
+  struct rom_command command;
+  while (rom_command_reader_next(&command,&reader)>0) {
+    switch (command.opcode) {
+      case 0x3f: SPRITE->heatseek=command.argv[1]; break;
+    }
   }
   SPRITE->clock=0.200; // Bottom of cycle is the distended frame; skip that the first time.
   SPRITE->tileid0=sprite->tileid;

@@ -41,35 +41,9 @@ mid/web/%.o:$(EGG_SDK)/src/opt/%.c|$(TOC_H);$(PRECMD) $(WEB_CC) -o$@ $<
 WEB_LIB:=mid/web/code.wasm
 $(WEB_LIB):$(WEB_OFILES);$(PRECMD) $(WEB_LD) -o$@ $(WEB_OFILES) $(WEB_LDPOST)
 
-TOOL:=out/tool
-all:$(TOOL)
-TOOL_CFILES:=$(filter src/tool/%.c,$(SRCFILES))
-TOOL_OPT_CFILES:=$(filter $(addprefix $(EGG_SDK)/src/opt/,$(addsuffix /%.c,fs serial)),$(OPT_ALL_CFILES))
-TOOL_OPT_OFILES:=$(patsubst $(EGG_SDK)/src/%.c,mid/tool/%.o,$(TOOL_OPT_CFILES))
-TOOL_OFILES:=$(patsubst src/%.c,mid/%.o,$(TOOL_CFILES)) $(TOOL_OPT_OFILES)
--include $(TOOL_OFILES:.o=.d)
-mid/tool/%.o:src/tool/%.c|$(TOC_H);$(PRECMD) $(CC) -o$@ $<
-mid/tool/%.o:$(EGG_SDK)/src/%.c;$(PRECMD) $(CC) -o$@ $<
-$(TOOL):$(TOOL_OFILES);$(PRECMD) $(LD) -o$@ $^
-
-MAPS_SRC:=$(filter src/data/map/%,$(DATAFILES))
-MAPS_MID:=$(patsubst src/%,mid/%,$(MAPS_SRC))
-mid/data/map/%:src/data/map/% $(TOOL)|$(TOC_H);$(PRECMD) $(TOOL) -o$@ $< --toc=$(TOC_H)
-DATAFILES+=$(MAPS_MID)
-
-TILESHEETS_SRC:=$(filter src/data/tilesheet/%,$(DATAFILES))
-TILESHEETS_MID:=$(patsubst src/%,mid/%,$(TILESHEETS_SRC))
-mid/data/tilesheet/%:src/data/tilesheet/% $(TOOL)|$(TOC_H);$(PRECMD) $(TOOL) -o$@ $< --toc=$(TOC_H)
-DATAFILES+=$(TILESHEETS_MID)
-
-SPRITES_SRC:=$(filter src/data/sprite/%,$(DATAFILES))
-SPRITES_MID:=$(patsubst src/%,mid/%,$(SPRITES_SRC))
-mid/data/sprite/%:src/data/sprite/% $(TOOL)|$(TOC_H);$(PRECMD) $(TOOL) -o$@ $< --toc=$(TOC_H)
-DATAFILES+=$(SPRITES_MID)
-
 ROM:=out/penance.egg
 all:$(ROM)
-$(ROM):$(WEB_LIB) $(DATAFILES);$(PRECMD) $(EGG_SDK)/out/eggdev pack -o$@ $(WEB_LIB) src/data mid/data
+$(ROM):$(WEB_LIB) $(DATAFILES);$(PRECMD) $(EGG_SDK)/out/eggdev pack -o$@ $(WEB_LIB) src/data --schema=src/game/shared_symbols.h
 
 HTML:=out/penance.html
 all:$(HTML)
@@ -98,7 +72,13 @@ AUDIO_DRIVERS:=$(strip $(filter pulse asound alsafd macaudio msaudio,$(patsubst 
 EDIT_AUDIO_ARGS:=--audio=$(subst $(SPACE),$(COMMA),$(AUDIO_DRIVERS)) --audio-rate=44100 --audio-chanc=2
 # If you prefer web audio only, enable this:
 #EDIT_AUDIO_ARGS:=
-edit:$(ROM);$(EGG_SDK)/out/eggdev serve --htdocs=rt:$(EGG_SDK)/src/www --htdocs=$(EGG_SDK)/src/editor --htdocs=src/editor --htdocs=src --write=src $(EDIT_AUDIO_ARGS)
+edit:$(ROM);$(EGG_SDK)/out/eggdev serve \
+  --htdocs=rt:$(EGG_SDK)/src/www \
+  --htdocs=$(EGG_SDK)/src/editor \
+  --htdocs=src \
+  --write=src \
+  --schema=src/game/shared_symbols.h \
+  $(EDIT_AUDIO_ARGS)
 
 web-run:$(ROM);$(EGG_SDK)/out/eggdev serve --htdocs=$(EGG_SDK)/src/www --htdocs=out --default-rom=/$(notdir $(ROM))
 

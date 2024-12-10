@@ -10,6 +10,6 @@
 8978351307020c0c0001010a0200022515222486
 8788143233253422353322132333151434132386
 
-image outdoors
+image image:outdoors
 location 14 16
-sprite @2,2 candle1
+sprite @2,2 sprite:candle1

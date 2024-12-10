@@ -1,4 +1,4 @@
-type werewolf
-image hero
-tileid 0xb6
-groups UPDATE,VISIBLE
+type (u16:sprtype)werewolf
+image image:hero
+tileid 0xb6 0
+groups 0x0000000c

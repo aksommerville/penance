@@ -6,14 +6,12 @@
 static int penance_load_map_object(struct map *map) {
   if (!map) return -1;
   g.map=map;
-  struct map_command_reader reader;
-  map_command_reader_init_map(&reader,map);
-  const uint8_t *arg;
-  int argc,opcode;
-  while ((argc=map_command_reader_next(&arg,&opcode,&reader))>=0) {
-    switch (opcode) {
+  struct rom_command_reader reader={.v=map->serial+COLC*ROWC,.c=map->serialc-COLC*ROWC};
+  struct rom_command command;
+  while (rom_command_reader_next(&command,&reader)>0) {
+    switch (command.opcode) {
       case 0x20: { // image
-          int imageid=(arg[0]<<8)|arg[1];
+          int imageid=(command.argv[0]<<8)|command.argv[1];
           if (imageid==g.map_imageid) continue;
           if (egg_texture_load_image(g.texid_tiles,imageid)<0) {
             fprintf(stderr,"Failed to load image:%d for map:%d\n",imageid,map->rid);
@@ -22,15 +20,15 @@ static int penance_load_map_object(struct map *map) {
         } break;
       case 0x21: { // hero
           if (GRP(HERO)->spritec) break;
-          double x=(double)arg[0]+0.5;
-          double y=(double)arg[1]+0.5;
+          double x=(double)command.argv[0]+0.5;
+          double y=(double)command.argv[1]+0.5;
           struct sprite *sprite=sprite_spawn_with_type(x,y,&sprite_type_hero,0,0);
           if (!sprite) return -1;
         } break;
       case 0x40: { // sprite
-          double x=(double)arg[0]+0.5;
-          double y=(double)arg[1]+0.5;
-          int rid=(arg[2]<<8)|arg[3];
+          double x=(double)command.argv[0]+0.5;
+          double y=(double)command.argv[1]+0.5;
+          int rid=(command.argv[2]<<8)|command.argv[3];
           const uint8_t *serial=0;
           int serialc=maps_get_sprite(&serial,rid);
           struct sprite *sprite=sprite_spawn_for_map(x,y,serial,serialc);

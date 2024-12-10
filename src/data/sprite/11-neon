@@ -1,2 +1,2 @@
-type neon
-groups VISIBLE,UPDATE
+type (u16:sprtype)neon
+groups 0x0000000c

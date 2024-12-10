@@ -10,6 +10,6 @@
 878789777822231223242500060000006b6c6d86
 878787878978152232333335321534337677778a
 
-image outdoors
+image image:outdoors
 location 14 15
-sprite @8,5 raccoon
+sprite @8,5 sprite:raccoon
