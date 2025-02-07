@@ -55,7 +55,7 @@ int penance_load_map(int mapid,int transition) {
   if (transition) {
     if (g.transition_pvbits<=0) {
       g.transition_pvbits=egg_texture_new();
-      if (egg_texture_load_raw(g.transition_pvbits,EGG_TEX_FMT_RGBA,g.fbw,g.fbh,g.fbw<<2,0,0)<0) return -1;
+      if (egg_texture_load_raw(g.transition_pvbits,g.fbw,g.fbh,g.fbw<<2,0,0)<0) return -1;
     }
     penance_render_game_to(g.transition_pvbits);
   }
@@ -95,7 +95,7 @@ int penance_navigate(int dx,int dy) {
   // Capture the scene for transition's "from" bits.
   if (g.transition_pvbits<=0) {
     g.transition_pvbits=egg_texture_new();
-    if (egg_texture_load_raw(g.transition_pvbits,EGG_TEX_FMT_RGBA,g.fbw,g.fbh,g.fbw<<2,0,0)<0) return -1;
+    if (egg_texture_load_raw(g.transition_pvbits,g.fbw,g.fbh,g.fbw<<2,0,0)<0) return -1;
   }
   penance_render_game_to(g.transition_pvbits);
   
