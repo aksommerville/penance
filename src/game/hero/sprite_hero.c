@@ -340,13 +340,13 @@ void hero_draw_overlay(struct sprite *sprite,int16_t addx,int16_t addy) {
     int16_t loy=TILESIZE*8+(TILESIZE>>1); // Must be fixed so it doesn't roll back up with her.
     if (SPRITE->animclock<3.0) {
       int16_t h=(int16_t)((loy*SPRITE->animclock)/3.0);
-      graf_draw_rect(&g.graf,midx-1,0,2,h,0xfff8f080);
+      graf_fill_rect(&g.graf,midx-1,0,2,h,0xfff8f080);
     } else if (SPRITE->animclock<4.0) {
       int16_t w=2+(int16_t)((SPRITE->animclock-3.0)*22);
       if (w<2) w=2; else if (w>24) w=24;
-      graf_draw_rect(&g.graf,midx-(w>>1),0,w,loy,0xfff8f080);
+      graf_fill_rect(&g.graf,midx-(w>>1),0,w,loy,0xfff8f080);
     } else {
-      graf_draw_rect(&g.graf,midx-12,0,24,loy,0xfff8f080);
+      graf_fill_rect(&g.graf,midx-12,0,24,loy,0xfff8f080);
     }
     return;
   }
@@ -363,13 +363,13 @@ void hero_draw_overlay(struct sprite *sprite,int16_t addx,int16_t addy) {
     int16_t dstx=(int)(sprite->x*TILESIZE)+addx-(dstw>>1);
     if (dstx<0) dstx=0; else if (dstx>g.fbw-dstw) dstx=g.fbw-dstw;
     dstx+=3;
-    int texid=texcache_get_image(&g.texcache,sprite->imageid);
-    graf_draw_tile(&g.graf,texid,dstx,dsty,0x50,0); dstx+=7;
-    graf_draw_tile(&g.graf,texid,dstx,dsty,overflow?0x56:spell_tile(SPRITE->spellv[0]),0); dstx+=7;
+    graf_set_image(&g.graf,sprite->imageid);
+    graf_tile(&g.graf,dstx,dsty,0x50,0); dstx+=7;
+    graf_tile(&g.graf,dstx,dsty,overflow?0x56:spell_tile(SPRITE->spellv[0]),0); dstx+=7;
     int i=1; for (;i<wordc;i++,dstx+=7) {
-      graf_draw_tile(&g.graf,texid,dstx,dsty,spell_tile(SPRITE->spellv[i]),0);
+      graf_tile(&g.graf,dstx,dsty,spell_tile(SPRITE->spellv[i]),0);
     }
-    graf_draw_tile(&g.graf,texid,dstx,dsty,0x51,0);
+    graf_tile(&g.graf,dstx,dsty,0x51,0);
   }
 }
 

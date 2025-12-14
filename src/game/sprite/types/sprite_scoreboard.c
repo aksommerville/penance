@@ -12,7 +12,7 @@ static void _scoreboard_update(struct sprite *sprite,double elapsed) {
   if ((SPRITE->animphase+=elapsed)>=1.0) SPRITE->animphase-=1.0;
 }
 
-static void scoreboard_repr(struct egg_draw_tile *vtxv/*9*/,double time,int16_t dstx,int16_t dsty) {
+static void scoreboard_repr(struct egg_render_tile *vtxv/*9*/,double time,int16_t dstx,int16_t dsty) {
   if (time<0.0) time=0.0;
   int mil=(int)(time*1000.0);
   int sec=mil/1000; mil%=1000;
@@ -27,10 +27,10 @@ static void scoreboard_repr(struct egg_draw_tile *vtxv/*9*/,double time,int16_t 
   vtxv[6].tileid=0xa5+mil/100;
   vtxv[7].tileid=0xa5+(mil/10)%10;
   vtxv[8].tileid=0xa5+mil%10;
-  struct egg_draw_tile *vtx=vtxv;
+  struct egg_render_tile *vtx=vtxv;
   int i=9; for (;i-->0;vtx++,dstx+=7) {
-    vtx->dstx=dstx;
-    vtx->dsty=dsty;
+    vtx->x=dstx;
+    vtx->y=dsty;
     vtx->xform=0;
   }
 }
@@ -55,18 +55,25 @@ static int scoreboard_is_full_clear() {
 
 static void _scoreboard_render(struct sprite *sprite,int16_t addx,int16_t addy) {
   graf_flush(&g.graf);
-  int texid=texcache_get_image(&g.texcache,sprite->imageid);
+  int texid=graf_tex(&g.graf,sprite->imageid);
   
   /* Play time and best time.
    */
   int16_t dstx=(int16_t)(sprite->x*TILESIZE)+addx-8;
   int16_t dsty=(int16_t)(sprite->y*TILESIZE)+addy+2;
-  struct egg_draw_tile vtxv[18];
-  scoreboard_repr(vtxv,g.playtime,dstx,dsty);
-  scoreboard_repr(vtxv+9,g.besttime,dstx,dsty+12);
-  egg_draw_globals(0xe0c080ff,0xff);
-  egg_draw_tile(1,texid,vtxv,sizeof(vtxv)/sizeof(vtxv[0]));
-  egg_draw_globals(0,0xff);
+  struct egg_render_tile vtxv[18];
+  {
+    scoreboard_repr(vtxv,g.playtime,dstx,dsty);
+    scoreboard_repr(vtxv+9,g.besttime,dstx,dsty+12);
+    struct egg_render_uniform un={
+      .dsttexid=1,
+      .srctexid=texid,
+      .mode=EGG_RENDER_TILE,
+      .alpha=0xff,
+      .tint=0xe0c080ff,
+    };
+    egg_render(&un,vtxv,sizeof(vtxv));
+  }
   
   /* Badges blow the time section.
    * Six tiles, aligned with six grid cells: Bone, Jammio, Rescue, Spell Usage, (blank), 100% (*2)
@@ -76,9 +83,9 @@ static void _scoreboard_render(struct sprite *sprite,int16_t addx,int16_t addy) 
   int vtxc=0;
   uint8_t qmark=(SPRITE->animphase>=0.500)?0x77:0x76;
   #define VTX(tile) { \
-    struct egg_draw_tile *vtx=vtxv+vtxc++; \
-    vtx->dstx=dstx; \
-    vtx->dsty=dsty; \
+    struct egg_render_tile *vtx=vtxv+vtxc++; \
+    vtx->x=dstx; \
+    vtx->y=dsty; \
     vtx->tileid=tile; \
     vtx->xform=0; \
     dstx+=TILESIZE; \
@@ -92,7 +99,15 @@ static void _scoreboard_render(struct sprite *sprite,int16_t addx,int16_t addy) 
     VTX(0x7f) // ''
   }
   #undef VTX
-  egg_draw_tile(1,texid,vtxv,vtxc);
+  {
+    struct egg_render_uniform un={
+      .dsttexid=1,
+      .srctexid=texid,
+      .mode=EGG_RENDER_TILE,
+      .alpha=0xff,
+    };
+    egg_render(&un,vtxv,sizeof(struct egg_render_tile)*vtxc);
+  }
 }
 
 const struct sprite_type sprite_type_scoreboard={

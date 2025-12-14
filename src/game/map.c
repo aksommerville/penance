@@ -18,7 +18,7 @@ static struct {
     int x,y; // Map position in world. We don't care about the stump's position in map.
   } stumpv[STUMP_LIMIT];
   int stumpc;
-  struct rom_res *spritev;
+  struct rom_entry *spritev;
   int spritec,spritea;
 } maps={0};
 
@@ -27,8 +27,8 @@ static struct {
  
 static int maps_add_resource(const uint8_t *src,int srcc,int rid) {
 
-  struct rom_map rmap={0};
-  if (rom_map_decode(&rmap,src,srcc)<0) {
+  struct map_res rmap={0};
+  if (map_res_decode(&rmap,src,srcc)<0) {
     fprintf(stderr,"map:%d failed to decode\n",rid);
     return -1;
   }
@@ -40,20 +40,21 @@ static int maps_add_resource(const uint8_t *src,int srcc,int rid) {
   struct map *map=calloc(1,sizeof(struct map));
   if (!map) return -1;
   map->rid=rid;
-  map->serial=src+8; // strip the signature and dimensions; pre-egg-maps code assumed a slightly different format.
-  map->serialc=srcc-8;
+  map->rov=rmap.v;
+  map->cmd=rmap.cmd;
+  map->cmdc=rmap.cmdc;
   map->tileprops=tileprops_default;
   memcpy(map->v,rmap.v,COLC*ROWC);
   
   // Read commands. Only thing we actually care about at this time is 0x22 location.
   int x=255,y=255;
-  struct rom_command_reader reader={.v=map->serial+COLC*ROWC,.c=map->serialc-COLC*ROWC};
-  struct rom_command cmd;
-  while (rom_command_reader_next(&cmd,&reader)>0) {
+  struct cmdlist_reader reader={.v=map->cmd,.c=map->cmdc};
+  struct cmdlist_entry cmd;
+  while (cmdlist_reader_next(&cmd,&reader)>0) {
     switch (cmd.opcode) {
       case 0x22: { // location
-          x=cmd.argv[0];
-          y=cmd.argv[1];
+          x=cmd.arg[0];
+          y=cmd.arg[1];
         } break;
     }
   }
@@ -113,12 +114,12 @@ static int maps_add_resource(const uint8_t *src,int srcc,int rid) {
  */
  
 static int map_link(struct map *map) {
-  struct rom_command_reader reader={.v=map->serial+COLC*ROWC,.c=map->serialc-COLC*ROWC};
-  struct rom_command command;
-  while (rom_command_reader_next(&command,&reader)>0) {
+  struct cmdlist_reader reader={.v=map->cmd,.c=map->cmdc};
+  struct cmdlist_entry command;
+  while (cmdlist_reader_next(&command,&reader)>0) {
     switch (command.opcode) {
       case 0x20: { // image (parallel to tilesheet)
-          int tsid=(command.argv[0]<<8)|command.argv[1];
+          int tsid=(command.arg[0]<<8)|command.arg[1];
           if ((tsid<TILESHEET_LIMIT)&&maps.tilesheetv[tsid]) map->tileprops=maps.tilesheetv[tsid];
           else map->tileprops=tileprops_default;
         } break;
@@ -136,35 +137,35 @@ int maps_reset(const void *rom,int romc) {
   // Collect map and tilesheet resources.
   struct rom_reader reader={0};
   if (rom_reader_init(&reader,rom,romc)<0) return -1;
-  struct rom_res *res;
-  while (res=rom_reader_next(&reader)) {
-    switch (res->tid) {
-      case EGG_TID_map: if (maps_add_resource(res->v,res->c,res->rid)<0) return -1; break;
+  struct rom_entry res;
+  while (rom_reader_next(&res,&reader)>0) {
+    switch (res.tid) {
+      case EGG_TID_map: if (maps_add_resource(res.v,res.c,res.rid)<0) return -1; break;
       case EGG_TID_tilesheet: {
-          if ((res->rid<0)||(res->rid>=TILESHEET_LIMIT)) {
-            fprintf(stderr,"Invalid tilesheet id %d\n",res->rid);
+          if ((res.rid<0)||(res.rid>=TILESHEET_LIMIT)) {
+            fprintf(stderr,"Invalid tilesheet id %d\n",res.rid);
             return -2;
           }
-          uint8_t *storage=tilesheet_storage+256*res->rid;
-          struct rom_tilesheet_reader tsr;
-          if (rom_tilesheet_reader_init(&tsr,res->v,res->c)<0) return -1;
-          struct rom_tilesheet_entry ts;
-          while (rom_tilesheet_reader_next(&ts,&tsr)>0) {
+          uint8_t *storage=tilesheet_storage+256*res.rid;
+          struct tilesheet_reader tsr;
+          if (tilesheet_reader_init(&tsr,res.v,res.c)<0) return -1;
+          struct tilesheet_entry ts;
+          while (tilesheet_reader_next(&ts,&tsr)>0) {
             if (ts.tableid!=NS_tilesheet_physics) continue;
             memcpy(storage+ts.tileid,ts.v,ts.c);
           }
-          maps.tilesheetv[res->rid]=storage;
+          maps.tilesheetv[res.rid]=storage;
         } break;
       case EGG_TID_sprite: {
           if (maps.spritec>=maps.spritea) {
             int na=maps.spritea+32;
-            if (na>INT_MAX/sizeof(struct rom_res)) return -1;
-            void *nv=realloc(maps.spritev,sizeof(struct rom_res)*na);
+            if (na>INT_MAX/sizeof(struct rom_entry)) return -1;
+            void *nv=realloc(maps.spritev,sizeof(struct rom_entry)*na);
             if (!nv) return -1;
             maps.spritev=nv;
             maps.spritea=na;
           }
-          maps.spritev[maps.spritec++]=*res;
+          maps.spritev[maps.spritec++]=res;
         } break;
     }
   }
@@ -213,7 +214,7 @@ int maps_get_sprite(void *dstpp,int rid) {
   int lo=0,hi=maps.spritec;
   while (lo<hi) {
     int ck=(lo+hi)>>1;
-    const struct rom_res *q=maps.spritev+ck;
+    const struct rom_entry *q=maps.spritev+ck;
          if (rid<q->rid) hi=ck;
     else if (rid>q->rid) lo=ck+1;
     else {

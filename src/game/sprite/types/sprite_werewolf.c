@@ -30,18 +30,18 @@ void _werewolf_update(struct sprite *sprite,double elapsed) {
 }
 
 void _werewolf_render(struct sprite *sprite,int16_t addx,int16_t addy) {
-  int texid=texcache_get_image(&g.texcache,sprite->imageid);
+  graf_set_image(&g.graf,sprite->imageid);
   int16_t dstx=(int16_t)(sprite->x*TILESIZE)+addx;
   int16_t dsty=(int16_t)(sprite->y*TILESIZE)+addy;
   if (g.rescued) {
-    graf_draw_tile(&g.graf,texid,dstx,dsty,sprite->tileid+2,0);
+    graf_tile(&g.graf,dstx,dsty,sprite->tileid+2,0);
     if (SPRITE->animframe) {
-      graf_draw_tile(&g.graf,texid,dstx+(TILESIZE>>1),dsty-TILESIZE,sprite->tileid+3,0);
+      graf_tile(&g.graf,dstx+(TILESIZE>>1),dsty-TILESIZE,sprite->tileid+3,0);
     } else {
-      graf_draw_tile(&g.graf,texid,dstx-(TILESIZE>>1),dsty-TILESIZE,sprite->tileid+3,EGG_XFORM_XREV);
+      graf_tile(&g.graf,dstx-(TILESIZE>>1),dsty-TILESIZE,sprite->tileid+3,EGG_XFORM_XREV);
     }
   } else {
-    graf_draw_tile(&g.graf,texid,dstx,dsty,sprite->tileid+SPRITE->animframe,0);
+    graf_tile(&g.graf,dstx,dsty,sprite->tileid+SPRITE->animframe,0);
   }
 }
 

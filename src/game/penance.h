@@ -57,20 +57,20 @@ Tree:
 #define SFXTRACK_LIMIT 8
 
 #include <egg/egg.h>
-#include <opt/stdlib/egg-stdlib.h>
-#include <opt/text/text.h>
-#include <opt/graf/graf.h>
-#include <opt/rom/rom.h>
+#include "util/stdlib/egg-stdlib.h"
+#include "util/text/text.h"
+#include "util/font/font.h"
+#include "util/graf/graf.h"
+#include "util/res/res.h"
+#include "egg_res_toc.h"
 #include "map.h"
 #include "sprite/sprite.h"
 #include "hero/hero.h"
 #include "menu/menu.h"
-#include "egg_rom_toc.h"
 
 extern struct globals {
   void *rom;
   int romc;
-  struct texcache texcache;
   struct graf graf;
   struct font *font;
   int fbw,fbh;
@@ -94,6 +94,7 @@ extern struct globals {
     int id;
   } sfxtrackv[SFXTRACK_LIMIT];
   int sfxtrackc;
+  int song_playing;
 } g;
 
 int penance_load_map(int mapid,int transition);
@@ -146,5 +147,6 @@ void penance_render_game_to(int texid);
 //#define sfx(id) egg_play_sound(2,id)
 #define sfx(id) _penance_sfx(id)
 void _penance_sfx(int id); // Don't call directly; use the macro.
+void penance_song(int rid,int repeat);
 
 #endif

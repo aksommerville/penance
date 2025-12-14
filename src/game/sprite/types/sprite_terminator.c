@@ -66,11 +66,11 @@ static void _terminator_render(struct sprite *sprite,int16_t addx,int16_t addy) 
   }
   graf_set_tint(&g.graf,0xffff00ff);
   graf_set_alpha(&g.graf,a);
-  graf_draw_decal(&g.graf,
-    texcache_get_image(&g.texcache,sprite->imageid),
+  graf_set_image(&g.graf,sprite->imageid);
+  graf_decal(&g.graf,
     SPRITE->dstx+addx,SPRITE->dsty+addy,
     SPRITE->srcx,SPRITE->srcy,
-    TILESIZE<<1,TILESIZE<<1,0
+    TILESIZE<<1,TILESIZE<<1
   );
   graf_set_tint(&g.graf,0);
   graf_set_alpha(&g.graf,0xff);

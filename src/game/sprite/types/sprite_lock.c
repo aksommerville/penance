@@ -27,12 +27,12 @@ static void _lock_update(struct sprite *sprite,double elapsed) {
 static void _lock_render(struct sprite *sprite,int16_t addx,int16_t addy) {
   int16_t dstx=(int16_t)(sprite->x*TILESIZE)+addx;
   int16_t dsty=(int16_t)(sprite->y*TILESIZE)+addy;
-  int texid=texcache_get_image(&g.texcache,sprite->imageid);
-  graf_draw_tile(&g.graf,texid,dstx,dsty,sprite->tileid,0);
+  graf_set_image(&g.graf,sprite->imageid);
+  graf_tile(&g.graf,dstx,dsty,sprite->tileid,0);
   if ((SPRITE->unlock_clock<=0.0)||!(((int)(SPRITE->unlock_clock*3.0))&1)) {
-    if (SPRITE->lamps&1) graf_draw_tile(&g.graf,texid,dstx,dsty,sprite->tileid+1,0);
-    if (SPRITE->lamps&2) graf_draw_tile(&g.graf,texid,dstx,dsty,sprite->tileid+2,0);
-    if (SPRITE->lamps&4) graf_draw_tile(&g.graf,texid,dstx,dsty,sprite->tileid+3,0);
+    if (SPRITE->lamps&1) graf_tile(&g.graf,dstx,dsty,sprite->tileid+1,0);
+    if (SPRITE->lamps&2) graf_tile(&g.graf,dstx,dsty,sprite->tileid+2,0);
+    if (SPRITE->lamps&4) graf_tile(&g.graf,dstx,dsty,sprite->tileid+3,0);
   }
 }
 

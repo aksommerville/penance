@@ -13,3 +13,5 @@ genre=Adventure
 # tags= Use itch.io for reference.
 iconImage=7
 # posterImage= image id, should have aspect 2:1 and no text
+incfgMask=dsw
+incfgNames=3

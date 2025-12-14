@@ -1,13 +1,13 @@
 # Full Moon 2: The Season of Penance
 
-Requires [Egg](https://github.com/aksommerville/egg) to build.
+Requires [Egg](https://github.com/aksommerville/egg2) to build.
 
 This is a sequel to my 2023 game [Full Moon](https://github.com/aksommerville/fullmoon4).
+It's also the first game in my custom engine Egg.
 
 For [GDEX Game Jam 2024](https://itch.io/jam/gdex-game-jam-2024), theme "FULL MOON".
 
-- [x] Islands in the baseball bonus zone: Ensure you can unbird there!
-- [x] Update audio for Egg synth rewrite.
+2025-12-14: Migrate to Egg v2.
 
 ## Playtest high scores
 

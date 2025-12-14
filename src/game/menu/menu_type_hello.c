@@ -43,15 +43,16 @@ static void hello_begin_FADE_IN_TITLE(struct menu *menu) {
 }
 
 static void hello_render_FADE_IN_TITLE(struct menu *menu) {
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,0x887890ff);
-  int texid_hello=texcache_get_image(&g.texcache,RID_image_hello);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,0x887890ff);
+  int texid_hello=graf_tex(&g.graf,RID_image_hello);
   int hellow=0,helloh=0;
-  egg_texture_get_status(&hellow,&helloh,texid_hello);
+  egg_texture_get_size(&hellow,&helloh,texid_hello);
   graf_set_tint(&g.graf,0x201008ff);
   int alpha=(int)((9.5-MENU->stageclock)*255.0);
   if (alpha<0) alpha=0; else if (alpha>0xff) alpha=0xff;
   graf_set_alpha(&g.graf,alpha);
-  graf_draw_decal(&g.graf,texid_hello,44,36,0,0,hellow,helloh,0);
+  graf_set_input(&g.graf,texid_hello);
+  graf_decal(&g.graf,44,36,0,0,hellow,helloh);
   graf_set_tint(&g.graf,0);
   graf_set_alpha(&g.graf,0xff);
 }
@@ -72,13 +73,14 @@ static void hello_render_FADE_OUT_TITLE(struct menu *menu) {
   int r=(int)(fr*0x88+to*0x20);
   int G=(int)(fr*0x78+to*0x10);
   int b=(int)(fr*0x90+to*0x08);
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,(r<<24)|(G<<16)|(b<<8)|0xff);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,(r<<24)|(G<<16)|(b<<8)|0xff);
 
-  int texid_hello=texcache_get_image(&g.texcache,RID_image_hello);
+  int texid_hello=graf_tex(&g.graf,RID_image_hello);
   int hellow=0,helloh=0;
-  egg_texture_get_status(&hellow,&helloh,texid_hello);
+  egg_texture_get_size(&hellow,&helloh,texid_hello);
   graf_set_tint(&g.graf,0x201008ff);
-  graf_draw_decal(&g.graf,texid_hello,44,36,0,0,hellow,helloh,0);
+  graf_set_input(&g.graf,texid_hello);
+  graf_decal(&g.graf,44,36,0,0,hellow,helloh);
   graf_set_tint(&g.graf,0);
 }
 
@@ -91,23 +93,23 @@ static void hello_begin_SPOOKY_SILHOUETTE(struct menu *menu) {
 }
 
 static void hello_render_SPOOKY_SILHOUETTE(struct menu *menu) {
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,0x201008ff);
-  int texid_bits=texcache_get_image(&g.texcache,RID_image_hello_bits);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,0x201008ff);
+  graf_set_image(&g.graf,RID_image_hello_bits);
   double norm=(10.0-MENU->stageclock)/10.0; // 0 => 1
   
   { // Moon.
     int16_t dsty=10;
     if (norm<0.75) dsty+=(int16_t)((0.75-norm)*200.0);
     graf_set_tint(&g.graf,0xc0c0e0ff);
-    graf_draw_decal(&g.graf,texid_bits,(g.fbw>>1)-64,dsty,0,0,128,128,0);
+    graf_decal(&g.graf,(g.fbw>>1)-64,dsty,0,0,128,128);
     graf_set_tint(&g.graf,0);
   }
   
   { // Silhouette.
     graf_set_tint(&g.graf,0x201008ff);
-    graf_draw_decal(&g.graf,texid_bits,(g.fbw>>1)-64,g.fbh-256,128,0,128,256,0);
+    graf_decal(&g.graf,(g.fbw>>1)-64,g.fbh-256,128,0,128,256);
     if (norm>=0.85) {
-      graf_draw_decal(&g.graf,texid_bits,150,70,128,0,80,40,0);
+      graf_decal(&g.graf,150,70,128,0,80,40);
     }
     graf_set_tint(&g.graf,0);
   }
@@ -122,12 +124,12 @@ static void hello_begin_PLEADY_WOLF(struct menu *menu) {
 }
 
 static void hello_render_PLEADY_WOLF(struct menu *menu) {
-  int texid_bits=texcache_get_image(&g.texcache,RID_image_hello_bits);
   int animframe=((int)(MENU->stageclock*2.0))&1;
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,0x201008ff);
-  graf_draw_decal(&g.graf,texid_bits,150,100,256+animframe*64,160,64,48,0);
-  graf_draw_decal(&g.graf,texid_bits,48,24,256,0,256,160,0);
-  graf_draw_decal(&g.graf,texid_bits,185,110,256+animframe*64,208,64,48,0);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,0x201008ff);
+  graf_set_image(&g.graf,RID_image_hello_bits);
+  graf_decal(&g.graf,150,100,256+animframe*64,160,64,48);
+  graf_decal(&g.graf,48,24,256,0,256,160);
+  graf_decal(&g.graf,185,110,256+animframe*64,208,64,48);
 }
 
 /* MENACE: Silhouette resolves into evil Dot.
@@ -139,13 +141,13 @@ static void hello_begin_MENACE(struct menu *menu) {
 }
 
 static void hello_render_MENACE(struct menu *menu) {
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,0x201008ff);
-  int texid_bits=texcache_get_image(&g.texcache,RID_image_hello_bits);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,0x201008ff);
+  graf_set_image(&g.graf,RID_image_hello_bits);
   
   { // Moon.
     int16_t dsty=10;
     graf_set_tint(&g.graf,0xc0c0e0ff);
-    graf_draw_decal(&g.graf,texid_bits,(g.fbw>>1)-64,dsty,0,0,128,128,0);
+    graf_decal(&g.graf,(g.fbw>>1)-64,dsty,0,0,128,128);
     graf_set_tint(&g.graf,0);
   }
   
@@ -153,7 +155,7 @@ static void hello_render_MENACE(struct menu *menu) {
     int alpha=(MENU->stageclock/5.0)*255.0;
     if (alpha<0) alpha=0; else if (alpha>0xff) alpha=0xff;
     graf_set_tint(&g.graf,0x20100800|alpha);
-    graf_draw_decal(&g.graf,texid_bits,(g.fbw>>1)-64,g.fbh-256,128,0,128,256,0);
+    graf_decal(&g.graf,(g.fbw>>1)-64,g.fbh-256,128,0,128,256);
     graf_set_tint(&g.graf,0);
   }
 }
@@ -167,16 +169,16 @@ static void hello_begin_AWAKE(struct menu *menu) {
 }
 
 static void hello_render_AWAKE(struct menu *menu) {
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,0x887890ff);
-  int texid_bits=texcache_get_image(&g.texcache,RID_image_hello_bits);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,0x887890ff);
+  graf_set_image(&g.graf,RID_image_hello_bits);
   double norm=(8.0-MENU->stageclock)/8.0; // 0 => 1
   
   { // Main pic, first frame. Second frame overlays it.
-    graf_draw_decal(&g.graf,texid_bits,0,0,0,256,256,176,0);
+    graf_decal(&g.graf,0,0,0,256,256,176);
   }
   
   if (norm>=0.500) {
-    graf_draw_decal(&g.graf,texid_bits,128,0,256,256,128,128,0);
+    graf_decal(&g.graf,128,0,256,256,128,128);
   }
 }
 
@@ -189,13 +191,13 @@ static void hello_begin_ENLIST(struct menu *menu) {
 }
 
 static void hello_render_ENLIST(struct menu *menu) {
-  int texid_bits=texcache_get_image(&g.texcache,RID_image_hello_bits);
+  graf_set_image(&g.graf,RID_image_hello_bits);
   double norm=(10.0-MENU->stageclock)/10.0; // 0 => 1
-  graf_draw_decal(&g.graf,texid_bits,0,0,0,432,320,176,0); // Floor is 112 pixels down.
+  graf_decal(&g.graf,0,0,0,432,320,176); // Floor is 112 pixels down.
   
   { // Mother Superior.
     uint8_t xform=(norm<0.700)?0:EGG_XFORM_XREV; // Facing left naturally.
-    graf_draw_decal(&g.graf,texid_bits,180,80,0,152,16,32,xform);
+    graf_decal_xform(&g.graf,180,80,0,152,16,32,xform);
   }
   
   { // Dot.
@@ -217,14 +219,14 @@ static void hello_render_ENLIST(struct menu *menu) {
       if (((int)(MENU->stageclock*4.0))&1) srcx+=16;
       dstx+=(int16_t)(((norm-0.600)/0.400)*92.0);
     }
-    graf_draw_decal(&g.graf,texid_bits,dstx,dsty,srcx,srcy,16,24,0);
+    graf_decal(&g.graf,dstx,dsty,srcx,srcy,16,24);
   }
   
   { // And as we approach the end, fade back to the background color.
     if (norm>=0.900) {
       int alpha=(int)((norm-0.900)*2550.0);
       if (alpha<0) alpha=0; else if (alpha>0xff) alpha=0xff;
-      graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,0x88789000|alpha);
+      graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,0x88789000|alpha);
     }
   }
 }
@@ -234,7 +236,7 @@ static void hello_render_ENLIST(struct menu *menu) {
  
 static int _hello_init(struct menu *menu) {
   menu->opaque=1;
-  if (ENABLE_MUSIC) egg_play_song(RID_song_penance_prima,0,1);
+  penance_song(RID_song_penance_prima,1);
   hello_begin_FADE_IN_TITLE(menu);
   return 0;
 }
@@ -251,7 +253,7 @@ static void _hello_input(struct menu *menu,int input,int pvinput) {
     g.playtime=0.0;
     g.bonus=g.jammio=g.spellusage=g.rescued=0;
     penance_load_map(1,TRANSITION_CUT);
-    if (ENABLE_MUSIC) egg_play_song(RID_song_doors_without_walls,0,1);
+    penance_song(RID_song_doors_without_walls,1);
     menu_pop(menu);
     return;
   }
@@ -281,7 +283,8 @@ static void _hello_render(struct menu *menu) {
     FOR_EACH_STAGE
     #undef _
   }
-  graf_draw_decal(&g.graf,texcache_get_image(&g.texcache,RID_image_border),0,0,0,0,g.fbw,g.fbh,0);
+  graf_set_image(&g.graf,RID_image_border);
+  graf_decal(&g.graf,0,0,0,0,g.fbw,g.fbh);
 }
 
 /* Type definition.

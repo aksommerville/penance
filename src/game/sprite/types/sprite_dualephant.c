@@ -62,7 +62,8 @@ static void _dualephant_render(struct sprite *sprite,int16_t addx,int16_t addy) 
   int16_t srcx=112,srcy=80,w=TILESIZE<<1,h=TILESIZE<<1;
   if (SPRITE->clock>=SHOOT_TIME) { srcx+=TILESIZE<<2; w+=TILESIZE; dstx-=TILESIZE; }
   else if (SPRITE->clock>=INHALE_TIME) srcx+=TILESIZE<<1;
-  graf_draw_decal(&g.graf,texcache_get_image(&g.texcache,RID_image_hero),dstx,dsty,srcx,srcy,w,h,0);
+  graf_set_image(&g.graf,RID_image_hero);
+  graf_decal(&g.graf,dstx,dsty,srcx,srcy,w,h);
 }
 
 const struct sprite_type sprite_type_dualephant={

@@ -207,7 +207,7 @@ static void _raccoon_update(struct sprite *sprite,double elapsed) {
 static void _raccoon_render(struct sprite *sprite,int16_t addx,int16_t addy) {
   int16_t dstx=(int16_t)(sprite->x*TILESIZE)+addx;
   int16_t dsty=(int16_t)(sprite->y*TILESIZE)+addy;
-  int texid=texcache_get_image(&g.texcache,sprite->imageid);
+  graf_set_image(&g.graf,sprite->imageid);
   uint8_t xform=0,tileid=SPRITE->tileid0;
   switch (SPRITE->stage) {
     case STAGE_WAIT: break;
@@ -222,13 +222,13 @@ static void _raccoon_render(struct sprite *sprite,int16_t addx,int16_t addy) {
         tileid+=1+SPRITE->animframe;
       } break;
     case STAGE_CONGRATULATE: {
-        graf_draw_tile(&g.graf,texid,dstx,dsty-TILESIZE,SPRITE->tileid0+12,0);
+        graf_tile(&g.graf,dstx,dsty-TILESIZE,SPRITE->tileid0+12,0);
         if (SPRITE->animframe) dsty--;
       } break;
   }
-  graf_draw_tile(&g.graf,texid,dstx,dsty,tileid,xform);
+  graf_tile(&g.graf,dstx,dsty,tileid,xform);
   if ((SPRITE->maskp>=0)&&(SPRITE->maskp<MASKC)&&(SPRITE->stage!=STAGE_RUMMAGE)) {
-    graf_draw_tile(&g.graf,texid,dstx,dsty,SPRITE->tileid0+5+SPRITE->maskv[SPRITE->maskp],xform);
+    graf_tile(&g.graf,dstx,dsty,SPRITE->tileid0+5+SPRITE->maskv[SPRITE->maskp],xform);
   }
   // Bones...
   dstx=SPRITE->bonex;
@@ -236,8 +236,8 @@ static void _raccoon_render(struct sprite *sprite,int16_t addx,int16_t addy) {
   const uint8_t *p=SPRITE->scorev;
   int i=MASKC;
   for (;i-->0;p++,dstx+=TILESIZE) {
-    if (*p) graf_draw_tile(&g.graf,texid,dstx,dsty,SPRITE->tileid0-14,0);
-    else graf_draw_tile(&g.graf,texid,dstx,dsty,SPRITE->tileid0-15,0);
+    if (*p) graf_tile(&g.graf,dstx,dsty,SPRITE->tileid0-14,0);
+    else graf_tile(&g.graf,dstx,dsty,SPRITE->tileid0-15,0);
   }
 }
 

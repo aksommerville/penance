@@ -29,7 +29,7 @@ static void _fireworks_update(struct sprite *sprite,double elapsed) {
 
 static void _fireworks_render(struct sprite *sprite,int16_t addx,int16_t addy) {
   #define PARTICLEC 7
-  int texid=texcache_get_image(&g.texcache,sprite->imageid);
+  graf_set_image(&g.graf,sprite->imageid);
   int i=PARTICLEC;
   double t=0.0;
   double dt=(M_PI*2.0)/PARTICLEC;
@@ -47,7 +47,7 @@ static void _fireworks_render(struct sprite *sprite,int16_t addx,int16_t addy) {
   for (;i-->0;t+=dt) {
     double x=(sprite->x+cos(t)*radius)*TILESIZE;
     double y=(sprite->y+sin(t)*radius)*TILESIZE;
-    graf_draw_tile(&g.graf,texid,(int16_t)x+addx,(int16_t)y+addy,tileid,0);
+    graf_tile(&g.graf,(int16_t)x+addx,(int16_t)y+addy,tileid,0);
   }
   graf_set_alpha(&g.graf,0xff);
   #undef PARTICLEC

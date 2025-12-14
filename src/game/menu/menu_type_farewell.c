@@ -111,8 +111,8 @@ static void _farewell_update(struct menu *menu,double elapsed) {
       const struct farewell_subtitle *st=farewell_subtitlev+MENU->subtitlep;
       MENU->subtitleclock+=st->duration;
       if (st->src&&st->src[0]) {
-        MENU->subtitle_texid=font_tex_multiline(g.font,st->src,-1,g.fbw,g.fbh-136,0xd0c8c0ff);
-        egg_texture_get_status(&MENU->subtitlew,&MENU->subtitleh,MENU->subtitle_texid);
+        MENU->subtitle_texid=font_render_to_texture(0,g.font,st->src,-1,g.fbw,g.fbh-136,0xd0c8c0ff);
+        egg_texture_get_size(&MENU->subtitlew,&MENU->subtitleh,MENU->subtitle_texid);
       }
     } else {
       MENU->subtitleclock=999.0;
@@ -126,52 +126,54 @@ static void _farewell_update(struct menu *menu,double elapsed) {
 static void farewell_render_FADEOUT1(struct menu *menu) {
   int alpha=(int)(((0.5-MENU->stageclock)/0.5)*255.0);
   if (alpha<0) alpha=0; else if (alpha>0xff) alpha=0xff;
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|alpha);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|alpha);
 }
 
 /* FLYAWAY
  */
  
 static void farewell_render_FLYAWAY(struct menu *menu) {
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|0xff);
-  int texid=texcache_get_image(&g.texcache,RID_image_farewell);
-  graf_draw_decal(&g.graf,texid,0,8,0,0,320,128,0);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|0xff);
+  graf_set_image(&g.graf,RID_image_farewell);
+  graf_decal(&g.graf,0,8,0,0,320,128);
   
   // Dot flying.
   int16_t doty=28;
   int16_t dotx=(int16_t)((MENU->stageclock*300.0)/10.0);
   uint8_t dottile=0x0c+((int)((fmod(MENU->stageclock,0.750)/0.750)*4.0)&3);
-  graf_draw_tile(&g.graf,texcache_get_image(&g.texcache,RID_image_hero),dotx,doty,dottile,0);
+  graf_set_image(&g.graf,RID_image_hero);
+  graf_tile(&g.graf,dotx,doty,dottile,0);
   
   // Fade out fore and aft.
   int fadealpha=0;
   if (MENU->stageclock>5.5) fadealpha=(MENU->stageclock-5.5)*512.0;
   else if (MENU->stageclock<0.5) fadealpha=(0.5-MENU->stageclock)*512.0;
   if (fadealpha>0xff) fadealpha=0xff;
-  if (fadealpha>0) graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
+  if (fadealpha>0) graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
 }
 
 /* FLYHOME
  */
  
 static void farewell_render_FLYHOME(struct menu *menu) {
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|0xff);
-  int texid=texcache_get_image(&g.texcache,RID_image_farewell);
-  graf_draw_decal(&g.graf,texid,0,8,0,128,320,128,0);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|0xff);
+  graf_set_image(&g.graf,RID_image_farewell);
+  graf_decal(&g.graf,0,8,0,128,320,128);
   
   // Dot flying.
   int16_t doty=28;
   int16_t dotx=64+(int16_t)((MENU->stageclock*300.0)/10.0);
   if (dotx<130) doty+=130-dotx;
   uint8_t dottile=0x0c+((int)((fmod(MENU->stageclock,0.750)/0.750)*4.0)&3);
-  graf_draw_tile(&g.graf,texcache_get_image(&g.texcache,RID_image_hero),dotx,doty,dottile,0);
+  graf_set_image(&g.graf,RID_image_hero);
+  graf_tile(&g.graf,dotx,doty,dottile,0);
   
   // Fade out fore and aft.
   int fadealpha=0;
   if (MENU->stageclock>5.5) fadealpha=(MENU->stageclock-5.5)*512.0;
   else if (MENU->stageclock<0.5) fadealpha=(0.5-MENU->stageclock)*512.0;
   if (fadealpha>0xff) fadealpha=0xff;
-  if (fadealpha>0) graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
+  if (fadealpha>0) graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
 }
 
 /* INSIDE
@@ -186,9 +188,9 @@ static void farewell_render_FLYHOME(struct menu *menu) {
  */
  
 static void farewell_render_INSIDE(struct menu *menu) {
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|0xff);
-  int texid=texcache_get_image(&g.texcache,RID_image_farewell);
-  graf_draw_decal(&g.graf,texid,0,8,0,256,320,128,0);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|0xff);
+  graf_set_image(&g.graf,RID_image_farewell);
+  graf_decal(&g.graf,0,8,0,256,320,128);
   
   // Mother Superior is 16x32 and has 3 frames.
   {
@@ -196,7 +198,7 @@ static void farewell_render_INSIDE(struct menu *menu) {
     if (MENU->stageclock<5.0) msx=16;
     else if (MENU->stageclock<6.0) msx=32;
     else if (MENU->stageclock<7.0) msx=16;
-    graf_draw_decal(&g.graf,texid,200,72,msx,416,16,32,0);
+    graf_decal(&g.graf,200,72,msx,416,16,32);
   }
   
   // Dot to her left, and walks away after some time.
@@ -216,7 +218,7 @@ static void farewell_render_INSIDE(struct menu *menu) {
     } else if (MENU->stageclock<7.0) { // Habit transferred.
       srcx=16;
     }
-    graf_draw_decal(&g.graf,texid,dotx,72,srcx,384,16,32,xform);
+    graf_decal_xform(&g.graf,dotx,72,srcx,384,16,32,xform);
   }
   
   // Fade out fore and aft.
@@ -224,22 +226,22 @@ static void farewell_render_INSIDE(struct menu *menu) {
   if (MENU->stageclock>8.5) fadealpha=(MENU->stageclock-8.5)*512.0;
   else if (MENU->stageclock<0.5) fadealpha=(0.5-MENU->stageclock)*512.0;
   if (fadealpha>0xff) fadealpha=0xff;
-  if (fadealpha>0) graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
+  if (fadealpha>0) graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
 }
 
 /* FINAL
  */
  
 static void farewell_render_FINAL(struct menu *menu) {
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|0xff);
-  int texid=texcache_get_image(&g.texcache,RID_image_farewell);
-  graf_draw_decal(&g.graf,texid,(g.fbw>>1)-24,(g.fbh>>1)-32,64,384,48,64,0);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|0xff);
+  graf_set_image(&g.graf,RID_image_farewell);
+  graf_decal(&g.graf,(g.fbw>>1)-24,(g.fbh>>1)-32,64,384,48,64);
   
   // Fade out fore only.
   int fadealpha=0;
   if (MENU->stageclock>59.5) fadealpha=(MENU->stageclock-9.5)*512.0;
   if (fadealpha>0xff) fadealpha=0xff;
-  if (fadealpha>0) graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
+  if (fadealpha>0) graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,FADE_COLOR|fadealpha);
 }
 
 /* Render, dispatch.
@@ -258,7 +260,8 @@ static void _farewell_render(struct menu *menu) {
   if (MENU->subtitle_texid>0) {
     int dstx=(g.fbw>>1)-(MENU->subtitlew>>1);
     int dsty=136+((g.fbh-136)>>1)-(MENU->subtitleh>>1);
-    graf_draw_decal(&g.graf,MENU->subtitle_texid,dstx,dsty,0,0,MENU->subtitlew,MENU->subtitleh,0);
+    graf_set_input(&g.graf,MENU->subtitle_texid);
+    graf_decal(&g.graf,dstx,dsty,0,0,MENU->subtitlew,MENU->subtitleh);
   }
 }
 

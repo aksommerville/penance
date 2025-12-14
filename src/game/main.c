@@ -5,26 +5,27 @@ struct globals g={0};
 void egg_client_quit(int status) {
 }
 
+void egg_client_notify(int k,int v) {
+}
+
 /* Init.
  */
 
 int egg_client_init() {
   
-  egg_texture_get_status(&g.fbw,&g.fbh,1);
+  egg_texture_get_size(&g.fbw,&g.fbh,1);
   if ((g.fbw!=COLC*TILESIZE)||(g.fbh!=ROWC*TILESIZE)) {
     fprintf(stderr,"Invalid framebuffer size (%d,%d) for (%d,%d) cells of %dx%d pixels.\n",g.fbw,g.fbh,COLC,ROWC,TILESIZE,TILESIZE);
     return -1;
   }
   
-  g.texcache.graf=&g.graf;
-  
-  if ((g.romc=egg_get_rom(0,0))<=0) return -1;
+  if ((g.romc=egg_rom_get(0,0))<=0) return -1;
   if (!(g.rom=malloc(g.romc))) return -1;
-  if (egg_get_rom(g.rom,g.romc)!=g.romc) return -1;
-  strings_set_rom(g.rom,g.romc);
+  if (egg_rom_get(g.rom,g.romc)!=g.romc) return -1;
+  text_set_rom(g.rom,g.romc);
   
   if (!(g.font=font_new())) return -1;
-  if (font_add_image_resource(g.font,0x0020,RID_image_witchy_0020)<0) return -1;
+  if (font_add_image(g.font,RID_image_witchy_0020,0x0020)<0) return -1;
   if ((g.texid_tiles=egg_texture_new())<1) return -1;
   
   penance_load_hiscore();
@@ -87,7 +88,17 @@ void egg_client_update(double elapsed) {
  */
  
 static void render_game_at(int16_t dstx,int16_t dsty) {
-  graf_draw_tile_buffer(&g.graf,g.texid_tiles,dstx+8,dsty+8,g.map->v,COLC,ROWC,COLC);
+  graf_set_input(&g.graf,g.texid_tiles);
+  const uint8_t *mp=g.map->v;
+  int yi=ROWC;
+  int y=dsty+8;
+  for (;yi-->0;y+=TILESIZE) {
+    int xi=COLC;
+    int x=dstx+8;
+    for (;xi-->0;x+=TILESIZE,mp++) {
+      graf_tile(&g.graf,x,y,*mp,0);
+    }
+  }
   sprite_group_render(GRP(VISIBLE),dstx,dsty);
   if (GRP(HERO)->spritec>=1) hero_draw_overlay(GRP(HERO)->spritev[0],dstx,dsty);
 }
@@ -111,10 +122,11 @@ static void render_game_pan(int dx,int dy) {
   double norm=1.0-(g.transition_clock/TRANSITION_TIME); // How far displaced, 1=>0
   int16_t dstx=(int16_t)(norm*dx*g.fbw);
   int16_t dsty=(int16_t)(norm*dy*g.fbh);
-  graf_draw_decal(
-    &g.graf,g.transition_pvbits,
+  graf_set_input(&g.graf,g.transition_pvbits);
+  graf_decal(
+    &g.graf,
     dstx-dx*g.fbw,dsty-dy*g.fbh,
-    0,0,g.fbw,g.fbh,0
+    0,0,g.fbw,g.fbh
   );
   render_game_at(dstx,dsty);
 }
@@ -127,7 +139,8 @@ static void render_game_fade() {
   int alpha=(int)((1.0-(g.transition_clock/TRANSITION_TIME))*255.0);
   if (alpha<0) alpha=0; else if (alpha>0xff) alpha=0xff;
   graf_set_alpha(&g.graf,alpha);
-  graf_draw_decal(&g.graf,g.transition_pvbits,0,0,0,0,g.fbw,g.fbh,0);
+  graf_set_input(&g.graf,g.transition_pvbits);
+  graf_decal(&g.graf,0,0,0,0,g.fbw,g.fbh);
   graf_set_alpha(&g.graf,0xff);
 }
 
@@ -236,18 +249,24 @@ void _penance_sfx(int id) {
     if (sfxtrack->id!=id) continue;
     if (sfxtrack->when+0.100>=now) return;
     sfxtrack->when=now;
-    egg_play_sound(id);
+    egg_play_sound(id,1.0f,0.0f);
     return;
   }
   if (g.sfxtrackc<SFXTRACK_LIMIT) {
     sfxtrack=g.sfxtrackv+g.sfxtrackc++;
     sfxtrack->when=now;
     sfxtrack->id=id;
-    egg_play_sound(id);
+    egg_play_sound(id,1.0f,0.0f);
     return;
   }
   if (oldest->id==id) return;
   oldest->when=now;
   oldest->id=id;
-  egg_play_sound(id);
+  egg_play_sound(id,1.0f,0.0f);
+}
+
+void penance_song(int rid,int repeat) {
+  if (rid==g.song_playing) return;
+  g.song_playing=rid;
+  if (ENABLE_MUSIC) egg_play_song(1,rid,repeat,0.5f,0.0f);
 }

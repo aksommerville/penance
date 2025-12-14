@@ -13,13 +13,13 @@ struct sprite_cannon {
 #define SPRITE ((struct sprite_cannon*)sprite)
 
 static int _cannon_init(struct sprite *sprite,const uint8_t *def,int defc) {
-  struct rom_sprite res={0};
-  if (rom_sprite_decode(&res,def,defc)<0) return -1;
-  struct rom_command_reader reader={.v=res.cmdv,.c=res.cmdc};
-  struct rom_command command;
-  while (rom_command_reader_next(&command,&reader)>0) {
-    switch (command.opcode) {
-      case 0x3f: SPRITE->heatseek=command.argv[1]; break;
+  struct cmdlist_reader reader;
+  if (sprite_reader_init(&reader,def,defc)>=0) {
+    struct cmdlist_entry command;
+    while (cmdlist_reader_next(&command,&reader)>0) {
+      switch (command.opcode) {
+        case 0x3f: SPRITE->heatseek=command.arg[1]; break;
+      }
     }
   }
   SPRITE->clock=0.200; // Bottom of cycle is the distended frame; skip that the first time.
@@ -73,7 +73,7 @@ static void _cannon_update(struct sprite *sprite,double elapsed) {
 }
 
 static void _cannon_render(struct sprite *sprite,int16_t addx,int16_t addy) {
-  int texid=texcache_get_image(&g.texcache,sprite->imageid);
+  graf_set_image(&g.graf,sprite->imageid);
   int16_t dstx=(int16_t)(sprite->x*TILESIZE)+addx; // center
   int16_t dsty=(int16_t)(sprite->y*TILESIZE)+addy;
   uint8_t tileid=SPRITE->tileid0;
@@ -83,11 +83,10 @@ static void _cannon_render(struct sprite *sprite,int16_t addx,int16_t addy) {
     tileid+=1;
   }
   if (SPRITE->heatseek) {
-    int16_t srcx=(tileid&0x0f)*TILESIZE;
-    int16_t srcy=(tileid>>4)*TILESIZE;
-    graf_draw_mode7(&g.graf,texid,dstx,dsty,srcx,srcy,TILESIZE,TILESIZE,1.0,1.0,SPRITE->rotation,0);
+    uint8_t rotation=(int)((SPRITE->rotation*256.0)/(M_PI*2.0));
+    graf_fancy(&g.graf,dstx,dsty,tileid,0,rotation,TILESIZE,0,0x808080ff);
   } else {
-    graf_draw_tile(&g.graf,texid,dstx,dsty,tileid,0);
+    graf_tile(&g.graf,dstx,dsty,tileid,0);
   }
 }
 

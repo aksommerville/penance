@@ -109,7 +109,8 @@ static void _wind_render(struct sprite *sprite,int16_t addx,int16_t addy) {
   int16_t srcx=(sprite->tileid&0x0f)*TILESIZE;
   int16_t srcy=(sprite->tileid>>4)*TILESIZE;
   srcx+=SPRITE->stage*(TILESIZE<<1);
-  graf_draw_decal(&g.graf,texcache_get_image(&g.texcache,sprite->imageid),dstx,dsty,srcx,srcy,TILESIZE<<1,TILESIZE<<1,0);
+  graf_set_image(&g.graf,sprite->imageid);
+  graf_decal(&g.graf,dstx,dsty,srcx,srcy,TILESIZE<<1,TILESIZE<<1);
   if (SPRITE->stage==WIND_STAGE_EXHALE) {
     struct particle *particle=SPRITE->particlev;
     int i=PARTICLEC;
@@ -118,7 +119,7 @@ static void _wind_render(struct sprite *sprite,int16_t addx,int16_t addy) {
       if (particle->x<0) {
         particle->x=rand()%dstx;
       }
-      graf_draw_rect(&g.graf,particle->x,particle->y,4,1,0xf0f0ff80);
+      graf_fill_rect(&g.graf,particle->x,particle->y,4,1,0xf0f0ff80);
     }
   }
 }

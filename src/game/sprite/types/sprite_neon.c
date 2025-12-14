@@ -32,7 +32,7 @@ static void _neon_render(struct sprite *sprite,int16_t addx,int16_t addy) {
   }
   int16_t x=dstx+15,i=6;
   const int *p=topv;
-  for (;i-->0;p++,x+=5) if (*p) graf_draw_rect(&g.graf,x,dsty+2,2,2,0xffff00ff);
+  for (;i-->0;p++,x+=5) if (*p) graf_fill_rect(&g.graf,x,dsty+2,2,2,0xffff00ff);
   
   // Bottom lightbulbs begin at +19,16, each is 2x1, 5 of them spaced 5 pixels horizontally.
   int btmv[5]={0,0,0,0,0};
@@ -44,7 +44,7 @@ static void _neon_render(struct sprite *sprite,int16_t addx,int16_t addy) {
     int tp=4-t%5;
     btmv[tp]=1;
   }
-  for (x=dstx+19,i=5,p=btmv;i-->0;p++,x+=5) if (*p) graf_draw_rect(&g.graf,x,dsty+16,2,1,0x00ff00ff);
+  for (x=dstx+19,i=5,p=btmv;i-->0;p++,x+=5) if (*p) graf_fill_rect(&g.graf,x,dsty+16,2,1,0x00ff00ff);
 }
 
 const struct sprite_type sprite_type_neon={

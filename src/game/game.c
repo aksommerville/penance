@@ -6,12 +6,12 @@
 static int penance_load_map_object(struct map *map) {
   if (!map) return -1;
   g.map=map;
-  struct rom_command_reader reader={.v=map->serial+COLC*ROWC,.c=map->serialc-COLC*ROWC};
-  struct rom_command command;
-  while (rom_command_reader_next(&command,&reader)>0) {
+  struct cmdlist_reader reader={.v=map->cmd,.c=map->cmdc};
+  struct cmdlist_entry command;
+  while (cmdlist_reader_next(&command,&reader)>0) {
     switch (command.opcode) {
       case 0x20: { // image
-          int imageid=(command.argv[0]<<8)|command.argv[1];
+          int imageid=(command.arg[0]<<8)|command.arg[1];
           if (imageid==g.map_imageid) continue;
           if (egg_texture_load_image(g.texid_tiles,imageid)<0) {
             fprintf(stderr,"Failed to load image:%d for map:%d\n",imageid,map->rid);
@@ -20,15 +20,15 @@ static int penance_load_map_object(struct map *map) {
         } break;
       case 0x21: { // hero
           if (GRP(HERO)->spritec) break;
-          double x=(double)command.argv[0]+0.5;
-          double y=(double)command.argv[1]+0.5;
+          double x=(double)command.arg[0]+0.5;
+          double y=(double)command.arg[1]+0.5;
           struct sprite *sprite=sprite_spawn_with_type(x,y,&sprite_type_hero,0,0);
           if (!sprite) return -1;
         } break;
       case 0x40: { // sprite
-          double x=(double)command.argv[0]+0.5;
-          double y=(double)command.argv[1]+0.5;
-          int rid=(command.argv[2]<<8)|command.argv[3];
+          double x=(double)command.arg[0]+0.5;
+          double y=(double)command.arg[1]+0.5;
+          int rid=(command.arg[2]<<8)|command.arg[3];
           const uint8_t *serial=0;
           int serialc=maps_get_sprite(&serial,rid);
           struct sprite *sprite=sprite_spawn_for_map(x,y,serial,serialc);
@@ -164,7 +164,7 @@ void penance_gameover() {
     g.besttime=g.playtime;
     penance_save_hiscore();
   }
-  if (ENABLE_MUSIC) egg_play_song(RID_song_take_wing,0,0);
+  penance_song(RID_song_take_wing,0);
   if (GRP(HERO)->spritec>=1) {
     struct sprite *hero=GRP(HERO)->spritev[0];
     hero_map_changed(hero);

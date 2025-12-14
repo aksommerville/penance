@@ -78,25 +78,24 @@ struct sprite *sprite_spawn_with_type(
   // Iterate (def) and apply all generic fields.
   // Sprite resources are framed exactly the same way as map commands (tho the opcodes are completely different).
   if (defc) {
-    struct rom_sprite res={0};
-    if (rom_sprite_decode(&res,def,defc)<0) { sprite_kill_now(sprite); return 0; }
-    struct rom_command_reader reader={.v=res.cmdv,.c=res.cmdc};
-    struct rom_command command;
-    while (rom_command_reader_next(&command,&reader)>0) {
+    struct cmdlist_reader reader;
+    if (sprite_reader_init(&reader,def,defc)<0) { sprite_kill_now(sprite); return 0; }
+    struct cmdlist_entry command;
+    while (cmdlist_reader_next(&command,&reader)>0) {
       switch (command.opcode) {
     
         case 0x20: break; // type -- must have been processed already by our caller.
         case 0x21: { // image
-            sprite->imageid=(command.argv[0]<<8)|command.argv[1];
+            sprite->imageid=(command.arg[0]<<8)|command.arg[1];
           } break;
         case 0x22: { // tileid
-            sprite->tileid=command.argv[0];
+            sprite->tileid=command.arg[0];
           } break;
         case 0x23: { // layer
-            sprite->layer=(int16_t)((command.argv[0]<<8)|command.argv[1]);
+            sprite->layer=(int16_t)((command.arg[0]<<8)|command.arg[1]);
           } break;
         case 0x40: { // grpmask
-            int grpmask=(command.argv[0]<<24)|(command.argv[1]<<16)|(command.argv[2]<<8)|command.argv[3];
+            int grpmask=(command.arg[0]<<24)|(command.arg[1]<<16)|(command.arg[2]<<8)|command.arg[3];
             int i=0,bit=1; for (;i<32;i++,bit<<=1) {
               if (grpmask&bit) {
                 if (sprite_group_add(sprite_groupv+i,sprite)<0) {

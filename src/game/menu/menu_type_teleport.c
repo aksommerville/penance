@@ -12,7 +12,7 @@
  
 struct menu_teleport {
   struct menu hdr;
-  struct egg_draw_tile *vtxv;
+  struct egg_render_tile *vtxv;
   int vtxc,vtxa;
   int wx,wy,ww,wh;
   int cx,cy; // Cursor position in world coords.
@@ -32,11 +32,11 @@ static void _teleport_del(struct menu *menu) {
 /* Add vertex.
  */
  
-static struct egg_draw_tile *teleport_add_vertex(struct menu *menu) {
+static struct egg_render_tile *teleport_add_vertex(struct menu *menu) {
   if (MENU->vtxc>=MENU->vtxa) {
     int na=MENU->vtxa+16;
-    if (na>INT_MAX/sizeof(struct egg_draw_tile)) return 0;
-    void *nv=realloc(MENU->vtxv,sizeof(struct egg_draw_tile)*na);
+    if (na>INT_MAX/sizeof(struct egg_render_tile)) return 0;
+    void *nv=realloc(MENU->vtxv,sizeof(struct egg_render_tile)*na);
     if (!nv) return 0;
     MENU->vtxv=nv;
     MENU->vtxa=na;
@@ -64,10 +64,10 @@ static int teleport_generate_vertices(struct menu *menu) {
     int y=wy+wh; while (y-->wy) {
       const struct map *map=map_by_location(x,y);
       if (!map) continue;
-      struct egg_draw_tile *vtx=teleport_add_vertex(menu);
+      struct egg_render_tile *vtx=teleport_add_vertex(menu);
       if (!vtx) return -1;
-      vtx->dstx=dstx+(x-wx)*TILESIZE;
-      vtx->dsty=dsty+(y-wy)*TILESIZE;
+      vtx->x=dstx+(x-wx)*TILESIZE;
+      vtx->y=dsty+(y-wy)*TILESIZE;
       vtx->xform=0;
       // I carefully arranged the tiles to make this possible, check it out:
       vtx->tileid=0x90;
@@ -82,19 +82,19 @@ static int teleport_generate_vertices(struct menu *menu) {
   int y,p=0;
   for (;;p++) {
     if (!maps_get_stump(&x,&y,p)) break;
-    struct egg_draw_tile *vtx=teleport_add_vertex(menu);
+    struct egg_render_tile *vtx=teleport_add_vertex(menu);
     if (!vtx) return -1;
-    vtx->dstx=dstx+(x-wx)*TILESIZE;
-    vtx->dsty=dsty+(y-wy)*TILESIZE;
+    vtx->x=dstx+(x-wx)*TILESIZE;
+    vtx->y=dsty+(y-wy)*TILESIZE;
     vtx->xform=0;
     vtx->tileid=((x==g.map->x)&&(y==g.map->y))?0xa0:0xa1;
   }
   
   // And finally, a vertex for the cursor.
-  struct egg_draw_tile *vtx=teleport_add_vertex(menu);
+  struct egg_render_tile *vtx=teleport_add_vertex(menu);
   if (!vtx) return -1;
-  vtx->dstx=dstx+(g.map->x-wx)*TILESIZE;
-  vtx->dsty=dsty+(g.map->y-wy)*TILESIZE;
+  vtx->x=dstx+(g.map->x-wx)*TILESIZE;
+  vtx->y=dsty+(g.map->y-wy)*TILESIZE;
   vtx->tileid=0xa2;
   vtx->xform=0;
   MENU->cx=g.map->x;
@@ -122,9 +122,9 @@ static void teleport_move_cursor(struct menu *menu,int dx,int dy) {
   MENU->cx=nx;
   MENU->cy=ny;
   // Cursor tile is always last in the list.
-  struct egg_draw_tile *vtx=MENU->vtxv+MENU->vtxc-1;
-  vtx->dstx+=dx*TILESIZE;
-  vtx->dsty+=dy*TILESIZE;
+  struct egg_render_tile *vtx=MENU->vtxv+MENU->vtxc-1;
+  vtx->x+=dx*TILESIZE;
+  vtx->y+=dy*TILESIZE;
   MENU->animclock=0.0; // force a fresh frame
 }
 
@@ -194,7 +194,7 @@ static void _teleport_update(struct menu *menu,double elapsed) {
   if ((MENU->animclock-=elapsed)<=0.0) {
     MENU->animclock+=0.500;
     if (++(MENU->animframe)>=2) MENU->animframe=0;
-    struct egg_draw_tile *vtx=MENU->vtxv+MENU->vtxc-1;
+    struct egg_render_tile *vtx=MENU->vtxv+MENU->vtxc-1;
     if (MENU->animframe) { // Frame 1: dot-on-stump (noop), X, or Check.
       if ((MENU->cx==g.map->x)&&(MENU->cy==g.map->y)) {
         vtx->tileid=0xa0;
@@ -213,9 +213,15 @@ static void _teleport_update(struct menu *menu,double elapsed) {
  */
  
 static void _teleport_render(struct menu *menu) {
-  graf_draw_rect(&g.graf,0,0,g.fbw,g.fbh,0x00102080);
+  graf_fill_rect(&g.graf,0,0,g.fbw,g.fbh,0x00102080);
   graf_flush(&g.graf);
-  egg_draw_tile(1,texcache_get_image(&g.texcache,RID_image_hero),MENU->vtxv,MENU->vtxc);
+  struct egg_render_uniform un={
+    .dsttexid=1,
+    .srctexid=graf_tex(&g.graf,RID_image_hero),
+    .mode=EGG_RENDER_TILE,
+    .alpha=0xff,
+  };
+  egg_render(&un,MENU->vtxv,sizeof(struct egg_render_tile)*MENU->vtxc);
 }
 
 /* Type definition.

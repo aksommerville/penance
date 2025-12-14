@@ -15,8 +15,9 @@
 
 struct map {
   uint8_t v[COLC*ROWC];
-  const uint8_t *serial;
-  int serialc; // >=COLC*ROWC
+  const uint8_t *rov; // COLC*ROWC
+  const uint8_t *cmd;
+  int cmdc;
   const uint8_t *tileprops;
   uint16_t rid;
   uint8_t x,y;

@@ -13,13 +13,13 @@ struct sprite_candle {
 
 static int _candle_init(struct sprite *sprite,const uint8_t *def,int defc) {
   SPRITE->candleid=-1;
-  struct rom_sprite res={0};
-  if (rom_sprite_decode(&res,def,defc)<0) return -1;
-  struct rom_command_reader reader={.v=res.cmdv,.c=res.cmdc};
-  struct rom_command command;
-  while (rom_command_reader_next(&command,&reader)>0) {
-    switch (command.opcode) {
-      case 0x3f: SPRITE->candleid=(command.argv[0]<<8)|command.argv[1]; break;
+  struct cmdlist_reader reader;
+  if (sprite_reader_init(&reader,def,defc)>=0) {
+    struct cmdlist_entry command;
+    while (cmdlist_reader_next(&command,&reader)>0) {
+      switch (command.opcode) {
+        case 0x3f: SPRITE->candleid=(command.arg[0]<<8)|command.arg[1]; break;
+      }
     }
   }
   if ((SPRITE->candleid>=0)&&(SPRITE->candleid<CANDLE_COUNT)) SPRITE->lit=g.candlev[SPRITE->candleid];
@@ -53,7 +53,7 @@ int sprite_candle_light(struct sprite *sprite) {
     int alllit=1,i=CANDLE_COUNT;
     while (i-->0) if (!g.candlev[i]) { alllit=0; break; }
     if (alllit&&ENABLE_MUSIC) {
-      egg_play_song(RID_song_antechamber,0,1);
+      penance_song(RID_song_antechamber,1);
     }
   }
   return 1;
